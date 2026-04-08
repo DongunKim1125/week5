@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_GridEdgeOnlyFlow
-  m_Shader: {fileID: 4800000, guid: ccb5597f389ea0743ac68a0cb881a5b4, type: 3}
+  m_Name: Custom_ContinuousLineFlow
+  m_Shader: {fileID: 4800000, guid: 5f77eb86be1cd194cb5cb19b4bcc7277, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,10 +25,9 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Length: 0.6
-    - _Speed: 0.5
-    - _Thickness: 0.02
+    - _Length: 0.924
+    - _Speed: 0.1
     m_Colors:
-    - _Color: {r: 0.9669811, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

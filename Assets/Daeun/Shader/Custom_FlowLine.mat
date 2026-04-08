@@ -26,7 +26,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Length: 0.6
-    - _Speed: 0.5
+    - _Speed: 0.05
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []

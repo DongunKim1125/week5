@@ -267,6 +267,7 @@ GameObject:
   - component: {fileID: 568900234}
   - component: {fileID: 568900233}
   - component: {fileID: 568900235}
+  - component: {fileID: 568900236}
   m_Layer: 0
   m_Name: GridManager
   m_TagString: Untagged
@@ -326,6 +327,20 @@ MonoBehaviour:
   rotationSpeed: 10
   dragScaleMultiplier: 1.1
   dragSortingOrderOffset: 100
+--- !u!114 &568900236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568900232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42dbbc0bf37f52240b492a44cc1ea755, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GridEffectApplier
+  flowMaterial: {fileID: 2100000, guid: 18bf7aaa69b3a9243ae14e2b40a94247, type: 2}
+  glowLineWidth: 0.09
 --- !u!4 &948976843 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 277354363044197649, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
