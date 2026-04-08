@@ -430,6 +430,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Key
       objectReference: {fileID: 0}
+    - target: {fileID: 2644186680813737905, guid: 1cbf67af561e03043969544877dde068, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2999422964378652238, guid: 1cbf67af561e03043969544877dde068, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.052
@@ -560,6 +564,7 @@ MonoBehaviour:
     m_Bits: 0
   rotationSpeed: 10
   dragScaleMultiplier: 1.05
+  dragSortingOrderOffset: 100
 --- !u!1001 &701277245
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -690,6 +695,10 @@ PrefabInstance:
     - target: {fileID: 6166268320885442901, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
       propertyPath: m_Name
       value: Tile_Base (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6166268320885442901, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7209638582275384858, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
       propertyPath: lockID
@@ -869,6 +878,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile_Base (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 6166268320885442901, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7209638582275384858, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
       propertyPath: lockID
       value: 1
@@ -968,13 +981,32 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419595294}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ef1ce33f33103c40a9aa65552731b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController2
   moveSpeed: 5
   jumpForce: 4
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  castDistance: 0.7
+  boxSize: {x: 0.5, y: 0.1}
+--- !u!114 &1419595303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1419595294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8e6ab028dd88a45a032ed6a8d54866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DE_PlayerController
+  moveSpeed: 5
+  jumpForce: 5
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -1155,6 +1187,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile_Base (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6166268320885442901, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7209638582275384858, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
       propertyPath: lockID
       value: 2
@@ -1251,6 +1287,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile_Base
       objectReference: {fileID: 0}
+    - target: {fileID: 6166268320885442901, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 7209638582275384858, guid: babf5605b2d6555469c81b97d230aa7e, type: 3}
       propertyPath: unlockedColor.b
       value: 1
@@ -1333,6 +1373,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2576206789328219512, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1419595301}
+    - targetCorrespondingSourceObject: {fileID: 2576206789328219512, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1419595303}
   m_SourcePrefab: {fileID: 100100000, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
