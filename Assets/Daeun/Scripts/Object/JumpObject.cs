@@ -1,16 +1,30 @@
 using UnityEngine;
 
 /// <summary>
-/// 중력을 고려한 목표 높이(Height) 기반의 탄성 오브젝트
+/// Height-based bounce object.
 /// </summary>
 public class JumpObject : MonoBehaviour
 {
     [Header("Bounce Settings (Height Based)")]
-    [Tooltip("기존에 떨어진 높이에 비례하여 얼마나 뛸 것인가 (1이면 떨어진 높이와 정확히 동일)")]
-    [SerializeField] private float heightMultiplier = 1.0f; 
-    
-    [Tooltip("추가로 더 높이 뛸 보정 높이 (단위: 타일 칸 수 등 유니티 Unit 거리 기준)")]
-    [SerializeField] private float bonusHeight = 3f; 
+    [Tooltip("Keeps the original height feel by scaling the impact height.")]
+    [SerializeField] private float heightMultiplier = 1.0f;
+
+    [Tooltip("Extra bonus height when hit from above.")]
+    [SerializeField] private float topBonusHeight = 3f;
+    [Tooltip("Extra bonus height when hit from the side.")]
+    [SerializeField] private float sideBonusHeight = 1.5f;
+    [Tooltip("Extra bonus height when hit from below.")]
+    [SerializeField] private float bottomBonusHeight = 0f;
+    [Tooltip("Minimum target height for side hits so walking into the block still bounces away.")]
+    [SerializeField] private float sideMinimumTargetHeight = 2.0f;
+
+    [Header("Input Lock Settings")]
+    [Tooltip("Input lock time when hit from above.")]
+    [SerializeField] private float topInputLockTime = 0.15f;
+    [Tooltip("Input lock time when hit from the side.")]
+    [SerializeField] private float sideInputLockTime = 0.1f;
+    [Tooltip("Input lock time when hit from below.")]
+    [SerializeField] private float bottomInputLockTime = 0.2f;
 
     [Header("Target Layer")]
     [SerializeField] private LayerMask playerLayer;
@@ -27,38 +41,89 @@ public class JumpObject : MonoBehaviour
     {
         DE_PlayerController controller = collision.gameObject.GetComponent<DE_PlayerController>();
         Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
-        
-        if (controller == null || rb == null) return;
 
-        // 1. 튕겨나갈 방향 결정 (부딪힌 면의 수직 반대 방향)
-        Vector2 bounceDirection = -collision.contacts[0].normal;
+        if (controller == null || rb == null || collision.contactCount == 0)
+            return;
 
-        // 2. 현재 플레이어가 받고 있는 중력 가속도 크기 구하기 (0으로 나누기 방지)
+        Vector2 bounceDirection = GetBounceDirection(collision);
+
         float gravity = Mathf.Max(0.01f, Mathf.Abs(Physics2D.gravity.y * rb.gravityScale));
-
-        // 3. 충돌 속도를 바탕으로 "내가 어느 정도 높이에서 떨어졌는가?" 가상의 높이 역산
         float impactSpeed = collision.relativeVelocity.magnitude;
         float fallHeight = (impactSpeed * impactSpeed) / (2f * gravity);
 
-        // 4. 보정값 1회성 적용 로직
         float currentBonusHeight = 0f;
         if (controller.CanReceiveBounceBonus)
         {
-            currentBonusHeight = bonusHeight;
-            controller.CanReceiveBounceBonus = false; 
+            currentBonusHeight = GetDirectionalBonusHeight(bounceDirection);
+            controller.CanReceiveBounceBonus = false;
         }
 
-        // 5. 최종 목표 높이 계산
-        // (떨어진 높이 * 배율) + 1회성 보정 높이
         float targetHeight = (fallHeight * heightMultiplier) + currentBonusHeight;
-
-        // 6. 목표 높이에 도달하기 위해 중력을 이겨내는 정확한 초기 속도 계산
+        targetHeight = Mathf.Max(targetHeight, GetDirectionalMinimumTargetHeight(bounceDirection));
         float requiredSpeed = Mathf.Sqrt(2f * gravity * targetHeight);
 
-        // 7. 플레이어에게 힘 전달
         Vector2 appliedForce = bounceDirection * requiredSpeed;
         controller.ApplyExternalForce(appliedForce);
+        controller.InputLockTimer = GetDirectionalInputLockTime(bounceDirection);
 
-        Debug.Log($"[탄성 점프] 역산된 낙하높이: {fallHeight:F1} | 최종 목표높이: {targetHeight:F1} | 적용속도: {requiredSpeed:F1}");
+        Debug.Log($"[Bounce] fallHeight: {fallHeight:F1} | targetHeight: {targetHeight:F1} | speed: {requiredSpeed:F1}");
+    }
+
+    private Vector2 GetBounceDirection(Collision2D collision)
+    {
+        Collider2D selfCollider = GetComponent<Collider2D>();
+        Vector2 blockCenter = selfCollider != null ? (Vector2)selfCollider.bounds.center : (Vector2)transform.position;
+        Vector2 playerCenter = collision.collider != null ? (Vector2)collision.collider.bounds.center : (Vector2)collision.transform.position;
+        Vector2 delta = playerCenter - blockCenter;
+        Vector2 blockExtents = selfCollider != null ? selfCollider.bounds.extents : Vector2.one;
+        Vector2 normalizedDelta = new Vector2(
+            Mathf.Abs(blockExtents.x) > 0.0001f ? Mathf.Abs(delta.x) / blockExtents.x : Mathf.Abs(delta.x),
+            Mathf.Abs(blockExtents.y) > 0.0001f ? Mathf.Abs(delta.y) / blockExtents.y : Mathf.Abs(delta.y)
+        );
+
+        if (normalizedDelta.x > normalizedDelta.y * 1.1f)
+            return new Vector2(Mathf.Sign(delta.x), 0f);
+
+        if (normalizedDelta.y > normalizedDelta.x * 1.1f)
+            return new Vector2(0f, Mathf.Sign(delta.y));
+
+        Vector2 normal = collision.contacts[0].normal;
+        if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+            return new Vector2(Mathf.Sign(-normal.x), 0f);
+
+        return -normal.normalized;
+    }
+
+    private float GetDirectionalBonusHeight(Vector2 bounceDirection)
+    {
+        if (bounceDirection.y > 0.5f)
+            return topBonusHeight;
+
+        if (bounceDirection.y < -0.5f)
+            return bottomBonusHeight;
+
+        return sideBonusHeight;
+    }
+
+    private float GetDirectionalInputLockTime(Vector2 bounceDirection)
+    {
+        if (bounceDirection.y > 0.5f)
+            return topInputLockTime;
+
+        if (bounceDirection.y < -0.5f)
+            return bottomInputLockTime;
+
+        return sideInputLockTime;
+    }
+
+    private float GetDirectionalMinimumTargetHeight(Vector2 bounceDirection)
+    {
+        if (bounceDirection.y > 0.5f)
+            return 0f;
+
+        if (bounceDirection.y < -0.5f)
+            return 0f;
+
+        return sideMinimumTargetHeight;
     }
 }
