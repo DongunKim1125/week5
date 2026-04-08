@@ -6,27 +6,42 @@ public class Tile : MonoBehaviour
 {
     [Header("Tile Settings")]
     [SerializeField] private TileType tileType = TileType.Normal;
-    [SerializeField] private int lockID = 0; // 열쇠와 매칭될 고유 번호
-    [SerializeField] private bool isLocked = false; // 기본적으로 잠기지 않은 상태
+    [SerializeField] private int lockID = 0; 
+    [SerializeField] private bool isLocked = false; 
     [SerializeField] private bool isOccupiedByPlayer;
+    [SerializeField] private bool invertGravity;
 
     [Header("Visuals (For Player)")]
-    [SerializeField] private Color lockedColor = new Color(1f, 0.8f, 0.8f); // 연한 분홍색 (잠김)
-    [SerializeField] private Color unlockedColor = Color.white;           // 흰색 (해제)
+    [SerializeField] private Color lockedColor = new Color(1f, 0.8f, 0.8f);       
+    [SerializeField] private Color unlockedColor = Color.white;                   
+    [SerializeField] private Color invertGravityColor = new Color(0.8f, 0.8f, 1f);
+    
+    // 추가됨: 고정 타일일 때 최종 색상의 밝기를 얼마나 줄일 것인가 (1 = 그대로, 0.85 = 15% 어둡게)
+    [Tooltip("고정 타일일 때 적용할 밝기 배율")]
+    [SerializeField] private float fixedBrightness = 0.85f;
+    
     [SerializeField] private SpriteRenderer borderRenderer;
+
+    [Header("Fixed Tile Visuals (Auto Generated)")]
+    [Tooltip("인스펙터에서 못 이미지를 넣어주세요.")]
+    [SerializeField] private Sprite nailSprite;
+    [Tooltip("모서리에서 안쪽으로 얼마나 들어올지 결정합니다.")]
+    [SerializeField] private float nailOffset = 0.4f; 
+
+    private GameObject[] _generatedNails = new GameObject[4];
 
     public int LockID => lockID;
     public TileType Type => tileType;
     public Vector2Int GridPosition { get; set; }
     public bool IsOccupiedByPlayer { get => isOccupiedByPlayer; set => isOccupiedByPlayer = value; }
-    
-    [SerializeField] private bool invertGravity;
     public bool InvertGravity => invertGravity;
 
-    /// <summary>
-    /// 드래그 가능 여부: 일반 타일이거나, 잠긴 타일인데 잠금이 풀렸을 때만 가능 (Fixed는 불가)
-    /// </summary>
     public bool CanMove => (tileType == TileType.Normal || (tileType == TileType.KeyLocked && !isLocked)) && !isOccupiedByPlayer;
+
+    private void Awake()
+    {
+        GenerateFixedVisuals();
+    }
 
     private void Start()
     {
@@ -37,29 +52,95 @@ public class Tile : MonoBehaviour
         UpdateState();
     }
 
-    /// <summary>
-    /// 외부(열쇠 시스템)에서 호출하여 잠금을 해제함
-    /// </summary>
+    private void GenerateFixedVisuals()
+    {
+        float halfSize = 0.5f; 
+
+        // 점선 로직 제거됨, 못 4개만 생성
+        if (nailSprite != null)
+        {
+            Vector3[] corners = new Vector3[4]
+            {
+                new Vector3(-halfSize + nailOffset, halfSize - nailOffset, -0.1f), 
+                new Vector3(halfSize - nailOffset, halfSize - nailOffset, -0.1f),  
+                new Vector3(-halfSize + nailOffset, -halfSize + nailOffset, -0.1f),
+                new Vector3(halfSize - nailOffset, -halfSize + nailOffset, -0.1f)  
+            };
+
+            for (int i = 0; i < 4; i++)
+            {
+                GameObject nailObj = new GameObject($"Nail_{i}_Auto");
+                nailObj.transform.SetParent(transform);
+                nailObj.transform.localPosition = corners[i];
+                nailObj.transform.localScale = Vector3.one * 0.5f; 
+                
+                SpriteRenderer sr = nailObj.AddComponent<SpriteRenderer>();
+                sr.sprite = nailSprite;
+                sr.sortingOrder = 6;
+                
+                _generatedNails[i] = nailObj;
+            }
+        }
+        
+        ToggleFixedVisuals(false);
+    }
+
     public void Unlock()
     {
         isLocked = false;
         UpdateState();
-        Debug.Log($"{lockID}번 타일 잠금 해제!");
     }
 
     private void UpdateState()
     {
-        // Normal 타입은 항상 잠기지 않은 상태(isLocked = false)로 간주
         if (tileType == TileType.Normal) isLocked = false;
-
-        // 1. 물리 차단: 잠긴 상태(KeyLocked && isLocked)면 IsTrigger를 꺼서 벽으로 만듦
-        // 잠기지 않았거나 일반 타일이면 IsTrigger를 켜서 진입 가능하게 함
         GetComponent<BoxCollider2D>().isTrigger = (tileType != TileType.KeyLocked || !isLocked);
-        
-        // 2. 시각화: 잠금 여부에 따라 지정된 색상 적용
+        ApplyColorPriority();
+    }
+
+    private void ApplyColorPriority()
+    {
+        // 1. 기본이 되는 상태(베이스 컬러)를 먼저 결정합니다.
+        Color targetColor = unlockedColor;
+
+        if (isLocked)
+        {
+            targetColor = lockedColor;
+        }
+        else if (invertGravity)
+        {
+            targetColor = invertGravityColor;
+        }
+
+        // 2. 만약 고정 타일(Fixed)이라면, 위에서 결정된 베이스 컬러에 밝기 배율을 곱합니다.
+        if (tileType == TileType.Fixed)
+        {
+            targetColor = new Color(
+                targetColor.r * fixedBrightness, 
+                targetColor.g * fixedBrightness, 
+                targetColor.b * fixedBrightness, 
+                targetColor.a
+            );
+        }
+
+        // 3. 렌더러에 최종 색상 적용
         if (borderRenderer != null)
         {
-            borderRenderer.color = isLocked ? lockedColor : unlockedColor;
+            borderRenderer.color = targetColor;
+        }
+
+        // 고정 타일 여부에 따라 못 켜기/끄기
+        ToggleFixedVisuals(tileType == TileType.Fixed);
+    }
+
+    private void ToggleFixedVisuals(bool isActive)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            if (_generatedNails[i] != null)
+            {
+                _generatedNails[i].SetActive(isActive);
+            }
         }
     }
 
@@ -74,12 +155,7 @@ public class Tile : MonoBehaviour
 
     private void OnValidate() 
     { 
-        // 에디터에서 Normal 타입으로 변경하면 즉시 잠금 해제 상태로 보이게 함
         if (tileType == TileType.Normal) isLocked = false;
-
-        if (borderRenderer != null) 
-        {
-            borderRenderer.color = isLocked ? lockedColor : unlockedColor;
-        }
+        ApplyColorPriority();
     }
 }
