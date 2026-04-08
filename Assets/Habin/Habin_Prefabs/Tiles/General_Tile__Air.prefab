@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 959129008492386206}
   m_Layer: 0
   m_Name: General_Tile__Air
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -151,8 +151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad7a85b4337e8d4eaf3b112aa29d772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tile
-  gridPosition: {x: 0, y: 0}
+  tileType: 0
+  lockID: 0
   isLocked: 0
   isOccupiedByPlayer: 0
+  lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
+  unlockedColor: {r: 1, g: 1, b: 1, a: 1}
+  borderRenderer: {fileID: 0}
   invertGravity: 0
-  tileSize: {x: 3, y: 3}
