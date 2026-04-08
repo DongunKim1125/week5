@@ -152,7 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c834c803ae966c643a1b49fe53570288, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JumpObject
-  tileSize: {x: 3, y: 3}
+  pushPower: 16
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024
