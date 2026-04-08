@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   stageDisplayName: Stage2
   sceneName: Dong_Stage2
-  isUnlocked: 0
+  isDefaultUnlocked: 0
   stageDescription: 

@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   stageDisplayName: Dong
   sceneName: DongScene
-  isUnlocked: 1
+  isDefaultUnlocked: 1
   stageDescription: "\uD14C\uC2A4\uD2B8\uC6A9\n"
