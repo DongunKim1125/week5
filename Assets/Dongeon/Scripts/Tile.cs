@@ -1,82 +1,85 @@
 using UnityEngine;
 
-/// <summary>
-/// 개별 타일의 상태와 속성을 관리하는 클래스
-/// </summary>
+public enum TileType { Normal, Fixed, KeyLocked }
+
 public class Tile : MonoBehaviour
 {
-    [Header("Tile Status")]
-    [SerializeField] private Vector2Int gridPosition;
-    [SerializeField] private bool isLocked; // 시작/목표 지점 등 이동 불가 여부
-    [SerializeField] private bool isOccupiedByPlayer; // 플레이어가 밟고 있는지 여부
+    [Header("Tile Settings")]
+    [SerializeField] private TileType tileType = TileType.Normal;
+    [SerializeField] private int lockID = 0; // 열쇠와 매칭될 고유 번호
+    [SerializeField] private bool isLocked = false; // 기본적으로 잠기지 않은 상태
+    [SerializeField] private bool isOccupiedByPlayer;
 
-    [SerializeField] private bool invertGravity; // 이 타일에 있을 때 중력 반전 여부
+    [Header("Visuals (For Player)")]
+    [SerializeField] private Color lockedColor = new Color(1f, 0.8f, 0.8f); // 연한 분홍색 (잠김)
+    [SerializeField] private Color unlockedColor = Color.white;           // 흰색 (해제)
+    [SerializeField] private SpriteRenderer borderRenderer;
 
+    public int LockID => lockID;
+    public TileType Type => tileType;
+    public Vector2Int GridPosition { get; set; }
+    public bool IsOccupiedByPlayer { get => isOccupiedByPlayer; set => isOccupiedByPlayer = value; }
+    
+    [SerializeField] private bool invertGravity;
     public bool InvertGravity => invertGravity;
 
-    public Vector2Int GridPosition 
-    { 
-        get => gridPosition; 
-        set => gridPosition = value; 
-    }
-
-    public bool IsLocked 
-    { 
-        get => isLocked; 
-        set => isLocked = value; 
-    }
-
-    public bool IsOccupiedByPlayer 
-    { 
-        get => isOccupiedByPlayer; 
-        set => isOccupiedByPlayer = value; 
-    }
-
-    [Header("Tile Dimensions")]
-    [SerializeField] private Vector2 tileSize = new Vector2(10f, 10f); // 타일(방)의 월드 크기
-
-    public Vector2 TileSize => tileSize;
-
     /// <summary>
-    /// 현재 타일이 드래그하여 이동 가능한 상태인지 확인
+    /// 드래그 가능 여부: 일반 타일이거나, 잠긴 타일인데 잠금이 풀렸을 때만 가능 (Fixed는 불가)
     /// </summary>
-    public bool CanMove => !isLocked && !isOccupiedByPlayer;
+    public bool CanMove => (tileType == TileType.Normal || (tileType == TileType.KeyLocked && !isLocked)) && !isOccupiedByPlayer;
 
     private void Start()
     {
-        // 1. 현재 월드 위치를 기반으로 가장 가까운 그리드 좌표 계산
-        gridPosition = GridManager.Instance.WorldToGrid(transform.position);
-
-        // 2. 계산된 좌표를 GridManager에 등록
+        GridPosition = GridManager.Instance.WorldToGrid(transform.position);
         GridManager.Instance.RegisterTile(this);
-
-        // 3. (선택 사항) 시작 시 타일 위치를 그리드 칸 정중앙으로 착 달라붙게 함
-        transform.position = GridManager.Instance.GridToWorld(gridPosition);
+        transform.position = GridManager.Instance.GridToWorld(GridPosition);
+        
+        UpdateState();
     }
 
     /// <summary>
-    /// 타일을 새로운 그리드 좌표로 이동시키고 월드 위치를 업데이트함
+    /// 외부(열쇠 시스템)에서 호출하여 잠금을 해제함
     /// </summary>
-    public void SetGridPosition(Vector2Int newPos)
+    public void Unlock()
     {
-        gridPosition = newPos;
-        // GridManager의 현재 위치를 반영하여 월드 좌표 업데이트
-        transform.position = GridManager.Instance.GridToWorld(newPos);
+        isLocked = false;
+        UpdateState();
+        Debug.Log($"{lockID}번 타일 잠금 해제!");
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void UpdateState()
     {
-        if (other.CompareTag("Player"))
+        // Normal 타입은 항상 잠기지 않은 상태(isLocked = false)로 간주
+        if (tileType == TileType.Normal) isLocked = false;
+
+        // 1. 물리 차단: 잠긴 상태(KeyLocked && isLocked)면 IsTrigger를 꺼서 벽으로 만듦
+        // 잠기지 않았거나 일반 타일이면 IsTrigger를 켜서 진입 가능하게 함
+        GetComponent<BoxCollider2D>().isTrigger = (tileType != TileType.KeyLocked || !isLocked);
+        
+        // 2. 시각화: 잠금 여부에 따라 지정된 색상 적용
+        if (borderRenderer != null)
         {
-            isOccupiedByPlayer = true;
+            borderRenderer.color = isLocked ? lockedColor : unlockedColor;
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    public void SetGridPosition(Vector2Int newPos)
     {
-        if (other.CompareTag("Player"))
+        GridPosition = newPos;
+        transform.position = GridManager.Instance.GridToWorld(newPos);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) { if (other.CompareTag("Player")) isOccupiedByPlayer = true; }
+    private void OnTriggerExit2D(Collider2D other) { if (other.CompareTag("Player")) isOccupiedByPlayer = false; }
+
+    private void OnValidate() 
+    { 
+        // 에디터에서 Normal 타입으로 변경하면 즉시 잠금 해제 상태로 보이게 함
+        if (tileType == TileType.Normal) isLocked = false;
+
+        if (borderRenderer != null) 
         {
-            isOccupiedByPlayer = false;
+            borderRenderer.color = isLocked ? lockedColor : unlockedColor;
         }
     }
 }
