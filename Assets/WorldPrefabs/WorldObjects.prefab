@@ -348,8 +348,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   rotationSpeed: 10
+  hoverScaleMultiplier: 1.05
   dragScaleMultiplier: 1.1
   dragSortingOrderOffset: 100
+  hintFont: {fileID: 11400000, guid: 71472e595d35e284c8a75c1480cf4892, type: 2}
+  occupiedTileHint: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC788\uB294 \uD0C0\uC77C\uC785\uB2C8\uB2E4"
+  fixedTileHint: "\uACE0\uC815\uB41C \uD0C0\uC77C\uC785\uB2C8\uB2E4"
+  playerInputtingHint: "\uD50C\uB808\uC774\uC5B4 \uC774\uB3D9 \uC911\uC5D0\uB294
+    \uC774\uB3D9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4"
+  hintColor: {r: 1, g: 0.993813, b: 0, a: 1}
+  hintFontSize: 3
+  hintFloatSpeed: 0.2
+  hintDuration: 2
 --- !u!114 &7995925562928146886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,11 +400,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.61
+      value: -5.87
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.66
+      value: -1.28
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.z
