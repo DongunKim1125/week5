@@ -27,6 +27,7 @@ public class DE_PlayerController : MonoBehaviour
     public float InputLockTimer { get; set; } = 0f;
 
     private float _externalVelocityX = 0f;
+    private DE_PlayerVisuals _visuals; // 추가: 시각 효과 스크립트 연결용 변수
 
     public bool IsInputting =>
         _horizontalInput != 0 ||
@@ -42,6 +43,8 @@ public class DE_PlayerController : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _initialScale = transform.localScale;
+        
+        _visuals = GetComponentInChildren<DE_PlayerVisuals>();
     }
 
     private void Update()
@@ -132,6 +135,7 @@ public class DE_PlayerController : MonoBehaviour
         if (!wasGrounded && _isGrounded && !touchedJumpObject)
         {
             CanReceiveBounceBonus = true;
+            _visuals?.TriggerLand();
         }
     }
 
@@ -140,6 +144,8 @@ public class DE_PlayerController : MonoBehaviour
         float jumpDirection = _rb.gravityScale > 0 ? 1f : -1f;
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0f);
         _rb.AddForce(Vector2.up * jumpDirection * jumpForce, ForceMode2D.Impulse);
+        
+        _visuals?.TriggerJump();
     }
 
     private void OnDrawGizmosSelected()
