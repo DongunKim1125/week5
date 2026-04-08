@@ -37,4 +37,5 @@ public class DE_PlayerHealth : MonoBehaviour
         // 사망 로그 출력 후 즉시 현재 스테이지 재시작
         Debug.Log("<color=red>플레이어 사망! 스테이지를 재시작합니다.</color>");
         SceneLoader.ReloadCurrentScene();
+    }
 }
