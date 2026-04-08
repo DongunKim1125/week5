@@ -55,11 +55,11 @@ public class StageClear : MonoBehaviour
         {
             if (stageList.stages[i].sceneName == currentSceneName)
             {
-                // 다음 인덱스의 스테이지가 있다면 잠금 해제
+                // 다음 인덱스의 스테이지가 있다면 잠금 해제 (PlayerPrefs 저장)
                 if (i + 1 < stageList.stages.Count)
                 {
-                    stageList.stages[i + 1].isUnlocked = true;
-                    Debug.Log($"다음 스테이지 ({stageList.stages[i+1].stageDisplayName}) 해제됨!");
+                    stageList.stages[i + 1].IsUnlocked = true;
+                    Debug.Log($"<color=cyan>해금 완료!</color> {stageList.stages[i+1].stageDisplayName} (Scene: {stageList.stages[i+1].sceneName})");
                 }
                 break;
             }
@@ -76,15 +76,16 @@ public class StageClear : MonoBehaviour
         {
             if (stageList.stages[i].sceneName == currentSceneName)
             {
-                // 다음 씬이 있다면 로딩, 없으면 스테이지 선택 화면으로
+                // 다음 씬이 있다면 로딩
                 if (i + 1 < stageList.stages.Count)
                 {
                     SceneLoader.LoadScene(stageList.stages[i + 1].sceneName);
                 }
+                // 다음 씬이 없다면 (마지막 스테이지 클리어)
                 else
                 {
-                    Debug.Log("모든 스테이지를 클리어했습니다!");
-                    SceneLoader.GoToStageSelect();
+                    Debug.Log("<color=yellow>축하합니다! 모든 스테이지를 클리어했습니다!</color>");
+                    SceneLoader.LoadScene("AllClearScene"); // 올 클리어 전용 씬으로 이동
                 }
                 return;
             }
