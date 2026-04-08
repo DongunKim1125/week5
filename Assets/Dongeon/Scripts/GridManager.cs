@@ -34,7 +34,9 @@ public class GridManager : MonoBehaviour
 
     [Header("Visualization")]
     [SerializeField] private bool showGrid = true;
+    [SerializeField] private bool showGridInGame = true; // 게임 뷰 표시 여부
     [SerializeField] private Color gridColor = Color.yellow;
+    [SerializeField] private float lineWidth = 0.05f;    // 선 두께
 
     private void Awake()
     {
@@ -44,6 +46,64 @@ public class GridManager : MonoBehaviour
             return;
         }
         _instance = this;
+    }
+
+    private void Start()
+    {
+        if (showGridInGame)
+        {
+            CreateGameGrid();
+        }
+    }
+
+    /// <summary>
+    /// 게임 실행 중(Game 뷰)에 보일 그리드 선을 생성함
+    /// </summary>
+    private void CreateGameGrid()
+    {
+        GameObject gridContainer = new GameObject("InGameGrid");
+        gridContainer.transform.SetParent(transform);
+        gridContainer.transform.localPosition = Vector3.zero;
+
+        Vector3 origin = transform.position;
+        float startX = origin.x - cellSize * 0.5f;
+        float startY = origin.y - cellSize * 0.5f;
+        float endX = origin.x + (width - 0.5f) * cellSize;
+        float endY = origin.y + (height - 0.5f) * cellSize;
+
+        // 세로선 생성
+        for (int x = 0; x <= width; x++)
+        {
+            float posX = startX + (x * cellSize);
+            CreateLine(gridContainer.transform, 
+                new Vector3(posX, startY, 0.1f), 
+                new Vector3(posX, endY, 0.1f));
+        }
+
+        // 가로선 생성
+        for (int y = 0; y <= height; y++)
+        {
+            float posY = startY + (y * cellSize);
+            CreateLine(gridContainer.transform, 
+                new Vector3(startX, posY, 0.1f), 
+                new Vector3(endX, posY, 0.1f));
+        }
+    }
+
+    private void CreateLine(Transform parent, Vector3 start, Vector3 end)
+    {
+        GameObject lineObj = new GameObject("GridLine");
+        lineObj.transform.SetParent(parent);
+        
+        LineRenderer lr = lineObj.AddComponent<LineRenderer>();
+        lr.material = new Material(Shader.Find("Sprites/Default")); // 기본 스프라이트 쉐이더 사용
+        lr.startColor = lr.endColor = gridColor;
+        lr.startWidth = lr.endWidth = lineWidth;
+        lr.positionCount = 2;
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
+        lr.useWorldSpace = true;
+        lr.sortingOrder = -10; // 타일보다 뒤에 그려지도록 설정
     }
 
     /// <summary>

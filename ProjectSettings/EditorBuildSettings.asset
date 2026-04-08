@@ -5,9 +5,24 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Dongeon/Scenes/TitleScene.unity
+    guid: 95b14e84ece457647b15ff7ab2fb1ff9
+  - enabled: 1
+    path: Assets/Dongeon/Scenes/Stages/DongScene.unity
+    guid: 38a75287b4a452b448b3aed8e3b99ae9
+  - enabled: 1
+    path: Assets/Dongeon/Scenes/StageSelectScene.unity
+    guid: 4aca0ea7839722c4ebbebb23a79e9a8f
+  - enabled: 1
+    path: Assets/Dongeon/Scenes/Stages/Dong_Stage1.unity
+    guid: 519dd16b36ed8a545b0327e405da4052
+  - enabled: 1
+    path: Assets/Dongeon/Scenes/Stages/Dong_Stage2.unity
+    guid: 4127e046f082be64aa5583d3ee6d5a54
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
