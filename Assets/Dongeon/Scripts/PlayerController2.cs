@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 플레이어의 좌우 이동과 타일 기반 중력 제어를 담당하는 클래스
 /// </summary>
-public class DE_PlayerController : MonoBehaviour
+public class PlayerController2 : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
@@ -98,5 +98,22 @@ public class DE_PlayerController : MonoBehaviour
         Gizmos.color = _isGrounded ? Color.green : Color.red;
         Vector3 checkPos = transform.position + (Vector3.up * direction * castDistance);
         Gizmos.DrawWireCube(checkPos, boxSize);
+    }
+
+    /// <summary>
+    /// 열쇠 등 트리거 충돌 감지
+    /// </summary>
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // 충돌한 오브젝트에 Key 컴포넌트가 있는지 확인
+        if (other.TryGetComponent<Key>(out Key key))
+        {
+            // KeyManager에 획득 알림
+            KeyManager.Instance.OnKeyCollected(key.KeyID);
+            
+            // 열쇠 오브젝트 파괴
+            Destroy(other.gameObject);
+            Debug.Log($"{key.KeyID}번 열쇠를 획득했습니다!");
+        }
     }
 }
