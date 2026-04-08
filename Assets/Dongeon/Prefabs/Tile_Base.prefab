@@ -155,7 +155,12 @@ MonoBehaviour:
   lockID: 0
   isLocked: 0
   isOccupiedByPlayer: 0
+  invertGravity: 0
   lockedColor: {r: 1, g: 0.6556604, b: 0.6556604, a: 1}
   unlockedColor: {r: 1, g: 1, b: 1, a: 1}
+  invertGravityColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+  fixedColor: {r: 0.8, g: 0.8, b: 0.8, a: 1}
   borderRenderer: {fileID: 2023543980693714417}
-  invertGravity: 0
+  nailSprite: {fileID: -6236935491567674646, guid: e01840d19d275df42978c66eaf776b01, type: 3}
+  nailOffset: 0.4
+  dashedLineMaterial: {fileID: 0}
