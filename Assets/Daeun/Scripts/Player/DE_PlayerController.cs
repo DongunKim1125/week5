@@ -19,6 +19,18 @@ public class DE_PlayerController : MonoBehaviour
     private Vector3 _initialScale; // 플레이어의 초기 크기 저장
     private bool _isGrounded; //점프를 위한 지면감지
 
+
+    /// <summary>
+    /// 플레이어가 현재 이동 입력을 주거나 공중에 떠있는지(조작 중인지) 여부
+    /// </summary>
+    public bool IsInputting => 
+        _horizontalInput != 0 || 
+        Input.GetKey(KeyCode.LeftArrow) || 
+        Input.GetKey(KeyCode.RightArrow) || 
+        Input.GetKey(KeyCode.A) || 
+        Input.GetKey(KeyCode.D) || 
+        !_isGrounded;
+
     //외부에서 읽을 수 있는 플레이어 최고 높이
     public float MaxHeightInAir { get; private set; }
 
@@ -30,6 +42,15 @@ public class DE_PlayerController : MonoBehaviour
 
     private void Update()
     {
+        // 타일 드래그 중에는 모든 조작 차단
+        TileInputHandler inputHandler = FindFirstObjectByType<TileInputHandler>();
+        if (inputHandler != null && inputHandler.IsDragging)
+        {
+            _horizontalInput = 0;
+            _rb.linearVelocity = new Vector2(0, _rb.linearVelocity.y);
+            return;
+        }
+
         // 1. 좌우 입력 감지
         _horizontalInput = Input.GetAxisRaw("Horizontal");
 
