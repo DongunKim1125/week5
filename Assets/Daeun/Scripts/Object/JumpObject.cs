@@ -75,14 +75,22 @@ public class JumpObject : MonoBehaviour
         Vector2 blockCenter = selfCollider != null ? (Vector2)selfCollider.bounds.center : (Vector2)transform.position;
         Vector2 playerCenter = collision.collider != null ? (Vector2)collision.collider.bounds.center : (Vector2)collision.transform.position;
         Vector2 delta = playerCenter - blockCenter;
+        Vector2 blockExtents = selfCollider != null ? selfCollider.bounds.extents : Vector2.one;
+        Vector2 normalizedDelta = new Vector2(
+            Mathf.Abs(blockExtents.x) > 0.0001f ? Mathf.Abs(delta.x) / blockExtents.x : Mathf.Abs(delta.x),
+            Mathf.Abs(blockExtents.y) > 0.0001f ? Mathf.Abs(delta.y) / blockExtents.y : Mathf.Abs(delta.y)
+        );
 
-        if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+        if (normalizedDelta.x > normalizedDelta.y * 1.1f)
             return new Vector2(Mathf.Sign(delta.x), 0f);
 
-        if (Mathf.Abs(delta.y) > 0.0001f)
+        if (normalizedDelta.y > normalizedDelta.x * 1.1f)
             return new Vector2(0f, Mathf.Sign(delta.y));
 
         Vector2 normal = collision.contacts[0].normal;
+        if (Mathf.Abs(normal.x) > Mathf.Abs(normal.y))
+            return new Vector2(Mathf.Sign(-normal.x), 0f);
+
         return -normal.normalized;
     }
 
