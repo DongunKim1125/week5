@@ -160,6 +160,7 @@ MonoBehaviour:
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
   unlockedColor: {r: 1, g: 1, b: 1, a: 1}
   invertGravityColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+  hoverSortingOrderOffset: 50
   fixedBrightness: 0.9
   borderRenderer: {fileID: 6270105272533751257}
   nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
