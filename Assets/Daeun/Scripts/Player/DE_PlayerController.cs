@@ -104,4 +104,18 @@ public class DE_PlayerController : MonoBehaviour
         Vector3 checkPos = transform.position + (Vector3.up * direction * castDistance);
         Gizmos.DrawWireCube(checkPos, boxSize);
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        // 충돌한 오브젝트에 Key 컴포넌트가 있는지 확인
+        if (other.TryGetComponent<Key>(out Key key))
+        {
+            // KeyManager에 획득 알림
+            KeyManager.Instance.OnKeyCollected(key.KeyID);
+            
+            // 열쇠 오브젝트 파괴
+            Destroy(other.gameObject);
+            Debug.Log($"{key.KeyID}번 열쇠를 획득했습니다!");
+        }
+    }
 }
