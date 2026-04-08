@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 7353211979876054909}
   - component: {fileID: 6025838115977835370}
   - component: {fileID: 2357504992594875000}
+  - component: {fileID: 8408395214871956157}
   m_Layer: 10
   m_Name: TestPlayer
   m_TagString: Player
@@ -200,7 +201,7 @@ Transform:
   m_GameObject: {fileID: 7960080745290059635}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.8, y: 1.7, z: 0}
+  m_LocalPosition: {x: -5.85, y: -1.68, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -318,7 +319,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0
   m_GravityScale: 5
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 35572f1d5fc706c499bb96c55312bcc2, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -347,8 +348,20 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
-  castDistance: 0.5
-  boxSize: {x: 0.5, y: 0.1}
+  castDistance: 0.3
+  boxSize: {x: 0.2, y: 0.1}
+--- !u!114 &8408395214871956157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7960080745290059635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b24dc1f0d7da1224e8bef34223baaca8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
 --- !u!1 &8612569524975500859
 GameObject:
   m_ObjectHideFlags: 0
