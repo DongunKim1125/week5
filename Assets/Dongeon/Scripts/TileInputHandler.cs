@@ -68,7 +68,7 @@ public class TileInputHandler : MonoBehaviour
     private void TrySelectTile()
     {
         // 플레이어가 현재 입력 중(이동, 점프 등)이면 타일 선택 차단
-        PlayerController2 player = FindFirstObjectByType<PlayerController2>();
+        DE_PlayerController player = FindFirstObjectByType<DE_PlayerController>();
         if (player != null && player.IsInputting)
         {
             Debug.Log("플레이어 조작 중: 타일 이동 불가");
