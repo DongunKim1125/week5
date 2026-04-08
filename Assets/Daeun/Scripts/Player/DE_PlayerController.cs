@@ -22,6 +22,7 @@ public class DE_PlayerController : MonoBehaviour
     private float _horizontalInput;
     private Vector3 _initialScale;
     private bool _isGrounded;
+    public bool CanReceiveBounceBonus { get; set; } = true; // 점프대 보정값을 받을 수 있는지 확인하는 bool
 
     /// <summary>
     /// DashObject가 설정하는 입력 차단 타이머.
@@ -117,7 +118,15 @@ public class DE_PlayerController : MonoBehaviour
     {
         float direction = _rb.gravityScale > 0 ? -1f : 1f;
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.up * direction, castDistance, groundLayer);
+        
+        bool wasGrounded = _isGrounded;
         _isGrounded = hit.collider != null;
+
+        // 공중에 있다가 방금 새롭게 땅(groundLayer)에 닿았다면 보정값 상태 초기화
+        if (!wasGrounded && _isGrounded)
+        {
+            CanReceiveBounceBonus = true;
+        }
     }
 
     private void Jump()
