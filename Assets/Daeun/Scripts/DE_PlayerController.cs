@@ -3,14 +3,21 @@ using UnityEngine;
 /// <summary>
 /// 플레이어의 좌우 이동과 타일 기반 중력 제어를 담당하는 클래스
 /// </summary>
-public class PlayerController : MonoBehaviour
+public class DE_PlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpForce = 10f;
+
+    [Header("Ground Check Settings")]
+    [SerializeField] private LayerMask groundLayer;   // 타일 레이어 설정 필요
+    [SerializeField] private float castDistance = 0.1f; // 지면 감지 거리
+    [SerializeField] private Vector2 boxSize = new Vector2(0.5f, 0.1f); // 감지 영역 크기
     
     private Rigidbody2D _rb;
     private float _horizontalInput;
     private Vector3 _initialScale; // 플레이어의 초기 크기 저장
+    private bool _isGrounded; //점프를 위한 지면감지
 
     private void Awake()
     {
@@ -25,6 +32,13 @@ public class PlayerController : MonoBehaviour
 
         // 2. 현재 위치한 타일 확인 및 중력 처리
         UpdateGravityBasedOnTile();
+
+        // 3. 지면 확인 및 점프 입력
+        CheckGrounded();
+        if (Input.GetButtonDown("Jump") && _isGrounded)
+        {
+            Jump();
+        }
     }
 
     private void FixedUpdate()
@@ -54,5 +68,35 @@ public class PlayerController : MonoBehaviour
             float flipY = currentTile.InvertGravity ? -_initialScale.y : _initialScale.y;
             transform.localScale = new Vector3(_initialScale.x, flipY, _initialScale.z);
         }
+    }
+
+    //점프를 위한 지면 감지
+    private void CheckGrounded()
+    {
+        // 중력이 양수면 아래(-1), 음수면 위(1) 방향으로 레이캐스트 발사
+        float direction = _rb.gravityScale > 0 ? -1f : 1f;
+        RaycastHit2D hit = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.up * direction, castDistance, groundLayer);
+        
+        _isGrounded = hit.collider != null;
+    }
+
+    private void Jump()
+    {
+        // 중력 방향의 반대 방향으로 힘을 가함
+        float jumpDirection = _rb.gravityScale > 0 ? 1f : -1f;
+        
+        // 기존 수직 속도를 초기화하여 중첩 점프 힘 방지
+        _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
+        _rb.AddForce(Vector2.up * jumpDirection * jumpForce, ForceMode2D.Impulse);
+    }
+
+    //지면 체크 범위 기즈모
+    private void OnDrawGizmosSelected()
+    {
+        if (_rb == null) return;
+        float direction = _rb.gravityScale > 0 ? -1f : 1f;
+        Gizmos.color = _isGrounded ? Color.green : Color.red;
+        Vector3 checkPos = transform.position + (Vector3.up * direction * castDistance);
+        Gizmos.DrawWireCube(checkPos, boxSize);
     }
 }
