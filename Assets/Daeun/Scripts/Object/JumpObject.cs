@@ -65,6 +65,7 @@ public class JumpObject : MonoBehaviour
         Vector2 appliedForce = bounceDirection * requiredSpeed;
         controller.ApplyExternalForce(appliedForce);
         controller.InputLockTimer = GetDirectionalInputLockTime(bounceDirection);
+        controller.GetComponentInChildren<DE_PlayerVisuals>()?.TriggerBounce(bounceDirection);
 
         Debug.Log($"[Bounce] fallHeight: {fallHeight:F1} | targetHeight: {targetHeight:F1} | speed: {requiredSpeed:F1}");
     }
