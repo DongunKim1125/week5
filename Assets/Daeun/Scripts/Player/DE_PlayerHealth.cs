@@ -34,8 +34,7 @@ public class DE_PlayerHealth : MonoBehaviour
         if (_isDead) return;
         _isDead = true;
 
-        // 요청하신 대로 디버그 로그 출력 후 오브젝트 파괴
-        Debug.Log("<color=red>플레이어 사망!</color>");
-        Destroy(gameObject);
-    }
+        // 사망 로그 출력 후 즉시 현재 스테이지 재시작
+        Debug.Log("<color=red>플레이어 사망! 스테이지를 재시작합니다.</color>");
+        SceneLoader.ReloadCurrentScene();
 }
