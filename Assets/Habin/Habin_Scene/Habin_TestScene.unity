@@ -527,7 +527,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2857717481869603914, guid: 9055b7496fbd3314a9523ad0080f8b6e, type: 3}
       propertyPath: invertGravity
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2857717481869603914, guid: 9055b7496fbd3314a9523ad0080f8b6e, type: 3}
       propertyPath: borderRenderer
