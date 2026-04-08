@@ -19,6 +19,9 @@ public class DE_PlayerController : MonoBehaviour
     private Vector3 _initialScale; // 플레이어의 초기 크기 저장
     private bool _isGrounded; //점프를 위한 지면감지
 
+    //외부에서 읽을 수 있는 플레이어 최고 높이
+    public float MaxHeightInAir { get; private set; }
+
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
@@ -39,6 +42,8 @@ public class DE_PlayerController : MonoBehaviour
         {
             Jump();
         }
+
+        //UpdateMaxHeight();
     }
 
     private void FixedUpdate()
