@@ -11,6 +11,7 @@ public class JumpObject : MonoBehaviour
 
     private float _playerMaxY = float.MinValue;
     private bool _hasJumped = false;
+    private bool _isMaxYLocked = false; // 높이 계산 고정을 위한 플래그 추가
     private Vector2Int _lastGridPos;
     private Tile _parentTile;
 
@@ -43,14 +44,14 @@ public class JumpObject : MonoBehaviour
 
     private void TrackPlayerMaxY()
     {
-        // 씬 내의 플레이어를 찾음 (성능 최적화가 필요할 경우 참조 저장 권장)
+        // 이미 최고 높이가 계산되어 고정된 상태라면 갱신하지 않음
+        if (_isMaxYLocked) return;
+
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player == null) return;
 
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         
-        // 지면에 닿아있지 않을 때만 최고 높이 갱신
-        // DE_PlayerController의 _isGrounded 상태를 확인하거나 물리 엔진 속도로 판단
         if (Mathf.Abs(rb.linearVelocity.y) > 0.1f)
         {
             _playerMaxY = Mathf.Max(_playerMaxY, player.transform.position.y);
@@ -72,37 +73,46 @@ public class JumpObject : MonoBehaviour
         Rigidbody2D rb = player.GetComponent<Rigidbody2D>();
         if (rb == null) return;
 
+        // 높이가 고정되지 않은 최초 점프 시에만 _playerMaxY를 확정
+        // (플레이어가 점프대에 닿기 전에 충분한 낙하를 하지 않았을 경우를 대비한 최소값 방어)
+        if (_playerMaxY == float.MinValue)
+        {
+            _playerMaxY = player.transform.position.y;
+        }
+
         // 1. 목표 높이 계산
-        // 플레이어 최고점 + 타일 크기의 1/2
         float targetHeightValue = _playerMaxY + (tileSize.y * 0.5f);
         float currentY = player.transform.position.y;
         float displacementY = Mathf.Abs(targetHeightValue - currentY);
 
-        // 2. 필요한 초기 속도 계산 (에너지 보존 법칙 활용)
-        // v = sqrt(2 * g * h)
+        // 2. 필요한 초기 속도 계산
         float gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
         float requiredVelocityY = Mathf.Sqrt(2 * gravity * displacementY);
 
         // 3. 중력 방향에 따른 속도 적용
         float direction = rb.gravityScale > 0 ? 1f : -1f;
         
-        // X축 속도는 유지, Y축은 계산된 속도로 덮어쓰기 (포물선 운동 시작)
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, requiredVelocityY * direction);
 
         _hasJumped = true;
-        Debug.Log($"Jump Triggered! Target Height: {targetHeightValue}");
+        _isMaxYLocked = true; // 이후 점프 시 _playerMaxY가 갱신되지 않도록 잠금
+
+        Debug.Log($"Jump Triggered! Fixed Target Height: {targetHeightValue}");
     }
 
     private void ResetJumpData()
     {
         _playerMaxY = float.MinValue;
         _hasJumped = false;
+        _isMaxYLocked = false; // 타일 이동 시 잠금 해제
         Debug.Log("Tile Moved: Jump Data Reset.");
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    // OnCollisionExit2D 대신 OnTriggerExit2D 사용 (OnTriggerEnter2D와 쌍을 맞춤)
+    private void OnTriggerExit2D(Collider2D collision)
     {
-        // 플레이어가 점프대를 완전히 벗어나면 다시 점프 가능하도록 설정 (필요 시)
+        // 플레이어가 점프대를 완전히 벗어나면 다시 점프 가능하도록 설정
+        // 계속 밟고 통통 튀는 동작을 위해 필수적
         if (((1 << collision.gameObject.layer) & playerLayer) != 0)
         {
             _hasJumped = false;
