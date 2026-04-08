@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2703d0c539f71ba4db0f5b5557cfaae7, type: 3}
+  m_Name: Dong_StageList
+  m_EditorClassIdentifier: Assembly-CSharp::StageList
+  stages:
+  - {fileID: 11400000, guid: ca5dc22ac57c72342a32e09128d6761b, type: 2}
+  - {fileID: 11400000, guid: 7c4f015c742dafb4ab417046c1fba455, type: 2}
+  - {fileID: 11400000, guid: be7867c546336d148b6cc2184364a266, type: 2}
