@@ -9,40 +9,48 @@ public class DE_PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float jumpForce = 10f;
 
+    [Header("Knockback Settings (신규)")]
+    [Tooltip("수평으로 밀려난 힘이 서서히 줄어드는 속도 (공기 저항 역할)")]
+    [SerializeField] private float knockbackDecay = 15f;
+
     [Header("Ground Check Settings")]
-    [SerializeField] private LayerMask groundLayer;   // 타일 레이어 설정 필요
-    [SerializeField] private float castDistance = 0.1f; // 지면 감지 거리
-    [SerializeField] private Vector2 boxSize = new Vector2(0.5f, 0.1f); // 감지 영역 크기
-    
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private float castDistance = 0.1f;
+    [SerializeField] private Vector2 boxSize = new Vector2(0.5f, 0.1f);
+
     private Rigidbody2D _rb;
     private float _horizontalInput;
-    private Vector3 _initialScale; // 플레이어의 초기 크기 저장
-    private bool _isGrounded; //점프를 위한 지면감지
-
+    private Vector3 _initialScale;
+    private bool _isGrounded;
+    public bool CanReceiveBounceBonus { get; set; } = true; // 점프대 보정값을 받을 수 있는지 확인하는 bool
 
     /// <summary>
-    /// 플레이어가 현재 이동 입력을 주거나 공중에 떠있는지(조작 중인지) 여부
+    /// DashObject가 설정하는 입력 차단 타이머.
+    /// 0보다 크면 MovePlayer()가 속도를 덮어쓰지 않아 대쉬 속도가 유지된다.
     /// </summary>
-    public bool IsInputting => 
-        _horizontalInput != 0 || 
-        Input.GetKey(KeyCode.LeftArrow) || 
-        Input.GetKey(KeyCode.RightArrow) || 
-        Input.GetKey(KeyCode.A) || 
-        Input.GetKey(KeyCode.D) || 
+    public float DashLockTimer { get; set; } = 0f;
+    
+    // 외부에서 받은 수평 속도를 저장할 변수
+    private float _externalVelocityX = 0f;
+
+    public bool IsInputting =>
+        _horizontalInput != 0 ||
+        Input.GetKey(KeyCode.LeftArrow) ||
+        Input.GetKey(KeyCode.RightArrow) ||
+        Input.GetKey(KeyCode.A) ||
+        Input.GetKey(KeyCode.D) ||
         !_isGrounded;
 
-    //외부에서 읽을 수 있는 플레이어 최고 높이
     public float MaxHeightInAir { get; private set; }
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
-        _initialScale = transform.localScale; // 시작 시 인스펙터에 설정된 크기 저장
+        _initialScale = transform.localScale;
     }
 
     private void Update()
     {
-        // 타일 드래그 중에는 모든 조작 차단
         TileInputHandler inputHandler = FindFirstObjectByType<TileInputHandler>();
         if (inputHandler != null && inputHandler.IsDragging)
         {
@@ -51,72 +59,83 @@ public class DE_PlayerController : MonoBehaviour
             return;
         }
 
-        // 1. 좌우 입력 감지
         _horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        // 2. 현재 위치한 타일 확인 및 중력 처리
         UpdateGravityBasedOnTile();
-
-        // 3. 지면 확인 및 점프 입력
         CheckGrounded();
-        if (Input.GetButtonDown("Jump") && _isGrounded)
-        {
-            Jump();
-        }
 
-        //UpdateMaxHeight();
+        if (Input.GetButtonDown("Jump") && _isGrounded)
+            Jump();
     }
 
     private void FixedUpdate()
     {
-        // 3. 물리적 이동 처리
+        // 1. 외부 수평 힘을 서서히 0으로 감소 (마찰력 효과)
+        if (Mathf.Abs(_externalVelocityX) > 0.01f)
+        {
+            // MoveTowards를 사용하여 일정한 속도로 0을 향해 감소시킴
+            _externalVelocityX = Mathf.MoveTowards(_externalVelocityX, 0f, knockbackDecay * Time.fixedDeltaTime);
+        }
+        else
+        {
+            _externalVelocityX = 0f;
+        }
+        
+        // 대쉬 잠금 타이머 감산
+        if (DashLockTimer > 0f)
+        {
+            DashLockTimer -= Time.fixedDeltaTime;
+            return; // 타이머가 남아있는 동안 속도 덮어쓰기 건너뜀
+        }
+
         MovePlayer();
     }
 
     private void MovePlayer()
     {
-        _rb.linearVelocity = new Vector2(_horizontalInput * moveSpeed, _rb.linearVelocity.y);
+        // 핵심 변경점: 플레이어의 기본 방향키 속도 + 점프대로 인한 외부 속도를 합산
+        float finalVelocityX = (_horizontalInput * moveSpeed) + _externalVelocityX;
+        
+        _rb.linearVelocity = new Vector2(finalVelocityX, _rb.linearVelocity.y);
     }
 
     private void UpdateGravityBasedOnTile()
     {
-        // 현재 위치의 그리드 좌표와 타일 가져오기
         Vector2Int gridPos = GridManager.Instance.WorldToGrid(transform.position);
         Tile currentTile = GridManager.Instance.GetTileAt(gridPos);
 
         if (currentTile != null)
         {
-            // 타일의 InvertGravity 값에 따라 Rigidbody2D의 중력 스케일 조절
             float targetGravity = currentTile.InvertGravity ? -1f : 1f;
             _rb.gravityScale = targetGravity;
 
-            // 초기 크기를 유지하면서 Y축만 반전
             float flipY = currentTile.InvertGravity ? -_initialScale.y : _initialScale.y;
             transform.localScale = new Vector3(_initialScale.x, flipY, _initialScale.z);
         }
     }
 
-    //점프를 위한 지면 감지
     private void CheckGrounded()
     {
-        // 중력이 양수면 아래(-1), 음수면 위(1) 방향으로 레이캐스트 발사
         float direction = _rb.gravityScale > 0 ? -1f : 1f;
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.up * direction, castDistance, groundLayer);
         
+        bool wasGrounded = _isGrounded;
         _isGrounded = hit.collider != null;
+
+        // 공중에 있다가 방금 새롭게 땅(groundLayer)에 닿았다면 보정값 상태 초기화
+        if (!wasGrounded && _isGrounded)
+        {
+            CanReceiveBounceBonus = true;
+        }
     }
 
     private void Jump()
     {
-        // 중력 방향의 반대 방향으로 힘을 가함
         float jumpDirection = _rb.gravityScale > 0 ? 1f : -1f;
-        
-        // 기존 수직 속도를 초기화하여 중첩 점프 힘 방지
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0);
         _rb.AddForce(Vector2.up * jumpDirection * jumpForce, ForceMode2D.Impulse);
     }
 
-    //지면 체크 범위 기즈모
     private void OnDrawGizmosSelected()
     {
         if (_rb == null) return;
@@ -128,15 +147,26 @@ public class DE_PlayerController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 충돌한 오브젝트에 Key 컴포넌트가 있는지 확인
         if (other.TryGetComponent<Key>(out Key key))
         {
-            // KeyManager에 획득 알림
             KeyManager.Instance.OnKeyCollected(key.KeyID);
-            
-            // 열쇠 오브젝트 파괴
             Destroy(other.gameObject);
             Debug.Log($"{key.KeyID}번 열쇠를 획득했습니다!");
         }
+    }
+
+    /// <summary>
+    /// 점프대 등 외부 요인에 의해 플레이어가 날아갈 때 호출
+    /// </summary>
+    public void ApplyExternalForce(Vector2 force)
+    {
+        // 1. 궤적을 깔끔하게 만들기 위해 기존 속도 초기화
+        _rb.linearVelocity = Vector2.zero;
+
+        // 2. X축(수평) 힘은 따로 변수에 담아 MovePlayer()에서 자연스럽게 섞이고 감소하도록 함
+        _externalVelocityX = force.x;
+
+        // 3. Y축(수직) 힘은 유니티 물리엔진(중력)이 자연스럽게 처리하도록 AddForce 적용
+        _rb.AddForce(new Vector2(0, force.y), ForceMode2D.Impulse);
     }
 }
