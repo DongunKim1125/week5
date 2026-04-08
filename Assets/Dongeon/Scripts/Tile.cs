@@ -44,8 +44,14 @@ public class Tile : MonoBehaviour
 
     private void Start()
     {
-        // 게임 시작 시 자신의 초기 위치를 GridManager에 등록
+        // 1. 현재 월드 위치를 기반으로 가장 가까운 그리드 좌표 계산
+        gridPosition = GridManager.Instance.WorldToGrid(transform.position);
+
+        // 2. 계산된 좌표를 GridManager에 등록
         GridManager.Instance.RegisterTile(this);
+
+        // 3. (선택 사항) 시작 시 타일 위치를 그리드 칸 정중앙으로 착 달라붙게 함
+        transform.position = GridManager.Instance.GridToWorld(gridPosition);
     }
 
     /// <summary>

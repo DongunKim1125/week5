@@ -10,10 +10,12 @@ public class PlayerController : MonoBehaviour
     
     private Rigidbody2D _rb;
     private float _horizontalInput;
+    private Vector3 _initialScale; // 플레이어의 초기 크기 저장
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _initialScale = transform.localScale; // 시작 시 인스펙터에 설정된 크기 저장
     }
 
     private void Update()
@@ -45,12 +47,12 @@ public class PlayerController : MonoBehaviour
         if (currentTile != null)
         {
             // 타일의 InvertGravity 값에 따라 Rigidbody2D의 중력 스케일 조절
-            // 일반 중력: 1.0, 반전 중력: -1.0
             float targetGravity = currentTile.InvertGravity ? -1f : 1f;
             _rb.gravityScale = targetGravity;
 
-            // 중력 반전 시 캐릭터 위아래 뒤집기 (시각적 연출)
-            transform.localScale = new Vector3(1, currentTile.InvertGravity ? -1 : 1, 1);
+            // 초기 크기를 유지하면서 Y축만 반전
+            float flipY = currentTile.InvertGravity ? -_initialScale.y : _initialScale.y;
+            transform.localScale = new Vector3(_initialScale.x, flipY, _initialScale.z);
         }
     }
 }
