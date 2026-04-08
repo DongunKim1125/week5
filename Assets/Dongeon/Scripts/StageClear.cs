@@ -55,11 +55,11 @@ public class StageClear : MonoBehaviour
         {
             if (stageList.stages[i].sceneName == currentSceneName)
             {
-                // 다음 인덱스의 스테이지가 있다면 잠금 해제
+                // 다음 인덱스의 스테이지가 있다면 잠금 해제 (PlayerPrefs 저장)
                 if (i + 1 < stageList.stages.Count)
                 {
-                    stageList.stages[i + 1].isUnlocked = true;
-                    Debug.Log($"다음 스테이지 ({stageList.stages[i+1].stageDisplayName}) 해제됨!");
+                    stageList.stages[i + 1].IsUnlocked = true;
+                    Debug.Log($"<color=cyan>해금 완료!</color> {stageList.stages[i+1].stageDisplayName} (Scene: {stageList.stages[i+1].sceneName})");
                 }
                 break;
             }

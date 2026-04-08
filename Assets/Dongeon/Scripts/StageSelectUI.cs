@@ -44,7 +44,7 @@ public class StageSelectUI : MonoBehaviour
             Button btn = btnObj.GetComponent<Button>();
             if (btn != null)
             {
-                btn.interactable = stage.isUnlocked;
+                btn.interactable = stage.IsUnlocked; // PlayerPrefs에서 저장된 값 확인
                 btn.onClick.AddListener(() => SceneLoader.LoadScene(stage.sceneName));
             }
         }
