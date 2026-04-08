@@ -29,6 +29,7 @@ public class DE_PlayerController : MonoBehaviour
     /// 0보다 크면 MovePlayer()가 속도를 덮어쓰지 않아 대쉬 속도가 유지된다.
     /// </summary>
     public float DashLockTimer { get; set; } = 0f;
+    public float InputLockTimer { get; set; } = 0f;
     
     // 외부에서 받은 수평 속도를 저장할 변수
     private float _externalVelocityX = 0f;
@@ -59,10 +60,17 @@ public class DE_PlayerController : MonoBehaviour
             return;
         }
 
-        _horizontalInput = Input.GetAxisRaw("Horizontal");
-
         UpdateGravityBasedOnTile();
         CheckGrounded();
+
+        if (InputLockTimer > 0f)
+        {
+            _horizontalInput = 0f;
+            InputLockTimer -= Time.deltaTime;
+            return;
+        }
+
+        _horizontalInput = Input.GetAxisRaw("Horizontal");
 
         if (Input.GetButtonDown("Jump") && _isGrounded)
             Jump();
