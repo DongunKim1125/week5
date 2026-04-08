@@ -22,6 +22,7 @@ public class DE_PlayerController : MonoBehaviour
     private float _horizontalInput;
     private Vector3 _initialScale;
     private bool _isGrounded;
+    public bool CanReceiveBounceBonus { get; set; } = true; // 점프대 보정값을 받을 수 있는지 확인하는 bool
 
     /// <summary>
     /// DashObject가 설정하는 입력 차단 타이머.
@@ -62,11 +63,9 @@ public class DE_PlayerController : MonoBehaviour
 
         UpdateGravityBasedOnTile();
         CheckGrounded();
-        
+
         if (Input.GetButtonDown("Jump") && _isGrounded)
-        {
             Jump();
-        }
     }
 
     private void FixedUpdate()
@@ -81,8 +80,6 @@ public class DE_PlayerController : MonoBehaviour
         {
             _externalVelocityX = 0f;
         }
-
-        // 2. 물리적 이동 처리
         
         // 대쉬 잠금 타이머 감산
         if (DashLockTimer > 0f)
@@ -121,7 +118,15 @@ public class DE_PlayerController : MonoBehaviour
     {
         float direction = _rb.gravityScale > 0 ? -1f : 1f;
         RaycastHit2D hit = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.up * direction, castDistance, groundLayer);
+        
+        bool wasGrounded = _isGrounded;
         _isGrounded = hit.collider != null;
+
+        // 공중에 있다가 방금 새롭게 땅(groundLayer)에 닿았다면 보정값 상태 초기화
+        if (!wasGrounded && _isGrounded)
+        {
+            CanReceiveBounceBonus = true;
+        }
     }
 
     private void Jump()
@@ -146,6 +151,7 @@ public class DE_PlayerController : MonoBehaviour
         {
             KeyManager.Instance.OnKeyCollected(key.KeyID);
             Destroy(other.gameObject);
+            Debug.Log($"{key.KeyID}번 열쇠를 획득했습니다!");
         }
     }
 
