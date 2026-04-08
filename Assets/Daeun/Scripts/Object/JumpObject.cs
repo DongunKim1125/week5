@@ -15,6 +15,9 @@ public class JumpObject : MonoBehaviour
     private Vector2Int _lastGridPos;
     private Tile _parentTile;
 
+    
+
+
     private void Awake()
     {
         _parentTile = GetComponentInParent<Tile>();
