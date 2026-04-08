@@ -125,13 +125,23 @@ public class DE_PlayerController : MonoBehaviour
     private void CheckGrounded()
     {
         float direction = _rb.gravityScale > 0 ? -1f : 1f;
-        RaycastHit2D hit = Physics2D.BoxCast(transform.position, boxSize, 0f, Vector2.up * direction, castDistance, groundLayer);
-        
-        bool wasGrounded = _isGrounded;
-        _isGrounded = hit.collider != null;
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(transform.position, boxSize, 0f, Vector2.up * direction, castDistance, groundLayer);
 
-        // 공중에 있다가 방금 새롭게 땅(groundLayer)에 닿았다면 보정값 상태 초기화
-        if (!wasGrounded && _isGrounded)
+        bool wasGrounded = _isGrounded;
+        _isGrounded = hits.Length > 0;
+
+        bool touchedJumpObject = false;
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider != null && hits[i].collider.GetComponentInParent<JumpObject>() != null)
+            {
+                touchedJumpObject = true;
+                break;
+            }
+        }
+
+        // 일반 바닥에 새로 닿았을 때만 보정값 상태를 초기화한다.
+        if (!wasGrounded && _isGrounded && !touchedJumpObject)
         {
             CanReceiveBounceBonus = true;
         }
