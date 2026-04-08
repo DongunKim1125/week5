@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5320592772395010238}
   - component: {fileID: 710924070291214312}
   - component: {fileID: 2488211349816132508}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Flatform
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.92, y: -2.37, z: 0}
-  m_LocalScale: {x: 2.3182, y: 0.7489, z: 1}
+  m_LocalScale: {x: 1.0007448, y: 0.31802395, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
