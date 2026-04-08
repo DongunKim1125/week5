@@ -892,23 +892,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1439517578035162458, guid: 4ae068c04632a32429411ae03ad4b526, type: 3}
   m_PrefabInstance: {fileID: 1147602426}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1222434958 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7960080745290059635, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-  m_PrefabInstance: {fileID: 1931195586427526714}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1222434964
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1222434958}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b24dc1f0d7da1224e8bef34223baaca8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
 --- !u!1001 &1242996916
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1906,6 +1889,14 @@ PrefabInstance:
       propertyPath: castDistance
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 4710312637648358028, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 4710312637648358028, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.53
+      objectReference: {fileID: 0}
     - target: {fileID: 5600497458870583303, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1957,10 +1948,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7960080745290059635, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1222434964}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
