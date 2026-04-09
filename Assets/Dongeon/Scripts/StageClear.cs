@@ -74,7 +74,7 @@ public class StageClear : MonoBehaviour
         LoadNextStageScene();
     }
 
-    private void UnlockNextStage()
+    public void UnlockNextStage()
     {
         if (stageList == null) return;
 
