@@ -30,7 +30,7 @@ public class DE_PlayerHealth : MonoBehaviour
     {
         if (_isDead) return;
         _isDead = true;
-        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.die);
+        // DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.die);
 
         Debug.Log("<color=red>플레이어 사망!</color>");
 
