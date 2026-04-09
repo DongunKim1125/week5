@@ -1083,11 +1083,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 975663484308335699, guid: 502b5ddf16e423742bbb6f5d37bfc98c, type: 3}
       propertyPath: m_Color.b
-      value: 0.69803923
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 975663484308335699, guid: 502b5ddf16e423742bbb6f5d37bfc98c, type: 3}
       propertyPath: m_Color.g
-      value: 0.52156866
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 975663484308335699, guid: 502b5ddf16e423742bbb6f5d37bfc98c, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2354801081186059437, guid: 502b5ddf16e423742bbb6f5d37bfc98c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1143,7 +1147,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4980505302374204237, guid: 502b5ddf16e423742bbb6f5d37bfc98c, type: 3}
       propertyPath: lockID
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980505302374204237, guid: 502b5ddf16e423742bbb6f5d37bfc98c, type: 3}
       propertyPath: isLocked
