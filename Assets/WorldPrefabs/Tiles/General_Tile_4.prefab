@@ -166,6 +166,12 @@ MonoBehaviour:
   borderRenderer: {fileID: 5876442021670929389}
   nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
   nailOffset: 0.1
+  gravityEffectPrefab: {fileID: -2253911629886400664, guid: 08765b5c1dc47a94b9390b6a139d0901, type: 3}
+  gravityEffectOrderOffset: 1
+  chainSprite: {fileID: 4821499735090501366, guid: 305fc330a59f68849b33fbc74a5344b0, type: 3}
+  padlockSprite: {fileID: -3343585313190569305, guid: b6c5225399a463a478037a1b48ef9354, type: 3}
+  chainScale: 0.4
+  padlockScale: 0.5
 --- !u!1001 &3194480043413690453
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -45,7 +45,11 @@ public class StageSelectUI : MonoBehaviour
             if (btn != null)
             {
                 btn.interactable = stage.IsUnlocked; // PlayerPrefs에서 저장된 값 확인
-                btn.onClick.AddListener(() => SceneLoader.LoadScene(stage.sceneName));
+                btn.onClick.AddListener(() =>
+                {
+                    DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.stageclick);
+                    SceneLoader.LoadScene(stage.sceneName);
+                });
             }
         }
     }
@@ -55,6 +59,7 @@ public class StageSelectUI : MonoBehaviour
     /// </summary>
     public void OnBackToTitle()
     {
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.uiclick);
         SceneLoader.BackToTitle();
     }
 }
