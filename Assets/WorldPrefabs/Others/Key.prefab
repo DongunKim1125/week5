@@ -105,7 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f63b25a8291f2f4e9943fc7532f2f96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Key
-  keyID: 1
+  keyID: 0
   keyColor: {r: 1, g: 0.654902, b: 0.654902, a: 1}
   spriteRenderer: {fileID: 6212865147685230534}
 --- !u!58 &2191795116271318759

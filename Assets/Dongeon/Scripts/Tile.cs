@@ -38,6 +38,13 @@ public class Tile : MonoBehaviour
     [SerializeField] private Sprite nailSprite;
     [Tooltip("모서리에서 안쪽으로 얼마나 들어올지 결정합니다.")]
     [SerializeField] private float nailOffset = 0.4f; 
+    
+    [Header("Gravity Visuals")]
+    [SerializeField] private GameObject gravityEffectPrefab; 
+    [Tooltip("타일 배경보다 얼마나 더 위에 보일지 결정 (양수 권장)")]
+    [SerializeField] private int gravityEffectOrderOffset = 1;
+
+    private GameObject _gravityEffectInstance;
 
     private GameObject[] _generatedNails = new GameObject[4];
     private SpriteRenderer _outlineRenderer; // 외곽선 전용 렌더러 (자동 생성)
@@ -64,7 +71,37 @@ public class Tile : MonoBehaviour
         transform.position = GridManager.Instance.GridToWorld(GridPosition);
         
         GenerateOutline(); // 외곽선 오브젝트 자동 생성
+        
+        // 중력 이펙트 객체 생성 및 레이어 설정
+        if (gravityEffectPrefab != null)
+        {
+            _gravityEffectInstance = Instantiate(gravityEffectPrefab, transform);
+            _gravityEffectInstance.transform.localPosition = Vector3.zero;
+
+            // --- 레이어 조정 코드 추가 ---
+            SpriteRenderer effectSR = _gravityEffectInstance.GetComponent<SpriteRenderer>();
+            if (effectSR != null && borderRenderer != null)
+            {
+                // 타일 배경(borderRenderer)의 순서보다 Offset만큼 높게 설정
+                effectSR.sortingLayerID = borderRenderer.sortingLayerID;
+                effectSR.sortingOrder = borderRenderer.sortingOrder + gravityEffectOrderOffset;
+            }
+            // ----------------------------
+
+            _gravityEffectInstance.SetActive(false);
+        }
+        
         UpdateState();
+    }
+    
+    // 부모 타일이 회전해도 이펙트는 회전하지 않도록 고정
+    private void LateUpdate()
+    {
+        if (invertGravity && _gravityEffectInstance != null)
+        {
+            // 부모의 회전과 상관없이 월드 기준 회전값을 0으로 고정 (항상 위를 향함)
+            _gravityEffectInstance.transform.rotation = Quaternion.identity;
+        }
     }
 
     private void GenerateFixedVisuals()
@@ -110,7 +147,14 @@ public class Tile : MonoBehaviour
     {
         if (tileType == TileType.Normal) isLocked = false;
         GetComponent<BoxCollider2D>().isTrigger = (tileType != TileType.KeyLocked || !isLocked);
+    
         ApplyColorPriority();
+    
+        // 반중력 상태일 때만 이펙트 활성화
+        if (_gravityEffectInstance != null)
+        {
+            _gravityEffectInstance.SetActive(invertGravity);
+        }
     }
 
     private void ApplyColorPriority()

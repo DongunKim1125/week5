@@ -40,6 +40,8 @@ public class TileInputHandler : MonoBehaviour
     [SerializeField] private float hintFloatSpeed = 0.4f;
     [Tooltip("힌트가 표시되는 시간 (초)")]
     [SerializeField] private float hintDuration = 3f;
+    [Tooltip("힌트 텍스트의 외곽선 두께 (0~1 사이)")]
+    [SerializeField] private float hintOutlineWidth = 0.2f; // 새 필드 추가
 
     private Quaternion _targetRotation; // 목표 회전값
     private Vector3 _originalTileScale; // 타일의 원래 크기 저장
@@ -177,7 +179,7 @@ public class TileInputHandler : MonoBehaviour
                     Vector3 spawnPos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
                     spawnPos.z = 0f;
                     spawnPos.y += 0.3f;
-                    FloatingText.Show(hint, spawnPos, hintColor, hintFont, hintFontSize, hintFloatSpeed, hintDuration);
+                    FloatingText.Show(hint, spawnPos, hintColor, hintFont, hintFontSize, hintFloatSpeed, hintDuration, 0.6f, hintOutlineWidth);
                 }
             }
             Debug.Log("플레이어 조작 중: 타일 이동 불가");
@@ -232,7 +234,7 @@ public class TileInputHandler : MonoBehaviour
                     Vector3 spawnPos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
                     spawnPos.z = 0f;
                     spawnPos.y += 0.3f;
-                    FloatingText.Show(hint, spawnPos, hintColor, hintFont, hintFontSize, hintFloatSpeed, hintDuration);
+                    FloatingText.Show(hint, spawnPos, hintColor, hintFont, hintFontSize, hintFloatSpeed, hintDuration, 0.6f, hintOutlineWidth);
                 }
             }
         }
