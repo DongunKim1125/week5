@@ -797,10 +797,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: StageEssentials
       objectReference: {fileID: 0}
-    - target: {fileID: 5925540733329437586, guid: 69decc3d019bd2145ba19dd930a5b73e, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
