@@ -38,7 +38,7 @@ public class DE_SoundManager : MonoBehaviour
     //DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.Jump);
 
     public enum bgm {} 
-    public enum sfx { uiclick, stageclick, clunk1, cluck2, clear, AllClear, bell, die }
+    public enum sfx { uiclick, stageclick, clunk1, cluck2, clear, AllClear, bell, die, unlock }
 
     void Awake()
     {

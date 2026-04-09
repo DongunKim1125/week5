@@ -37,6 +37,7 @@ public class KeyManager : MonoBehaviour
         {
             if (tile.Type == TileType.KeyLocked && tile.LockID == keyID)
             {
+                DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.unlock);
                 tile.Unlock();
             }
         }
