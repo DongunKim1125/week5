@@ -3,63 +3,91 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 /// <summary>
-/// 깃발 오브젝트에 부착하여 스테이지 클리어와 다음 스테이지 해제를 처리하는 클래스
+/// 깃발 오브젝트에 부착하여 스테이지 클리어 연출과 다음 스테이지 해제를 처리하는 클래스
 /// </summary>
 public class StageClear : MonoBehaviour
 {
     [Header("Data References")]
-    [SerializeField] private StageList stageList;     // 전체 스테이지 목록
-    [SerializeField] private float loadNextDelay = 2.0f; // 다음 씬 로딩 전 대기 시간
+    [SerializeField] private StageList stageList;     
+    [SerializeField] private float loadNextDelay = 2.5f; // 연출을 위해 대기 시간을 조금 늘리는 것이 좋습니다.
 
-    [Header("Effects")]
-    [SerializeField] private ParticleSystem clearParticles; // 클리어 시 터질 폭죽 파티클
+    [Header("Effects & Animation")]
+    [SerializeField] private ParticleSystem clearParticles;
+    [Tooltip("회전하고 커질 실제 그래픽 오브젝트 (보통 자식 오브젝트)")]
+    [SerializeField] private Transform targetVisual; 
+    [SerializeField] private float finalScale = 30f;    // 화면을 덮을 최종 크기
+    [SerializeField] private float rotationSpeed = 720f; // 초당 회전 각도
+    
+    [Header("Idle Settings")]
+    [Tooltip("대기 상태일 때 회전 속도 (낮을수록 천천히 회전)")]
+    [SerializeField] private float idleRotationSpeed = 20f; // 추가: 평상시 회전 속도
 
     private bool _isCleared = false;
+    
+    private void Update()
+    {
+        // 아직 클리어되지 않았고 회전시킬 타겟이 설정되어 있다면 매 프레임 회전
+        if (!_isCleared && targetVisual != null)
+        {
+            targetVisual.Rotate(0, 0, idleRotationSpeed * Time.deltaTime);
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // 1. 플레이어와 부딪혔고 아직 클리어되지 않았다면
         if (!_isCleared && other.CompareTag("Player"))
         {
+            DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.clear);
             StartCoroutine(ClearSequence());
         }
     }
 
     private IEnumerator ClearSequence()
     {
-        _isCleared = true;
+        _isCleared = true; // 클리어 상태가 되면 Update의 Idle 회전은 멈춤
         Debug.Log("<color=green>스테이지 클리어!</color>");
 
-        // 2. 폭죽 파티클 실행
         if (clearParticles != null)
         {
             clearParticles.Play();
         }
 
-        // 3. 현재 스테이지 정보 찾기 및 다음 스테이지 해제
         UnlockNextStage();
 
-        // 4. 잠시 대기 후 다음 씬으로 이동
-        yield return new WaitForSeconds(loadNextDelay);
+        float elapsed = 0f;
+        Vector3 initialScale = targetVisual != null ? targetVisual.localScale : Vector3.one;
+
+        while (elapsed < loadNextDelay)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / loadNextDelay;
+
+            if (targetVisual != null)
+            {
+                // 2. 클리어 시에는 훨씬 빠른 rotationSpeed로 회전 및 거대화
+                targetVisual.localScale = Vector3.Lerp(initialScale, Vector3.one * finalScale, t);
+                targetVisual.Rotate(0, 0, rotationSpeed * Time.deltaTime);
+            }
+
+            yield return null;
+        }
+
         LoadNextStageScene();
     }
 
-    private void UnlockNextStage()
+    public void UnlockNextStage()
     {
         if (stageList == null) return;
 
         string currentSceneName = SceneManager.GetActiveScene().name;
 
-        // 현재 씬의 인덱스를 리스트에서 찾음
         for (int i = 0; i < stageList.stages.Count; i++)
         {
             if (stageList.stages[i].sceneName == currentSceneName)
             {
-                // 다음 인덱스의 스테이지가 있다면 잠금 해제 (PlayerPrefs 저장)
                 if (i + 1 < stageList.stages.Count)
                 {
                     stageList.stages[i + 1].IsUnlocked = true;
-                    Debug.Log($"<color=cyan>해금 완료!</color> {stageList.stages[i+1].stageDisplayName} (Scene: {stageList.stages[i+1].sceneName})");
                 }
                 break;
             }
@@ -76,16 +104,13 @@ public class StageClear : MonoBehaviour
         {
             if (stageList.stages[i].sceneName == currentSceneName)
             {
-                // 다음 씬이 있다면 로딩
                 if (i + 1 < stageList.stages.Count)
                 {
                     SceneLoader.LoadScene(stageList.stages[i + 1].sceneName);
                 }
-                // 다음 씬이 없다면 (마지막 스테이지 클리어)
                 else
                 {
-                    Debug.Log("<color=yellow>축하합니다! 모든 스테이지를 클리어했습니다!</color>");
-                    SceneLoader.LoadScene("AllClearScene"); // 올 클리어 전용 씬으로 이동
+                    SceneLoader.LoadScene("AllClearScene");
                 }
                 return;
             }

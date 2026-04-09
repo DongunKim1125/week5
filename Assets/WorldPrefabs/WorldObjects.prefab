@@ -360,6 +360,7 @@ MonoBehaviour:
   hintFontSize: 3
   hintFloatSpeed: 0.2
   hintDuration: 2
+  hintOutlineWidth: 0
 --- !u!114 &7995925562928146886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,6 +439,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7400771041239086679, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
+      propertyPath: deathEffectPrefab
+      value: 
+      objectReference: {fileID: 6254388006431287068, guid: 79107e94c1591ee4287de3ca6b0950cc, type: 3}
     m_RemovedComponents:
     - {fileID: 8563100213375069577, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
     m_RemovedGameObjects: []

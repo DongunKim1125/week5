@@ -31,7 +31,8 @@ public class FloatingText : MonoBehaviour
         float fontSize = 0.35f,
         float floatSpeed = 0.4f,
         float duration = 3f,
-        float fadeStartRatio = 0.6f)
+        float fadeStartRatio = 0.6f,
+        float outlineWidth = 0.2f) // 외곽선 두께 매개변수 추가 (기본값 0.2)
     {
         GameObject go = new GameObject("FloatingText_Auto");
         go.transform.position = worldPos;
@@ -41,14 +42,18 @@ public class FloatingText : MonoBehaviour
         ft._duration = duration;
         ft._fadeStartRatio = Mathf.Clamp01(fadeStartRatio);
 
-        // TextMeshPro 컴포넌트 설정
         ft._tmp = go.AddComponent<TextMeshPro>();
-        if (fontAsset != null) ft._tmp.font = fontAsset; // 폰트 지정
+        if (fontAsset != null) ft._tmp.font = fontAsset;
         ft._tmp.text = message;
         ft._tmp.color = textColor;
         ft._tmp.fontSize = fontSize;
         ft._tmp.alignment = TextAlignmentOptions.Center;
-        ft._tmp.sortingOrder = 300; // 모든 타일/UI보다 최상위에 렌더링
+        ft._tmp.sortingOrder = 300;
+
+        // --- 외곽선 설정 추가 ---
+        ft._tmp.outlineColor = Color.black; // 검은색 외곽선 고정
+        ft._tmp.outlineWidth = outlineWidth; // 인스펙터에서 받아온 두께 적용
+        // -----------------------
 
         ft.StartCoroutine(ft.Animate());
         return ft;

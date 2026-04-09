@@ -38,8 +38,27 @@ public class Tile : MonoBehaviour
     [SerializeField] private Sprite nailSprite;
     [Tooltip("모서리에서 안쪽으로 얼마나 들어올지 결정합니다.")]
     [SerializeField] private float nailOffset = 0.4f; 
+    
+    [Header("Gravity Visuals")]
+    [SerializeField] private GameObject gravityEffectPrefab; 
+    [Tooltip("타일 배경보다 얼마나 더 위에 보일지 결정 (양수 권장)")]
+    [SerializeField] private int gravityEffectOrderOffset = 1;
+
+    private GameObject _gravityEffectInstance;
+
+    [Header("Locked Tile Visuals (Auto Generated)")]
+    [Tooltip("잠금 상태일 때 표시할 쇠사슬 스프라이트")]
+    [SerializeField] private Sprite chainSprite;
+    [Tooltip("잠금 상태일 때 표시할 자물쇠 스프라이트")]
+    [SerializeField] private Sprite padlockSprite;
+    [Tooltip("쇠사슬 스케일")]
+    [SerializeField] private float chainScale = 0.8f;
+    [Tooltip("자물쇠 스케일")]
+    [SerializeField] private float padlockScale = 0.4f;
 
     private GameObject[] _generatedNails = new GameObject[4];
+    private SpriteRenderer _chainRenderer;
+    private SpriteRenderer _padlockRenderer;
     private SpriteRenderer _outlineRenderer; // 외곽선 전용 렌더러 (자동 생성)
     private int _baseBorderSortingOrder;    // borderRenderer의 원래 sortingOrder (복구용)
     private Dictionary<Renderer, int> _hoverOriginalSortingOrders = new Dictionary<Renderer, int>(); // 호버 시 복구용
@@ -55,6 +74,7 @@ public class Tile : MonoBehaviour
     private void Awake()
     {
         GenerateFixedVisuals();
+        GenerateLockedVisuals();
     }
 
     private void Start()
@@ -64,7 +84,37 @@ public class Tile : MonoBehaviour
         transform.position = GridManager.Instance.GridToWorld(GridPosition);
         
         GenerateOutline(); // 외곽선 오브젝트 자동 생성
+        
+        // 중력 이펙트 객체 생성 및 레이어 설정
+        if (gravityEffectPrefab != null)
+        {
+            _gravityEffectInstance = Instantiate(gravityEffectPrefab, transform);
+            _gravityEffectInstance.transform.localPosition = Vector3.zero;
+
+            // --- 레이어 조정 코드 추가 ---
+            SpriteRenderer effectSR = _gravityEffectInstance.GetComponent<SpriteRenderer>();
+            if (effectSR != null && borderRenderer != null)
+            {
+                // 타일 배경(borderRenderer)의 순서보다 Offset만큼 높게 설정
+                effectSR.sortingLayerID = borderRenderer.sortingLayerID;
+                effectSR.sortingOrder = borderRenderer.sortingOrder + gravityEffectOrderOffset;
+            }
+            // ----------------------------
+
+            _gravityEffectInstance.SetActive(false);
+        }
+        
         UpdateState();
+    }
+    
+    // 부모 타일이 회전해도 이펙트는 회전하지 않도록 고정
+    private void LateUpdate()
+    {
+        if (invertGravity && _gravityEffectInstance != null)
+        {
+            // 부모의 회전과 상관없이 월드 기준 회전값을 0으로 고정 (항상 위를 향함)
+            _gravityEffectInstance.transform.rotation = Quaternion.identity;
+        }
     }
 
     private void GenerateFixedVisuals()
@@ -110,7 +160,14 @@ public class Tile : MonoBehaviour
     {
         if (tileType == TileType.Normal) isLocked = false;
         GetComponent<BoxCollider2D>().isTrigger = (tileType != TileType.KeyLocked || !isLocked);
+    
         ApplyColorPriority();
+    
+        // 반중력 상태일 때만 이펙트 활성화
+        if (_gravityEffectInstance != null)
+        {
+            _gravityEffectInstance.SetActive(invertGravity);
+        }
     }
 
     private void ApplyColorPriority()
@@ -144,8 +201,46 @@ public class Tile : MonoBehaviour
             borderRenderer.color = targetColor;
         }
 
+        // 4. 잠금 비주얼 색상 적용 (Locked 컬러가 쇠사슬/자물쇠에도 반영)
+        if (_chainRenderer != null)
+            _chainRenderer.color = targetColor;
+        if (_padlockRenderer != null)
+            _padlockRenderer.color = targetColor;
+
         // 고정 타일 여부에 따라 못 켜기/끄기
         ToggleFixedVisuals(tileType == TileType.Fixed);
+
+        // 잠금 상태에 따라 쇠사슬/자물쇠 켜기/끄기
+        ToggleLockedVisuals(isLocked);
+    }
+
+    private void GenerateLockedVisuals()
+    {
+        if (chainSprite != null)
+        {
+            GameObject chainObj = new GameObject("Chain_Auto");
+            chainObj.transform.SetParent(transform);
+            chainObj.transform.localPosition = new Vector3(0f, 0f, -0.1f);
+            chainObj.transform.localScale = Vector3.one * chainScale;
+
+            _chainRenderer = chainObj.AddComponent<SpriteRenderer>();
+            _chainRenderer.sprite = chainSprite;
+            _chainRenderer.sortingOrder = 7;
+        }
+
+        if (padlockSprite != null)
+        {
+            GameObject padlockObj = new GameObject("Padlock_Auto");
+            padlockObj.transform.SetParent(transform);
+            padlockObj.transform.localPosition = new Vector3(0f, 0f, -0.15f);
+            padlockObj.transform.localScale = Vector3.one * padlockScale;
+
+            _padlockRenderer = padlockObj.AddComponent<SpriteRenderer>();
+            _padlockRenderer.sprite = padlockSprite;
+            _padlockRenderer.sortingOrder = 8;
+        }
+
+        ToggleLockedVisuals(false);
     }
 
     private void ToggleFixedVisuals(bool isActive)
@@ -157,6 +252,14 @@ public class Tile : MonoBehaviour
                 _generatedNails[i].SetActive(isActive);
             }
         }
+    }
+
+    private void ToggleLockedVisuals(bool isActive)
+    {
+        if (_chainRenderer != null)
+            _chainRenderer.gameObject.SetActive(isActive);
+        if (_padlockRenderer != null)
+            _padlockRenderer.gameObject.SetActive(isActive);
     }
 
     public void SetGridPosition(Vector2Int newPos)
