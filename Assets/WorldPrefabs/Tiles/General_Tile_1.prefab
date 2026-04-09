@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.42352942, g: 0.4694118, b: 0.6282353, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -152,14 +152,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad7a85b4337e8d4eaf3b112aa29d772, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tile
-  tileType: 0
+  tileType: 1
   lockID: 0
   isLocked: 0
   isOccupiedByPlayer: 0
-  lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
-  unlockedColor: {r: 1, g: 1, b: 1, a: 1}
-  borderRenderer: {fileID: 6270105272533751257}
   invertGravity: 0
+  lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
+  unlockedColor: {r: 0.47058824, g: 0.52156866, b: 0.69803923, a: 1}
+  invertGravityColor: {r: 0.7386708, g: 0.5562478, b: 0.9433962, a: 1}
+  hoverSortingOrderOffset: 50
+  fixedBrightness: 0.9
+  borderRenderer: {fileID: 6270105272533751257}
+  nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
+  nailOffset: 0.1
 --- !u!1001 &7270261017361226229
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -168,6 +173,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1424142968282194624}
     m_Modifications:
+    - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+      propertyPath: m_Color.b
+      value: 0.1792453
+      objectReference: {fileID: 0}
+    - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+      propertyPath: m_Color.g
+      value: 0.0884148
+      objectReference: {fileID: 0}
+    - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+      propertyPath: m_Color.r
+      value: 0.060030267
+      objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.000000052154064
