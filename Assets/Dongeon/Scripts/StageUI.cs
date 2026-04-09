@@ -1,10 +1,31 @@
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// 개별 스테이지 씬 내의 UI 버튼 이벤트를 처리하는 클래스
 /// </summary>
 public class StageUI : MonoBehaviour
 {
+    [SerializeField] private StageList stageList;   
+    [SerializeField] private TextMeshProUGUI currentStage;
+
+    void Start()
+    {
+        if (stageList == null) return;
+
+        string currentSceneName = SceneManager.GetActiveScene().name;
+
+        for (int i = 0; i < stageList.stages.Count; i++)
+        {
+            if (stageList.stages[i].sceneName == currentSceneName)
+            {
+                currentStage.text = stageList.stages[i].stageDisplayName;
+                break;
+            }
+        }
+    } 
+
     private void Update()
     {
         // 매 프레임마다 F12 키 입력 확인

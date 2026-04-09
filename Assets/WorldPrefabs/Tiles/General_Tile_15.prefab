@@ -122,7 +122,7 @@ MonoBehaviour:
   gravityEffectPrefab: {fileID: 0}
   gravityEffectOrderOffset: 1
   chainSprite: {fileID: 0}
-  padlockSprite: {fileID: 0}
+  padlockSprite: {fileID: -3343585313190569305, guid: b6c5225399a463a478037a1b48ef9354, type: 3}
   chainScale: 0.8
   padlockScale: 0.4
 --- !u!61 &4766599331303340860

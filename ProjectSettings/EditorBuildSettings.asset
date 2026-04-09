@@ -51,6 +51,9 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelDesign/Stage3-3.unity
     guid: c66699335945db64b977aaa2b8fc6d60
   - enabled: 1
+    path: Assets/Scenes/LevelDesign/Stage3-4.unity
+    guid: ab9a89dfec66da546a24c51d25e05a7f
+  - enabled: 1
     path: Assets/Scenes/AllClearScene.unity
     guid: 9b8c9379c1edad14a84471d92d03cafb
   m_configObjects:
