@@ -360,6 +360,7 @@ MonoBehaviour:
   hintFontSize: 3
   hintFloatSpeed: 0.2
   hintDuration: 2
+  hintOutlineWidth: 0
 --- !u!114 &7995925562928146886
 MonoBehaviour:
   m_ObjectHideFlags: 0

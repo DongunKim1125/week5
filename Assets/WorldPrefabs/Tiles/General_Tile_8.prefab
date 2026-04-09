@@ -122,6 +122,12 @@ MonoBehaviour:
   borderRenderer: {fileID: 6823736250635303873}
   nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
   nailOffset: 0.1
+  gravityEffectPrefab: {fileID: 0}
+  gravityEffectOrderOffset: 1
+  chainSprite: {fileID: 0}
+  padlockSprite: {fileID: 0}
+  chainScale: 0.8
+  padlockScale: 0.4
 --- !u!61 &-2657511280760466065
 BoxCollider2D:
   m_ObjectHideFlags: 0
