@@ -1145,6 +1145,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5031878553629488496, guid: d63faf2969d4058459aaa726c8b6949d, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5137255
+      objectReference: {fileID: 0}
+    - target: {fileID: 5031878553629488496, guid: d63faf2969d4058459aaa726c8b6949d, type: 3}
+      propertyPath: m_Color.g
+      value: 0.78431374
+      objectReference: {fileID: 0}
     - target: {fileID: 5640000403647165759, guid: d63faf2969d4058459aaa726c8b6949d, type: 3}
       propertyPath: m_Name
       value: Jump_Tile_1

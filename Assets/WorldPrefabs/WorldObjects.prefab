@@ -186,7 +186,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.16153437, g: 0.20877834, b: 0.2830189, a: 0}
+  m_BackGroundColor: {r: 0.1970452, g: 0.22494082, b: 0.33962262, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -330,7 +330,7 @@ MonoBehaviour:
   cellSize: 3
   showGrid: 1
   showGridInGame: 1
-  gridColor: {r: 1, g: 1, b: 1, a: 1}
+  gridColor: {r: 0.52078146, g: 0.57825804, b: 0.7830189, a: 0.33333334}
   lineWidth: 0.05
 --- !u!114 &5484492534168315926
 MonoBehaviour:
@@ -356,11 +356,10 @@ MonoBehaviour:
   fixedTileHint: "\uACE0\uC815\uB41C \uD0C0\uC77C\uC785\uB2C8\uB2E4"
   playerInputtingHint: "\uD50C\uB808\uC774\uC5B4 \uC774\uB3D9 \uC911\uC5D0\uB294
     \uC774\uB3D9\uD560 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4"
-  hintColor: {r: 1, g: 0.993813, b: 0, a: 1}
+  hintColor: {r: 0.9529412, g: 0.9529412, b: 0.35686275, a: 1}
   hintFontSize: 3
   hintFloatSpeed: 0.2
   hintDuration: 2
-  hintOutlineWidth: 0.1
 --- !u!114 &7995925562928146886
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,7 +367,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8612569524975500859}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6aeba4891f5e65d45823cc1160044143, type: 3}
   m_Name: 
@@ -401,11 +400,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.72
+      value: -6.13
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.6
+      value: -4.14
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.z
@@ -439,10 +438,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7400771041239086679, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
-      propertyPath: deathEffectPrefab
-      value: 
-      objectReference: {fileID: 6254388006431287068, guid: 79107e94c1591ee4287de3ca6b0950cc, type: 3}
     m_RemovedComponents:
     - {fileID: 8563100213375069577, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
     m_RemovedGameObjects: []
