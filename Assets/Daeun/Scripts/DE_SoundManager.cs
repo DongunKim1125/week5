@@ -34,9 +34,11 @@ public class DE_SoundManager : MonoBehaviour
     [SerializeField] private AudioMixerGroup bgmGroup;
     [SerializeField] private AudioMixerGroup sfxGroup;
 
-    //사운드 추가하고 넣기
+    //사운드 추가하고 넣기 (뒤 점프만 바꾸면 됨)
+    //DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.Jump);
+
     public enum bgm {} 
-    public enum sfx {}
+    public enum sfx { uiclick, stageclick, clunk1, cluck2, clear, AllClear, bell, die }
 
     void Awake()
     {

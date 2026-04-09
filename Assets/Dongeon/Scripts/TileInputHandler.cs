@@ -195,6 +195,9 @@ public class TileInputHandler : MonoBehaviour
 
             _selectedTile = tile;
             _isDragging = true;
+
+            DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.clunk1);
+
             _originalWorldPos = _selectedTile.transform.position;
             _originalGridPos = _selectedTile.GridPosition;
             
@@ -250,6 +253,7 @@ public class TileInputHandler : MonoBehaviour
     private void DropTile()
     {
         _isDragging = false;
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.cluck2);
 
         // 1. 드래그 종료 시 자식 콜라이더들 다시 활성화
         SetChildrenCollidersActive(_selectedTile, true);

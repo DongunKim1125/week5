@@ -37,6 +37,7 @@ public class StageClear : MonoBehaviour
     {
         if (!_isCleared && other.CompareTag("Player"))
         {
+            DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.clear);
             StartCoroutine(ClearSequence());
         }
     }

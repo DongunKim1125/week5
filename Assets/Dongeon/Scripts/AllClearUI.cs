@@ -10,6 +10,7 @@ public class AllClearUI : MonoBehaviour
     /// </summary>
     public void OnBackToTitle()
     {
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.uiclick);
         SceneLoader.BackToTitle();
     }
 
@@ -18,6 +19,7 @@ public class AllClearUI : MonoBehaviour
     /// </summary>
     public void OnResetAndTitle()
     {
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.uiclick);
         PlayerPrefs.DeleteAll(); // 모든 저장 데이터 삭제
         Debug.Log("모든 진행 상황이 초기화되었습니다.");
         SceneLoader.BackToTitle();
