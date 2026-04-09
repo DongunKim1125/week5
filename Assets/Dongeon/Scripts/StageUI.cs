@@ -40,6 +40,7 @@ public class StageUI : MonoBehaviour
     /// </summary>
     public void OnBackToStageSelect()
     {
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.stageclick);
         SceneLoader.GoToStageSelect();
     }
 
@@ -48,6 +49,7 @@ public class StageUI : MonoBehaviour
     /// </summary>
     public void OnRestartStage()
     {
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.uiclick);
         SceneLoader.ReloadCurrentScene();
     }
 

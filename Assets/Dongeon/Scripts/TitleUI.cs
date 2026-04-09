@@ -7,6 +7,7 @@ public class TitleUI : MonoBehaviour
 {
     public void StartGame()
     {
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.stageclick);
         // 게임 시작 시 스테이지 선택 화면으로 이동
         SceneLoader.GoToStageSelect();
     }
@@ -14,6 +15,7 @@ public class TitleUI : MonoBehaviour
     public void QuitGame()
     {
         // 게임 종료
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.uiclick);
         Application.Quit();
         Debug.Log("게임 종료 요청됨");
     }
