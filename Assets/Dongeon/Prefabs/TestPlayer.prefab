@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8563100213375069577}
   - component: {fileID: 2171468997536470117}
   - component: {fileID: 1804947226806969853}
+  - component: {fileID: 5294898312758212689}
+  - component: {fileID: 7400771041239086679}
   m_Layer: 0
   m_Name: TestPlayer
   m_TagString: Player
@@ -29,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.33, y: -1.1, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -144,7 +146,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_AngularDamping: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -157,3 +159,35 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &5294898312758212689
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2576206789328219512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8e6ab028dd88a45a032ed6a8d54866, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DE_PlayerController
+  moveSpeed: 2
+  jumpForce: 4.5
+  knockbackDecay: 15
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  castDistance: 0.3
+  boxSize: {x: 0.2, y: 0.1}
+--- !u!114 &7400771041239086679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2576206789328219512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccae29ad99abd4b46bda40d80080aab9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DE_PlayerHealth

@@ -19,7 +19,7 @@ public class TileDragger : MonoBehaviour
         _mainCamera = Camera.main;
     }
 
-    private void OnMouseDown()
+    public void OnMouseDown()
     {
         // 밟고 있거나 잠긴 타일은 이동 불가
         if (!_tile.CanMove) return;
@@ -33,7 +33,7 @@ public class TileDragger : MonoBehaviour
         _offset = transform.position - mousePos;
     }
 
-    private void OnMouseDrag()
+    public void OnMouseDrag()
     {
         if (!_isDragging) return;
 
@@ -41,7 +41,7 @@ public class TileDragger : MonoBehaviour
         transform.position = GetMouseWorldPosition() + _offset;
     }
 
-    private void OnMouseUp()
+    public void OnMouseUp()
     {
         if (!_isDragging) return;
         _isDragging = false;

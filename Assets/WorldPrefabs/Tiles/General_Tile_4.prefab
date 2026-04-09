@@ -157,10 +157,15 @@ MonoBehaviour:
   lockID: 0
   isLocked: 0
   isOccupiedByPlayer: 0
+  invertGravity: 0
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
   unlockedColor: {r: 1, g: 1, b: 1, a: 1}
-  borderRenderer: {fileID: 6270105272533751257, guid: ddd5fab3630f32a4e983baeb8ac32806, type: 3}
-  invertGravity: 0
+  invertGravityColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+  hoverSortingOrderOffset: 50
+  fixedBrightness: 0.9
+  borderRenderer: {fileID: 5876442021670929389}
+  nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
+  nailOffset: 0.1
 --- !u!1001 &3194480043413690453
 PrefabInstance:
   m_ObjectHideFlags: 0
