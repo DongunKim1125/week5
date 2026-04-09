@@ -152,7 +152,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JumpObject
   heightMultiplier: 1
-  bonusHeight: 0.8
+  topBonusHeight: 1.5
+  sideBonusHeight: 3
+  bottomBonusHeight: 1.5
+  sideMinimumTargetHeight: 2
+  topInputLockTime: 0
+  sideInputLockTime: 0.2
+  bottomInputLockTime: 0
   playerLayer:
     serializedVersion: 2
     m_Bits: 1024

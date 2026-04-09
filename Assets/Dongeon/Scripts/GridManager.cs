@@ -201,6 +201,26 @@ public class GridManager : MonoBehaviour
     }
 
     /// <summary>
+    /// 두 좌표에 있는 타일의 위치를 서로 맞바꿈 (데이터 및 월드 좌표 동기화)
+    /// </summary>
+    public void SwapTiles(Vector2Int posA, Vector2Int posB)
+    {
+        Tile tileA = GetTileAt(posA);
+        Tile tileB = GetTileAt(posB);
+
+        // 그리드 데이터 교체
+        if (tileA != null) tileGrid[posB] = tileA;
+        else tileGrid.Remove(posB);
+
+        if (tileB != null) tileGrid[posA] = tileB;
+        else tileGrid.Remove(posA);
+
+        // 실제 타일 객체의 데이터 및 위치 업데이트
+        tileA?.SetGridPosition(posB);
+        tileB?.SetGridPosition(posA);
+    }
+
+    /// <summary>
     /// 타일을 그리드 시스템에 최초 등록함
     /// </summary>
     public void RegisterTile(Tile tile)
