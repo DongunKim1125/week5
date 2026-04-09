@@ -160,10 +160,17 @@ MonoBehaviour:
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
   unlockedColor: {r: 1, g: 1, b: 1, a: 1}
   invertGravityColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+  hoverSortingOrderOffset: 50
   fixedBrightness: 0.9
   borderRenderer: {fileID: 6289384549893061943}
   nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
   nailOffset: 0.1
+  gravityEffectPrefab: {fileID: 0}
+  gravityEffectOrderOffset: 1
+  chainSprite: {fileID: 4821499735090501366, guid: 305fc330a59f68849b33fbc74a5344b0, type: 3}
+  padlockSprite: {fileID: 6138796284936180805, guid: 2bbc93974c830574fad2f4e211895f8c, type: 3}
+  chainScale: 0.4
+  padlockScale: 0.5
 --- !u!1001 &2547980038793954160
 PrefabInstance:
   m_ObjectHideFlags: 0

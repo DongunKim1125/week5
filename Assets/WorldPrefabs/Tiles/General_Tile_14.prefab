@@ -121,6 +121,10 @@ MonoBehaviour:
   nailOffset: 0.1
   gravityEffectPrefab: {fileID: -2253911629886400664, guid: 08765b5c1dc47a94b9390b6a139d0901, type: 3}
   gravityEffectOrderOffset: 1
+  chainSprite: {fileID: 4821499735090501366, guid: 305fc330a59f68849b33fbc74a5344b0, type: 3}
+  padlockSprite: {fileID: 6138796284936180805, guid: 2bbc93974c830574fad2f4e211895f8c, type: 3}
+  chainScale: 0.4
+  padlockScale: 0.5
 --- !u!61 &6000975623256000730
 BoxCollider2D:
   m_ObjectHideFlags: 0
