@@ -122,7 +122,7 @@ public class MovableTileEdgeLine : MonoBehaviour
         // 1. 모두 숨김 (매 프레임 클린 슬레이트)
         HideAll();
 
-        bool isTileActive = _tile.CanMove && !_tile.IsOccupiedByPlayer && !_tile.IsDragging;
+        bool isTileActive = _tile.Type != TileType.Fixed && !_tile.IsDragging;
         if (!isTileActive) return;
 
         // 부모(Tile) 회전에 영향을 받지 않고 외곽선은 항상 월드 기준 정방향(상하좌우)을 유지하도록 설정
@@ -210,9 +210,7 @@ public class MovableTileEdgeLine : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             Tile neighbor = GridManager.Instance.GetTileAt(_tile.GridPosition + Directions[i]);
-            bool connected = neighbor != null &&
-                             neighbor.CanMove &&
-                             !neighbor.IsOccupiedByPlayer;
+            bool connected = neighbor != null && neighbor.Type != TileType.Fixed;
             visible[i] = !connected;
         }
         return visible;
