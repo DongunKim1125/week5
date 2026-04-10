@@ -31,7 +31,7 @@ public class Tile : MonoBehaviour
 
     [Header("Interaction Visuals")]
     [Tooltip("마우스를 올렸을 때 외곽선 색상")]
-    private Color hoverOutlineColor = new Color(0.549f, 0.549f, 0.549f); 
+    private Color hoverOutlineColor = new Color(255f/255f, 157f/255f, 8f/255f);
     [Tooltip("드래그 중일 때 외곽선 색상")]
     private Color dragOutlineColor = Color.white; 
     [Tooltip("외곽선 두께 (1.0 = 타일과 동일, 1.04 = 4% 더 크게 → 가장자리만 튀어나와 테두리처럼 보임)")]
@@ -89,6 +89,7 @@ public class Tile : MonoBehaviour
     public Vector2Int GridPosition { get; set; }
     public bool IsOccupiedByPlayer { get => isOccupiedByPlayer; set => isOccupiedByPlayer = value; }
     public bool InvertGravity => invertGravity;
+    public bool IsDragging { get; private set; }
 
     public bool CanMove => (tileType == TileType.Normal || (tileType == TileType.KeyLocked && !isLocked)) && !isOccupiedByPlayer;
 
@@ -432,6 +433,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void SetDragState(bool isDragging)
     {
+        IsDragging = isDragging;
         if (_outlineRenderer == null) return;
         _outlineRenderer.color = isDragging ? dragOutlineColor : Color.clear;
 

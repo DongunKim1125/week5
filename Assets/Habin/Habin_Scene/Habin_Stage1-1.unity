@@ -6561,22 +6561,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: WorldObjects
       objectReference: {fileID: 0}
-    - target: {fileID: 2497323722861191275, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_BackGroundColor.b
-      value: 0.13725491
-      objectReference: {fileID: 0}
-    - target: {fileID: 2497323722861191275, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_BackGroundColor.g
-      value: 0.07058824
-      objectReference: {fileID: 0}
-    - target: {fileID: 2497323722861191275, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_BackGroundColor.r
-      value: 0.0627451
-      objectReference: {fileID: 0}
-    - target: {fileID: 4710312637648358028, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.23
-      objectReference: {fileID: 0}
     - target: {fileID: 5600497458870583303, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6615,54 +6599,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5600497458870583303, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7301312052888552217, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_RenderPostProcessing
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7995925562928146886, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8289089222229921892, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_Color.b
-      value: 0.033018887
-      objectReference: {fileID: 0}
-    - target: {fileID: 8289089222229921892, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_Color.g
-      value: 0.61502856
-      objectReference: {fileID: 0}
-    - target: {fileID: 8289089222229921892, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: m_Color.r
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8482639206444252864, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: showGrid
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8482639206444252864, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: showBackdrop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8482639206444252864, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: squareSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: a8e5c719df318104e97b1b8f8732ad65, type: 3}
-    - target: {fileID: 8482639206444252864, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: backdropColor.a
-      value: 0.88235295
-      objectReference: {fileID: 0}
-    - target: {fileID: 8482639206444252864, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: backdropColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8482639206444252864, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: backdropColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8482639206444252864, guid: 4680876b7431aac49b883d3c68e39c00, type: 3}
-      propertyPath: backdropColor.r
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

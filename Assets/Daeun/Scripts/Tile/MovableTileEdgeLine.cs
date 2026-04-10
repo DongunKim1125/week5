@@ -117,8 +117,12 @@ public class MovableTileEdgeLine : MonoBehaviour
         // 1. 모두 숨김 (매 프레임 클린 슬레이트)
         HideAll();
 
-        bool isTileActive = _tile.CanMove && !_tile.IsOccupiedByPlayer;
+        bool isTileActive = _tile.CanMove && !_tile.IsOccupiedByPlayer && !_tile.IsDragging;
         if (!isTileActive) return;
+
+        // 부모(Tile) 회전에 영향을 받지 않고 외곽선은 항상 월드 기준 정방향(상하좌우)을 유지하도록 설정
+        if (_loopLR != null) _loopLR.transform.rotation = Quaternion.identity;
+        foreach (var lr in _segLR) if (lr != null) lr.transform.rotation = Quaternion.identity;
 
         // 2. 호버 감지
         Vector3    mouseWorld = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
