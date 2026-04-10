@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6224108987651702942}
   - component: {fileID: 3400896003921063257}
   - component: {fileID: 4766599331303340860}
+  - component: {fileID: 4452698152941185715}
   m_Layer: 0
   m_Name: General_Tile_15
   m_TagString: Untagged
@@ -85,7 +86,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.47058824, g: 0.52156866, b: 0.69803923, a: 1}
+  m_Color: {r: 0.24741901, g: 0.2571645, b: 0.3773585, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -111,20 +112,24 @@ MonoBehaviour:
   isLocked: 0
   isOccupiedByPlayer: 0
   invertGravity: 0
+  normalColor: {r: 0.24741901, g: 0.2571645, b: 0.3773585, a: 1}
+  normalInvertColor: {r: 0.4509804, g: 0.34901962, b: 0.6901961, a: 1}
+  fixedColor: {r: 0.16140084, g: 0.16625467, b: 0.2924528, a: 1}
+  fixedInvertColor: {r: 0.32156864, g: 0.25490198, b: 0.52156866, a: 1}
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
-  unlockedColor: {r: 0.47058824, g: 0.52156866, b: 0.69803923, a: 1}
-  invertGravityColor: {r: 0.7386708, g: 0.5562478, b: 0.9433962, a: 1}
   hoverSortingOrderOffset: 50
-  fixedBrightness: 0.9
+  visualRoot: {fileID: 0}
+  fixedBrightness: 0.6
   borderRenderer: {fileID: 6224108987651702942}
-  nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
-  nailOffset: 0.1
   gravityEffectPrefab: {fileID: 0}
   gravityEffectOrderOffset: 1
   chainSprite: {fileID: 0}
   padlockSprite: {fileID: -3343585313190569305, guid: b6c5225399a463a478037a1b48ef9354, type: 3}
   chainScale: 0.8
   padlockScale: 0.4
+  fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
+  fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
+  fixedOverlaySortingOrder: 5
 --- !u!61 &4766599331303340860
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -171,6 +176,29 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &4452698152941185715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7839152717950024062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89a3bc31ecfd6de4cae88ac021a42713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovableTileEdgeLine
+  lineMaterial: {fileID: 2100000, guid: ad09a1c5a71077c4eb35de0e6656af4d, type: 2}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  halfSize: 1.5
+  lineWidth: 0.05
+  zOffset: 0
+  hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  hoverLineWidthMultiplier: 1.5
+  usePulseEffect: 1
+  minAlpha: 0
+  maxAlpha: 1
+  pulseSpeed: 1.5
 --- !u!1001 &3721923428377337393
 PrefabInstance:
   m_ObjectHideFlags: 0

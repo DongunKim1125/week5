@@ -46,8 +46,63 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DE_SoundManager
   mixer: {fileID: 24100000, guid: cb5ef57ae5058e743adbfd4fa19351bb, type: 2}
   bgmSound: []
-  bgmChannel: 0
-  sfxSounds: []
-  channels: 0
+  bgmVolumes: []
+  bgmChannel: 1
+  sfxSounds:
+  - {fileID: 8300000, guid: 83ff768cd94c1124a9c88a35cc06e7bb, type: 3}
+  - {fileID: 8300000, guid: ac950fa7d0820e44a9259c8e074c365b, type: 3}
+  - {fileID: 8300000, guid: f87606609db81544194f0d7bda3ed0ab, type: 3}
+  - {fileID: 8300000, guid: 1781f4a3bf926b747bb759ec764a6653, type: 3}
+  - {fileID: 8300000, guid: c58fbd76b80e3574ebbbc89401715bab, type: 3}
+  - {fileID: 8300000, guid: 4e76a0d936d011c41ae7c414ad929679, type: 3}
+  - {fileID: 8300000, guid: dd6d36c8cccbed34bac89425508377c1, type: 3}
+  - {fileID: 8300000, guid: 44fb6b6201d1e8d42a4bcfe1c0ac4029, type: 3}
+  - {fileID: 8300000, guid: 2268bf1da9d19c6478a39f3477f01ed4, type: 3}
+  - {fileID: 8300000, guid: 4c61269c7348d444d81094aee3645186, type: 3}
+  - {fileID: 8300000, guid: 0c3ccf3bc58825d4ba8eaf8ca3efeff9, type: 3}
+  sfxVolumes:
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 1
+  - 0.362
+  - 1
+  - 0.805
+  - 0.805
+  channels: 1
+  bgmIndexGuide: 'Array Size: 0 / Enum Count: 0
+
+'
+  sfxIndexGuide: 'Array Size: 11 / Enum Count: 11
+
+    0 : uiclick
+
+    1 : stageclick
+
+    2
+    : clunk1
+
+    3 : cluck2
+
+    4 : clear
+
+    5 : AllClear
+
+    6 : bell
+
+    7
+    : die
+
+    8 : unlock
+
+    9 : rotation
+
+    10 : jump
+
+'
+  autoResizeArraysToEnumCount: 0
   bgmGroup: {fileID: -2286058588307111479, guid: cb5ef57ae5058e743adbfd4fa19351bb, type: 2}
   sfxGroup: {fileID: 540096067521415667, guid: cb5ef57ae5058e743adbfd4fa19351bb, type: 2}
