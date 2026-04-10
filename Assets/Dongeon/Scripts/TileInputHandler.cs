@@ -21,6 +21,8 @@ public class TileInputHandler : MonoBehaviour
     [SerializeField] private float rotationSpeed = 10f; // 회전 부드러움 속도
     [SerializeField] private float hoverScaleMultiplier = 1.05f; // 마우스 오버 시 확대 배율 (여기서 배율 수정)
     [SerializeField] private float dragScaleMultiplier = 1.1f; // 드래그 시 확대 배율
+    [SerializeField] private float dragShakeAmount = 2.0f; // 드래그 시 흔들림 강도(각도)
+    [SerializeField] private float dragShakeSpeed = 20.0f; // 드래그 시 흔들림 속도
     [SerializeField] private int dragSortingOrderOffset = 100; // 드래그 시 높일 Sorting Order 값
 
     [Header("Hint Messages")]
@@ -68,9 +70,18 @@ public class TileInputHandler : MonoBehaviour
 
         if (_selectedTile != null)
         {
+            Quaternion targetRot = _targetRotation;
+            
+            // 드래그 중일 때 흔들림 효과 추가
+            if (_isDragging)
+            {
+                float shake = Mathf.Sin(Time.time * dragShakeSpeed) * dragShakeAmount;
+                targetRot *= Quaternion.Euler(0, 0, shake);
+            }
+
             _selectedTile.transform.rotation = Quaternion.Slerp(
                 _selectedTile.transform.rotation, 
-                _targetRotation, 
+                targetRot, 
                 Time.deltaTime * rotationSpeed
             );
         }
