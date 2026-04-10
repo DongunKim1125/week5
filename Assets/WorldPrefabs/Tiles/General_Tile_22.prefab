@@ -87,7 +87,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.21938412, g: 0.22718185, b: 0.3207547, a: 1}
+  m_Color: {r: 0.21960784, g: 0.22745098, b: 0.32156864, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -113,9 +113,11 @@ MonoBehaviour:
   isLocked: 0
   isOccupiedByPlayer: 0
   invertGravity: 0
+  normalColor: {r: 0.21960784, g: 0.22745098, b: 0.32156864, a: 1}
+  normalInvertColor: {r: 0.8, g: 0.8, b: 1, a: 1}
+  fixedColor: {r: 0.16862746, g: 0.17254902, b: 0.24705882, a: 1}
+  fixedInvertColor: {r: 0.68, g: 0.68, b: 0.85, a: 1}
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
-  unlockedColor: {r: 0.21938412, g: 0.22718185, b: 0.3207547, a: 1}
-  invertGravityColor: {r: 0.7386708, g: 0.5562478, b: 0.9433962, a: 1}
   hoverSortingOrderOffset: 50
   visualRoot: {fileID: 0}
   fixedBrightness: 0.6
@@ -127,7 +129,7 @@ MonoBehaviour:
   chainScale: 0.8
   padlockScale: 0.4
   fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
-  fixedOverlayColor: {r: 1, g: 1, b: 1, a: 1}
+  fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
   fixedOverlaySortingOrder: 5
 --- !u!61 &2018231403181821958
 BoxCollider2D:
