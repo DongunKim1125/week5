@@ -22,6 +22,10 @@ public class MovableTileEdgeLine : MonoBehaviour
     [Header("Line Settings")]
     [Tooltip("선에 적용할 재질")]
     public Material lineMaterial;
+    
+    // ⬇️ 새로 추가하는 변수: 평상시 선 색상
+    [Tooltip("일반 상태의 선 색상 (주황색으로 설정하세요)")]
+    public Color normalColor = new Color(1f, 0.5f, 0f, 1f);
 
     [Tooltip("타일 크기의 절반값 (GridManager cellSize = 1 기준 → 0.5 권장, 시각 조정 가능)")]
     public float halfSize = 1.5f;
@@ -38,6 +42,23 @@ public class MovableTileEdgeLine : MonoBehaviour
 
     [Tooltip("호버 시 선 두께 배율 (1.0 = 동일)")]
     public float hoverLineWidthMultiplier = 1.5f;
+
+    // =========================================================
+    // ⬇️ 새로 추가된 펄스(Pulse) 효과 설정
+    // =========================================================
+    [Header("Pulse Effect (Alpha)")]
+    [Tooltip("투명도 깜빡임(펄스) 효과 사용 여부")]
+    public bool usePulseEffect = true;
+    
+    [Tooltip("최소 투명도 (0.0 ~ 1.0)")]
+    [Range(0f, 1f)] public float minAlpha = 0.2f;
+    
+    [Tooltip("최대 투명도 (0.0 ~ 1.0)")]
+    [Range(0f, 1f)] public float maxAlpha = 1.0f;
+    
+    [Tooltip("투명도가 변하는 속도")]
+    public float pulseSpeed = 3f;
+    // =========================================================
 
     // ─────────────────────────────────────────────────────────
     // 내부 상수
@@ -87,10 +108,9 @@ public class MovableTileEdgeLine : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────
-    // 매 프레임: 매번 전체 숨김 후 필요한 것만 켬
-    // → 이전 프레임 상태가 남아 겹치는 문제를 원천 차단
+    // 매 프레임: 시각 효과의 부드러움을 위해 Update로 변경
     // ─────────────────────────────────────────────────────────
-    private void FixedUpdate()
+    private void Update()
     {
         if (_tile == null || GridManager.Instance == null || _mainCamera == null) return;
 
@@ -105,7 +125,7 @@ public class MovableTileEdgeLine : MonoBehaviour
         Vector2Int mouseGrid  = GridManager.Instance.WorldToGrid(mouseWorld);
         _isHovered = (mouseGrid == _tile.GridPosition);
 
-        // 3. 호버 상태 → 루프 렌더러로 4면 전체 표시 (hoverColor 적용)
+        // 3. 호버 상태 → 루프 렌더러로 4면 전체 표시 (hoverColor 적용, 마우스를 올렸을 땐 선명하게)
         if (_isHovered)
         {
             ApplyToLR(_loopLR, hoverColor, lineWidth * hoverLineWidthMultiplier);
@@ -113,7 +133,22 @@ public class MovableTileEdgeLine : MonoBehaviour
             return;
         }
 
-        // 4. 일반 상태 → 외곽 엣지만 표시 (재질 기본색, 버텍스 tint 없음)
+        // =========================================================
+        // 4. 일반 상태 알파값 계산 (Sine 함수를 이용한 펄스)
+        // =========================================================
+        float currentAlpha = normalColor.a; // 인스펙터에서 설정한 기본 알파값
+        if (usePulseEffect)
+        {
+            // Mathf.Sin은 -1 ~ 1 사이를 왕복하므로, 이를 0 ~ 1 사이로 정규화
+            float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) / 2f;
+            currentAlpha = Mathf.Lerp(minAlpha, maxAlpha, t);
+        }
+        
+        // 투명도가 적용된 기본 색상 (normalColor의 RGB를 그대로 가져옴)
+        Color normalColorWithPulse = new Color(normalColor.r, normalColor.g, normalColor.b, currentAlpha);
+        // =========================================================
+
+
         bool[] visible     = GetVisibleEdges();
         int    visibleCount = CountTrue(visible);
 
@@ -122,13 +157,13 @@ public class MovableTileEdgeLine : MonoBehaviour
         if (visibleCount == 4)
         {
             // 4면 모두 외곽 → 루프 렌더러 사용 (모서리 완벽 이음)
-            ApplyToLR(_loopLR, Color.white, lineWidth);
+            ApplyToLR(_loopLR, normalColorWithPulse, lineWidth);
             _loopLR.enabled = true;
         }
         else
         {
             // 일부 면만 외곽 → 연속 구간별 꺾인 경로 렌더러 사용
-            DrawSegments(visible);
+            DrawSegments(visible, normalColorWithPulse);
         }
     }
 
@@ -151,8 +186,6 @@ public class MovableTileEdgeLine : MonoBehaviour
 
     // ─────────────────────────────────────────────────────────
     // 연속 구간 탐색 (순환 배열 처리)
-    // 예) [T,F,T,T] → [[2,3,0]] (Bottom·Left·Top 이 하나의 U자형 구간으로 합쳐짐)
-    //     [T,F,T,F] → [[0],[2]]
     // ─────────────────────────────────────────────────────────
     private List<List<int>> FindContiguousRuns(bool[] visible)
     {
@@ -173,7 +206,6 @@ public class MovableTileEdgeLine : MonoBehaviour
         }
         if (cur != null) runs.Add(cur);
 
-        // 순환 이어붙이기: 마지막 구간 끝(3) + 첫 구간 시작(0) → 하나로 합침
         if (runs.Count >= 2)
         {
             var first = runs[0];
@@ -189,26 +221,25 @@ public class MovableTileEdgeLine : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────────
-    // 세그먼트 렌더러 설정
+    // 세그먼트 렌더러 설정 (투명도 색상 전달받도록 수정됨)
     // ─────────────────────────────────────────────────────────
-    private void DrawSegments(bool[] visible)
+    private void DrawSegments(bool[] visible, Color applyColor)
     {
         List<List<int>> runs = FindContiguousRuns(visible);
 
         for (int r = 0; r < _segLR.Length; r++)
         {
-            if (r >= runs.Count) break; // 나머지는 HideAll()에서 이미 숨겨짐
+            if (r >= runs.Count) break; 
 
             List<int>    run = runs[r];
             LineRenderer lr  = _segLR[r];
 
-            // 구간의 코너 좌표: startCorner[e0] → endCorner[e0] → ... → endCorner[en]
             lr.positionCount = run.Count + 1;
             lr.SetPosition(0, _corners[EdgeStartCorner[run[0]]]);
             for (int i = 0; i < run.Count; i++)
                 lr.SetPosition(i + 1, _corners[EdgeEndCorner[run[i]]]);
 
-            ApplyToLR(lr, Color.white, lineWidth);
+            ApplyToLR(lr, applyColor, lineWidth);
             lr.enabled = true;
         }
     }
@@ -277,9 +308,6 @@ public class MovableTileEdgeLine : MonoBehaviour
         return lr;
     }
 
-    // ─────────────────────────────────────────────────────────
-    // 유틸
-    // ─────────────────────────────────────────────────────────
     private static int CountTrue(bool[] arr)
     {
         int n = 0;

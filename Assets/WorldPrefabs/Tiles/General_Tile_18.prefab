@@ -87,7 +87,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.15076537, g: 0.16270071, b: 0.26415092, a: 1}
+  m_Color: {r: 0.21938412, g: 0.22718185, b: 0.3207547, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -114,11 +114,11 @@ MonoBehaviour:
   isOccupiedByPlayer: 0
   invertGravity: 0
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
-  unlockedColor: {r: 0.15076537, g: 0.16270071, b: 0.26415092, a: 1}
+  unlockedColor: {r: 0.21938412, g: 0.22718185, b: 0.3207547, a: 1}
   invertGravityColor: {r: 0.7386708, g: 0.5562478, b: 0.9433962, a: 1}
   hoverSortingOrderOffset: 50
   visualRoot: {fileID: 0}
-  fixedBrightness: 0.9
+  fixedBrightness: 0.6
   borderRenderer: {fileID: 7353324936674243580}
   gravityEffectPrefab: {fileID: -2253911629886400664, guid: 08765b5c1dc47a94b9390b6a139d0901, type: 3}
   gravityEffectOrderOffset: 1
@@ -182,17 +182,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548329214697476757}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 89a3bc31ecfd6de4cae88ac021a42713, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovableTileEdgeLine
-  lineMaterial: {fileID: 2100000, guid: f3e3a05df3992dd438456ca333d41d5b, type: 2}
+  lineMaterial: {fileID: 2100000, guid: ad09a1c5a71077c4eb35de0e6656af4d, type: 2}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
   halfSize: 1.5
-  lineWidth: 0.06
+  lineWidth: 0.03
   zOffset: 0
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   hoverLineWidthMultiplier: 1.5
+  usePulseEffect: 1
+  minAlpha: 0
+  maxAlpha: 1
+  pulseSpeed: 1
 --- !u!1001 &6685542139540552659
 PrefabInstance:
   m_ObjectHideFlags: 0
