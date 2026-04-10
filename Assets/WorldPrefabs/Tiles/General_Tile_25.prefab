@@ -86,7 +86,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.47058824, g: 0.52156866, b: 0.69803923, a: 1}
+  m_Color: {r: 0.15076537, g: 0.16270071, b: 0.26415092, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -159,7 +159,7 @@ MonoBehaviour:
   isOccupiedByPlayer: 0
   invertGravity: 0
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
-  unlockedColor: {r: 0.47058824, g: 0.52156866, b: 0.69803923, a: 1}
+  unlockedColor: {r: 0.15076537, g: 0.16270071, b: 0.26415092, a: 1}
   invertGravityColor: {r: 0.7386708, g: 0.5562478, b: 0.9433962, a: 1}
   hoverSortingOrderOffset: 50
   fixedBrightness: 0.9

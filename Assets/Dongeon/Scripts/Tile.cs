@@ -32,12 +32,6 @@ public class Tile : MonoBehaviour
     [SerializeField] private float fixedBrightness = 0.85f;
     
     [SerializeField] private SpriteRenderer borderRenderer;
-
-    [Header("Fixed Tile Visuals (Auto Generated)")]
-    [Tooltip("인스펙터에서 못 이미지를 넣어주세요.")]
-    [SerializeField] private Sprite nailSprite;
-    [Tooltip("모서리에서 안쪽으로 얼마나 들어올지 결정합니다.")]
-    [SerializeField] private float nailOffset = 0.4f; 
     
     [Header("Gravity Visuals")]
     [SerializeField] private GameObject gravityEffectPrefab; 
@@ -56,7 +50,6 @@ public class Tile : MonoBehaviour
     [Tooltip("자물쇠 스케일")]
     [SerializeField] private float padlockScale = 0.4f;
 
-    private GameObject[] _generatedNails = new GameObject[4];
     private SpriteRenderer _chainRenderer;
     private SpriteRenderer _padlockRenderer;
     private SpriteRenderer _outlineRenderer; // 외곽선 전용 렌더러 (자동 생성)
@@ -73,7 +66,6 @@ public class Tile : MonoBehaviour
 
     private void Awake()
     {
-        GenerateFixedVisuals();
         GenerateLockedVisuals();
     }
 
@@ -115,39 +107,6 @@ public class Tile : MonoBehaviour
             // 부모의 회전과 상관없이 월드 기준 회전값을 0으로 고정 (항상 위를 향함)
             _gravityEffectInstance.transform.rotation = Quaternion.identity;
         }
-    }
-
-    private void GenerateFixedVisuals()
-    {
-        float halfSize = 0.5f; 
-
-        // 점선 로직 제거됨, 못 4개만 생성
-        if (nailSprite != null)
-        {
-            Vector3[] corners = new Vector3[4]
-            {
-                new Vector3(-halfSize + nailOffset, halfSize - nailOffset, -0.1f), 
-                new Vector3(halfSize - nailOffset, halfSize - nailOffset, -0.1f),  
-                new Vector3(-halfSize + nailOffset, -halfSize + nailOffset, -0.1f),
-                new Vector3(halfSize - nailOffset, -halfSize + nailOffset, -0.1f)  
-            };
-
-            for (int i = 0; i < 4; i++)
-            {
-                GameObject nailObj = new GameObject($"Nail_{i}_Auto");
-                nailObj.transform.SetParent(transform);
-                nailObj.transform.localPosition = corners[i];
-                nailObj.transform.localScale = Vector3.one * 0.5f; 
-                
-                SpriteRenderer sr = nailObj.AddComponent<SpriteRenderer>();
-                sr.sprite = nailSprite;
-                sr.sortingOrder = 6;
-                
-                _generatedNails[i] = nailObj;
-            }
-        }
-        
-        ToggleFixedVisuals(false);
     }
 
     public void Unlock()
@@ -207,9 +166,6 @@ public class Tile : MonoBehaviour
         if (_padlockRenderer != null)
             _padlockRenderer.color = targetColor;
 
-        // 고정 타일 여부에 따라 못 켜기/끄기
-        ToggleFixedVisuals(tileType == TileType.Fixed);
-
         // 잠금 상태에 따라 쇠사슬/자물쇠 켜기/끄기
         ToggleLockedVisuals(isLocked);
     }
@@ -241,17 +197,6 @@ public class Tile : MonoBehaviour
         }
 
         ToggleLockedVisuals(false);
-    }
-
-    private void ToggleFixedVisuals(bool isActive)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            if (_generatedNails[i] != null)
-            {
-                _generatedNails[i].SetActive(isActive);
-            }
-        }
     }
 
     private void ToggleLockedVisuals(bool isActive)
