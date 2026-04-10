@@ -13,10 +13,21 @@ public class Tile : MonoBehaviour
     [SerializeField] private bool isOccupiedByPlayer;
     [SerializeField] private bool invertGravity;
 
-    [Header("Visuals (For Player)")]
-    [SerializeField] private Color lockedColor = new Color(1f, 0.8f, 0.8f);       
-    [SerializeField] private Color unlockedColor = Color.white;                   
-    [SerializeField] private Color invertGravityColor = new Color(0.8f, 0.8f, 1f);
+    [Header("Visuals - Normal Tile")]
+    [Tooltip("일반 상태의 타일 색상")]
+    [SerializeField] private Color normalColor = Color.white;                   
+    [Tooltip("반중력 상태의 일반 타일 색상")]
+    [SerializeField] private Color normalInvertColor = new Color(0.8f, 0.8f, 1f);
+
+    [Header("Visuals - Fixed Tile")]
+    [Tooltip("고정 상태의 타일 색상")]
+    [SerializeField] private Color fixedColor = new Color(0.85f, 0.85f, 0.85f);
+    [Tooltip("반중력 상태의 고정 타일 색상")]
+    [SerializeField] private Color fixedInvertColor = new Color(0.68f, 0.68f, 0.85f);
+
+    [Header("Visuals - Locked Tile")]
+    [Tooltip("잠겨있을 때의 색상 (우선순위 제일 높음)")]
+    [SerializeField] private Color lockedColor = new Color(1f, 0.8f, 0.8f);
 
     [Header("Interaction Visuals")]
     [Tooltip("마우스를 올렸을 때 외곽선 색상")]
@@ -266,27 +277,22 @@ public class Tile : MonoBehaviour
 
     private void ApplyColorPriority()
     {
-        // 1. 기본이 되는 상태(베이스 컬러)를 먼저 결정합니다.
-        Color targetColor = unlockedColor;
+        Color targetColor = normalColor;
 
+        // 1. 타일 타입과 반중력 여부에 따라 기본 색상 결정
+        if (tileType == TileType.Fixed)
+        {
+            targetColor = invertGravity ? fixedInvertColor : fixedColor;
+        }
+        else // Normal 또는 KeyLocked(잠금 해제됨) 상태
+        {
+            targetColor = invertGravity ? normalInvertColor : normalColor;
+        }
+
+        // 2. 잠금(Locked) 상태라면 무조건 잠금 색상으로 덮어쓰기 (최우선 순위)
         if (isLocked)
         {
             targetColor = lockedColor;
-        }
-        else if (invertGravity)
-        {
-            targetColor = invertGravityColor;
-        }
-
-        // 2. 만약 고정 타일(Fixed)이라면, 위에서 결정된 베이스 컬러에 밝기 배율을 곱합니다.
-        if (tileType == TileType.Fixed)
-        {
-            targetColor = new Color(
-                targetColor.r * fixedBrightness, 
-                targetColor.g * fixedBrightness, 
-                targetColor.b * fixedBrightness, 
-                targetColor.a
-            );
         }
 
         // 3. 렌더러에 최종 색상 적용
