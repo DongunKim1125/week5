@@ -94,8 +94,15 @@ public class TileInputHandler : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (Input.GetKeyDown(KeyCode.Q)) _targetRotation *= Quaternion.Euler(0, 0, 90f);
-        else if (Input.GetKeyDown(KeyCode.E)) _targetRotation *= Quaternion.Euler(0, 0, -90f);
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.rotation);
+            _targetRotation *= Quaternion.Euler(0, 0, 90f);
+        }
+        else if (Input.GetKeyDown(KeyCode.E)) {
+            DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.rotation);
+            _targetRotation *= Quaternion.Euler(0, 0, -90f);
+        }
     }
 
     private void HandleInput()
