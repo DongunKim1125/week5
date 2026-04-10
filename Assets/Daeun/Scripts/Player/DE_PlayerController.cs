@@ -137,10 +137,12 @@ public class DE_PlayerController : MonoBehaviour
         bool wasGrounded = _isGrounded;
         _isGrounded = hits.Length > 0;
 
+        // JumpObject가 groundLayer에 포함되어 있지 않을 수도 있으므로, 레이어 상관없이 모두 감지하여 체크합니다.
+        RaycastHit2D[] allHits = Physics2D.BoxCastAll(transform.position, boxSize, 0f, Vector2.up * direction, castDistance);
         bool touchedJumpObject = false;
-        for (int i = 0; i < hits.Length; i++)
+        for (int i = 0; i < allHits.Length; i++)
         {
-            if (hits[i].collider != null && hits[i].collider.GetComponentInParent<JumpObject>() != null)
+            if (allHits[i].collider != null && allHits[i].collider.GetComponentInParent<JumpObject>() != null)
             {
                 touchedJumpObject = true;
                 break;

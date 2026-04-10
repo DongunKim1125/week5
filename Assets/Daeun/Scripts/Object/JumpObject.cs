@@ -68,7 +68,6 @@ public class JumpObject : MonoBehaviour
 
     private void ExecuteHeightBasedBounce(Collision2D collision)
     {
-        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.jump);
         DE_PlayerController controller = collision.gameObject.GetComponent<DE_PlayerController>();
         Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
 
@@ -76,6 +75,13 @@ public class JumpObject : MonoBehaviour
             return;
 
         Vector2 bounceDirection = GetBounceDirection(collision);
+
+        // 점프 등 스스로 튀어오르는 방향으로 이미 이동 중일 때는 점프대 효과를 무시합니다.
+        float velocityAlongBounce = Vector2.Dot(rb.linearVelocity, bounceDirection);
+        if (velocityAlongBounce > 0.1f)
+            return;
+
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.jump);
 
         float gravity = Mathf.Max(0.01f, Mathf.Abs(Physics2D.gravity.y * rb.gravityScale));
         float impactSpeed = collision.relativeVelocity.magnitude;
