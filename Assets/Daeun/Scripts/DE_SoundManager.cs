@@ -38,7 +38,7 @@ public class DE_SoundManager : MonoBehaviour
     //DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.Jump);
 
     public enum bgm {} 
-    public enum sfx { uiclick, stageclick, clunk1, cluck2, clear, AllClear, bell, die, unlock }
+    public enum sfx { uiclick, stageclick, clunk1, cluck2, clear, AllClear, bell, die, unlock, rotation, jump }
 
     void Awake()
     {
@@ -150,7 +150,7 @@ public class DE_SoundManager : MonoBehaviour
         for (int i = 0; i < sfxPLayer.Length; i++)
         {
             int loopIndex = (i + SFXchannelIndex) % sfxPLayer.Length;
-            if (sfxPLayer[loopIndex].isPlaying) continue;
+            // if (sfxPLayer[loopIndex].isPlaying) continue;
 
             SFXchannelIndex = (loopIndex + 1) % sfxPLayer.Length;
             sfxPLayer[loopIndex].clip = sfxSounds[(int)sfx];

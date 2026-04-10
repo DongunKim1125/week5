@@ -29,7 +29,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _EdgeWidth: 0.02
+    - _EdgeWidth: 0.0104
     - _FlowIntensity: 2
     - _FlowSpeed: 1
     - _GlowBloom: 1

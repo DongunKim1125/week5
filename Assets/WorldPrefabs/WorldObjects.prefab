@@ -350,6 +350,8 @@ MonoBehaviour:
   rotationSpeed: 10
   hoverScaleMultiplier: 1.05
   dragScaleMultiplier: 1.1
+  dragShakeAmount: 12
+  dragShakeSpeed: 4
   dragSortingOrderOffset: 100
   hintFont: {fileID: 11400000, guid: 71472e595d35e284c8a75c1480cf4892, type: 2}
   occupiedTileHint: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC788\uB294 \uD0C0\uC77C\uC785\uB2C8\uB2E4"
@@ -438,6 +440,10 @@ PrefabInstance:
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5294898312758212689, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
+      propertyPath: coyoteTime
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7400771041239086679, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: deathEffectPrefab

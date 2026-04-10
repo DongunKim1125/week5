@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public enum TileType { Normal, Fixed, KeyLocked }
 
@@ -26,6 +27,7 @@ public class Tile : MonoBehaviour
     private float outlineScale = 1.02f;
     [Tooltip("호버/드래그 외곽선이 인접 타일에 가려지지 않도록 올릴 Sorting Order 값")]
     [SerializeField] private int hoverSortingOrderOffset = 50;
+    [SerializeField] private Transform visualRoot;
     
     // 추가됨: 고정 타일일 때 최종 색상의 밝기를 얼마나 줄일 것인가 (1 = 그대로, 0.85 = 15% 어둡게)
     [Tooltip("고정 타일일 때 적용할 밝기 배율")]
@@ -52,9 +54,15 @@ public class Tile : MonoBehaviour
 
     private SpriteRenderer _chainRenderer;
     private SpriteRenderer _padlockRenderer;
+    private SpriteRenderer _visualRenderer;
     private SpriteRenderer _outlineRenderer; // 외곽선 전용 렌더러 (자동 생성)
     private int _baseBorderSortingOrder;    // borderRenderer의 원래 sortingOrder (복구용)
     private Dictionary<Renderer, int> _hoverOriginalSortingOrders = new Dictionary<Renderer, int>(); // 호버 시 복구용
+
+    private Dictionary<SpriteRenderer, SpriteRenderer> _overlayRenderers = new Dictionary<SpriteRenderer, SpriteRenderer>();
+    private List<SpriteRenderer> _overlaySourcesBuffer = new List<SpriteRenderer>();
+
+    private bool _isOriginalHidden = false;
 
     public int LockID => lockID;
     public TileType Type => tileType;
@@ -66,7 +74,124 @@ public class Tile : MonoBehaviour
 
     private void Awake()
     {
+        EnsureVisualRoot();
         GenerateLockedVisuals();
+    }
+
+    private void EnsureVisualRoot()
+    {
+        if (visualRoot == null)
+        {
+            Transform existing = transform.Find("Visual");
+            if (existing != null)
+            {
+                visualRoot = existing;
+            }
+            else
+            {
+                GameObject visualObj = new GameObject("Visual");
+                visualRoot = visualObj.transform;
+                visualRoot.SetParent(transform, false);
+            }
+        }
+
+        SyncVisualOverlay();
+        visualRoot.gameObject.SetActive(false);
+    }
+
+    private void SyncVisualOverlay()
+    {
+        if (visualRoot == null)
+            return;
+
+        _overlaySourcesBuffer.Clear();
+
+        SpriteRenderer[] sourceRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (SpriteRenderer sourceRenderer in sourceRenderers)
+        {
+            if (sourceRenderer == null || sourceRenderer.transform.IsChildOf(visualRoot))
+                continue;
+
+            _overlaySourcesBuffer.Add(sourceRenderer);
+
+            if (!_overlayRenderers.TryGetValue(sourceRenderer, out SpriteRenderer overlayRenderer) || overlayRenderer == null)
+            {
+                overlayRenderer = CreateOverlayRenderer(sourceRenderer);
+                _overlayRenderers[sourceRenderer] = overlayRenderer;
+            }
+
+            SyncOverlayRenderer(sourceRenderer, overlayRenderer);
+        }
+
+        List<SpriteRenderer> staleSources = _overlayRenderers.Keys.Where(source => !_overlaySourcesBuffer.Contains(source)).ToList();
+        foreach (SpriteRenderer staleSource in staleSources)
+        {
+            if (_overlayRenderers[staleSource] != null)
+                DestroyImmediate(_overlayRenderers[staleSource].gameObject);
+
+            _overlayRenderers.Remove(staleSource);
+        }
+    }
+
+    private SpriteRenderer CreateOverlayRenderer(SpriteRenderer sourceRenderer)
+    {
+        if (sourceRenderer == borderRenderer)
+        {
+            Transform visualSprite = visualRoot.Find("VisualSprite");
+            if (visualSprite == null)
+            {
+                GameObject visualSpriteObj = new GameObject("VisualSprite");
+                visualSprite = visualSpriteObj.transform;
+                visualSprite.SetParent(visualRoot, false);
+            }
+
+            _visualRenderer = visualSprite.GetComponent<SpriteRenderer>();
+            if (_visualRenderer == null)
+                _visualRenderer = visualSprite.gameObject.AddComponent<SpriteRenderer>();
+
+            return _visualRenderer;
+        }
+
+        GameObject overlayObj = new GameObject($"{sourceRenderer.gameObject.name}_Overlay");
+        overlayObj.transform.SetParent(visualRoot, false);
+        return overlayObj.AddComponent<SpriteRenderer>();
+    }
+
+    private void SyncOverlayRenderer(SpriteRenderer sourceRenderer, SpriteRenderer overlayRenderer)
+    {
+        if (sourceRenderer == null || overlayRenderer == null)
+            return;
+
+        Transform overlayTransform = overlayRenderer.transform;
+        overlayTransform.localPosition = transform.InverseTransformPoint(sourceRenderer.transform.position);
+        overlayTransform.localRotation = Quaternion.Inverse(transform.rotation) * sourceRenderer.transform.rotation;
+        overlayTransform.localScale = GetRelativeScale(sourceRenderer.transform.lossyScale, transform.lossyScale);
+
+        overlayRenderer.sprite = sourceRenderer.sprite;
+        overlayRenderer.color = sourceRenderer.color;
+        overlayRenderer.sortingLayerID = sourceRenderer.sortingLayerID;
+        overlayRenderer.sortingOrder = sourceRenderer.sortingOrder;
+        overlayRenderer.flipX = sourceRenderer.flipX;
+        overlayRenderer.flipY = sourceRenderer.flipY;
+        overlayRenderer.drawMode = sourceRenderer.drawMode;
+        overlayRenderer.size = sourceRenderer.size;
+        overlayRenderer.maskInteraction = sourceRenderer.maskInteraction;
+        overlayRenderer.enabled = _isOriginalHidden ? true : sourceRenderer.enabled; 
+
+        overlayRenderer.gameObject.SetActive(sourceRenderer.gameObject.activeSelf);
+    }
+
+    private Vector3 GetRelativeScale(Vector3 sourceLossyScale, Vector3 rootLossyScale)
+    {
+        return new Vector3(
+            SafeDivide(sourceLossyScale.x, rootLossyScale.x),
+            SafeDivide(sourceLossyScale.y, rootLossyScale.y),
+            SafeDivide(sourceLossyScale.z, rootLossyScale.z));
+    }
+
+    private float SafeDivide(float value, float divisor)
+    {
+        return Mathf.Approximately(divisor, 0f) ? 1f : value / divisor;
     }
 
     private void Start()
@@ -168,6 +293,7 @@ public class Tile : MonoBehaviour
 
         // 잠금 상태에 따라 쇠사슬/자물쇠 켜기/끄기
         ToggleLockedVisuals(isLocked);
+        SyncVisualOverlay();
     }
 
     private void GenerateLockedVisuals()
@@ -220,18 +346,22 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void GenerateOutline()
     {
-        if (borderRenderer == null || borderRenderer.sprite == null) return;
+        if (borderRenderer == null || borderRenderer.sprite == null || visualRoot == null) return;
+
+        SyncVisualOverlay();
+        if (_visualRenderer == null) return;
 
         // borderRenderer 원래 sortingOrder 저장 (SetHoverState에서 복구에 사용)
         _baseBorderSortingOrder = borderRenderer.sortingOrder;
 
         GameObject outlineObj = new GameObject("TileOutline_Auto");
-        outlineObj.transform.SetParent(transform);
+        outlineObj.transform.SetParent(visualRoot);
         outlineObj.transform.localPosition = Vector3.zero;
         outlineObj.transform.localScale = Vector3.one * outlineScale;
 
         _outlineRenderer = outlineObj.AddComponent<SpriteRenderer>();
-        _outlineRenderer.sprite = borderRenderer.sprite;
+        _outlineRenderer.sprite = _visualRenderer.sprite;
+        _outlineRenderer.sortingLayerID = _visualRenderer.sortingLayerID;
         _outlineRenderer.sortingOrder = _baseBorderSortingOrder - 1; // 기본: 배경 뒤에 배치
         _outlineRenderer.color = Color.clear; // 기본 투명
     }
@@ -250,7 +380,7 @@ public class Tile : MonoBehaviour
             // 1. 자식 포함 모든 렌더러(outline 제외)를 hoverSortingOrderOffset만큼 올림
             //    → 자식 플랫폼들도 outline 위에 유지되어 가려지지 않음
             _hoverOriginalSortingOrders.Clear();
-            Renderer[] allRenderers = GetComponentsInChildren<Renderer>(true);
+            Renderer[] allRenderers = visualRoot.GetComponentsInChildren<Renderer>(true);
             foreach (var r in allRenderers)
             {
                 if (r == _outlineRenderer) continue; // outline은 별도 처리
@@ -287,6 +417,39 @@ public class Tile : MonoBehaviour
     {
         if (_outlineRenderer == null) return;
         _outlineRenderer.color = isDragging ? dragOutlineColor : Color.clear;
+
+        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        if (col != null)
+        {
+            col.enabled = !isDragging;
+        }
+    }
+
+    public void SetVisualScale(float scaleMultiplier)
+    {
+        if (visualRoot == null) return;
+        
+        bool isDragging = scaleMultiplier > 1f;
+
+        SyncVisualOverlay();
+        
+        visualRoot.gameObject.SetActive(isDragging);
+        visualRoot.localScale = Vector3.one * scaleMultiplier;
+
+        // 드래그 중이면 원본 타일의 렌더러들을 숨겨서 겹쳐 보이지 않게 함
+        ToggleOriginalRenderers(!isDragging);
+    }
+
+    private void ToggleOriginalRenderers(bool isVisible)
+    {
+        _isOriginalHidden = !isVisible;
+        foreach (var sr in _overlaySourcesBuffer)
+        {
+            if (sr != null)
+            {
+                sr.enabled = isVisible;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) { if (other.CompareTag("Player")) isOccupiedByPlayer = true; }
