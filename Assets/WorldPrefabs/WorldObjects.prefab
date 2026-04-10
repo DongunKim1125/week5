@@ -350,6 +350,8 @@ MonoBehaviour:
   rotationSpeed: 10
   hoverScaleMultiplier: 1.05
   dragScaleMultiplier: 1.1
+  dragShakeAmount: 12
+  dragShakeSpeed: 4
   dragSortingOrderOffset: 100
   hintFont: {fileID: 11400000, guid: 71472e595d35e284c8a75c1480cf4892, type: 2}
   occupiedTileHint: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC788\uB294 \uD0C0\uC77C\uC785\uB2C8\uB2E4"
