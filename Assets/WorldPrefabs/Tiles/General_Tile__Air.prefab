@@ -197,4 +197,4 @@ MonoBehaviour:
   usePulseEffect: 1
   minAlpha: 0
   maxAlpha: 1
-  pulseSpeed: 1
+  pulseSpeed: 1.5

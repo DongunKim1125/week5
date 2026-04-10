@@ -198,7 +198,7 @@ MonoBehaviour:
   usePulseEffect: 1
   minAlpha: 0
   maxAlpha: 1
-  pulseSpeed: 1
+  pulseSpeed: 1.5
 --- !u!1001 &3452536375274421956
 PrefabInstance:
   m_ObjectHideFlags: 0

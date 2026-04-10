@@ -44,20 +44,20 @@ public class MovableTileEdgeLine : MonoBehaviour
     public float hoverLineWidthMultiplier = 1.5f;
 
     // =========================================================
-    // ⬇️ 새로 추가된 펄스(Pulse) 효과 설정
+    // ⬇️ 수정된 펄스(Pulse) 효과 설정
     // =========================================================
     [Header("Pulse Effect (Alpha)")]
-    [Tooltip("투명도 깜빡임(펄스) 효과 사용 여부")]
+    [Tooltip("투명도 깜빡임(펄스) 효과 사용 여부 (플레이어 입력 시 자동으로 꺼짐)")]
     public bool usePulseEffect = true;
     
     [Tooltip("최소 투명도 (0.0 ~ 1.0)")]
-    [Range(0f, 1f)] public float minAlpha = 0.2f;
+    [Range(0f, 1f)] public float minAlpha = 0.0f;
     
     [Tooltip("최대 투명도 (0.0 ~ 1.0)")]
     [Range(0f, 1f)] public float maxAlpha = 1.0f;
     
-    [Tooltip("투명도가 변하는 속도")]
-    public float pulseSpeed = 3f;
+    [Tooltip("투명도가 변하는 속도 (입력이 없을 때 밝아지는 속도)")]
+    public float pulseSpeed = 2f;
     // =========================================================
 
     // ─────────────────────────────────────────────────────────
@@ -85,6 +85,9 @@ public class MovableTileEdgeLine : MonoBehaviour
     private Tile   _tile;
     private Camera _mainCamera;
     private bool   _isHovered;
+    private float _currentAlphaRatio = 0f; // 펄스 애니메이션을 위한 내부 상태값
+    private float _pulseTimer = 0f;
+    private DE_PlayerController _playerController;
 
     // ─────────────────────────────────────────────────────────
     // 초기화
@@ -93,6 +96,8 @@ public class MovableTileEdgeLine : MonoBehaviour
     {
         _tile       = GetComponent<Tile>();
         _mainCamera = Camera.main;
+        // 씬 시작 시 플레이어 컨트롤러를 찾아둠
+        _playerController = FindFirstObjectByType<DE_PlayerController>();
 
         _corners = new Vector3[]
         {
@@ -138,18 +143,43 @@ public class MovableTileEdgeLine : MonoBehaviour
         }
 
         // =========================================================
-        // 4. 일반 상태 알파값 계산 (Sine 함수를 이용한 펄스)
+        // 4. 일반 상태 알파값 계산 (입력 정지 시 펄스 타이머 시작)
         // =========================================================
-        float currentAlpha = normalColor.a; // 인스펙터에서 설정한 기본 알파값
-        if (usePulseEffect)
+        float currentAlpha = minAlpha; 
+        
+        if (usePulseEffect && _playerController != null)
         {
-            // Mathf.Sin은 -1 ~ 1 사이를 왕복하므로, 이를 0 ~ 1 사이로 정규화
-            float t = (Mathf.Sin(Time.time * pulseSpeed) + 1f) / 2f;
-            currentAlpha = Mathf.Lerp(minAlpha, maxAlpha, t);
+            if (!_playerController.IsInputting)
+            {
+                // 조작을 멈추면 비율이 1(100%)로 차오르고, 펄스 타이머가 흘러가기 시작함
+                _currentAlphaRatio = Mathf.Clamp01(_currentAlphaRatio + Time.deltaTime * pulseSpeed);
+                _pulseTimer += Time.deltaTime; 
+            }
+            else
+            {
+                // 조작 중이면 빠르게 비율이 0(0%)으로 깎이고, 펄스 타이머를 0으로 초기화
+                _currentAlphaRatio = Mathf.Clamp01(_currentAlphaRatio - Time.deltaTime * (pulseSpeed * 2f)); 
+                _pulseTimer = 0f; 
+            }
+
+            // Mathf.Cos를 사용하면 타이머가 0일 때 1(최대치)에서 시작하므로, 
+            // 켜지자마자 가장 밝은 상태(maxAlpha)에서 시작해 부드럽게 어두워지는 펄스가 만들어집니다.
+            float pulseT = (Mathf.Cos(_pulseTimer * pulseSpeed) + 1f) / 2f;
+            float targetPulseAlpha = Mathf.Lerp(minAlpha, maxAlpha, pulseT);
+
+            // 최종 알파값 = (0부터 시작한 펄스 값) * (현재 나타남/사라짐 비율)
+            currentAlpha = targetPulseAlpha * _currentAlphaRatio;
+        }
+        else if (!usePulseEffect)
+        {
+            currentAlpha = normalColor.a;
         }
         
-        // 투명도가 적용된 기본 색상 (normalColor의 RGB를 그대로 가져옴)
+        // 투명도가 적용된 기본 색상
         Color normalColorWithPulse = new Color(normalColor.r, normalColor.g, normalColor.b, currentAlpha);
+        
+        // 만약 투명도가 거의 0에 가깝다면 (안보인다면) 렌더링 최적화를 위해 여기서 종료
+        if (currentAlpha <= 0.01f) return;
         // =========================================================
 
 
