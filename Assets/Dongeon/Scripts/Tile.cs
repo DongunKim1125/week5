@@ -51,6 +51,14 @@ public class Tile : MonoBehaviour
     [SerializeField] private float chainScale = 0.8f;
     [Tooltip("자물쇠 스케일")]
     [SerializeField] private float padlockScale = 0.4f;
+    
+    [Header("Fixed Tile Visuals")]
+    [Tooltip("고정 타일 위에 덮어씌울 빗금(Hatch) 스프라이트")]
+    [SerializeField] private Sprite fixedOverlaySprite;
+    [Tooltip("빗금 스프라이트의 색상 및 투명도")]
+    [SerializeField] private Color fixedOverlayColor = new Color(1f, 1f, 1f, 0.3f); // 기본 투명도 30%
+    [Tooltip("빗금 스프라이트의 Sorting Order (타일 배경보다 높게 설정)")]
+    [SerializeField] private int fixedOverlaySortingOrder = 5;
 
     private SpriteRenderer _chainRenderer;
     private SpriteRenderer _padlockRenderer;
@@ -58,6 +66,7 @@ public class Tile : MonoBehaviour
     private SpriteRenderer _outlineRenderer; // 외곽선 전용 렌더러 (자동 생성)
     private int _baseBorderSortingOrder;    // borderRenderer의 원래 sortingOrder (복구용)
     private Dictionary<Renderer, int> _hoverOriginalSortingOrders = new Dictionary<Renderer, int>(); // 호버 시 복구용
+    private SpriteRenderer _fixedOverlayRenderer;
 
     private Dictionary<SpriteRenderer, SpriteRenderer> _overlayRenderers = new Dictionary<SpriteRenderer, SpriteRenderer>();
     private List<SpriteRenderer> _overlaySourcesBuffer = new List<SpriteRenderer>();
@@ -75,6 +84,7 @@ public class Tile : MonoBehaviour
     private void Awake()
     {
         EnsureVisualRoot();
+        GenerateFixedVisuals();
         GenerateLockedVisuals();
     }
 
@@ -293,6 +303,7 @@ public class Tile : MonoBehaviour
 
         // 잠금 상태에 따라 쇠사슬/자물쇠 켜기/끄기
         ToggleLockedVisuals(isLocked);
+        ToggleFixedVisuals(tileType == TileType.Fixed);
         SyncVisualOverlay();
     }
 
@@ -459,5 +470,36 @@ public class Tile : MonoBehaviour
     { 
         if (tileType == TileType.Normal) isLocked = false;
         ApplyColorPriority();
+    }
+    
+    private void GenerateFixedVisuals()
+    {
+        if (fixedOverlaySprite != null)
+        {
+            GameObject overlayObj = new GameObject("FixedOverlay_Auto");
+            // visualRoot가 아닌 transform에 붙여야 SyncVisualOverlay가 
+            // 드래그/확대 시 자동으로 오버레이를 복사해서 그려줍니다.
+            overlayObj.transform.SetParent(transform); 
+            
+            // Z축을 -0.05f 정도로 주어 타일 배경보다 아주 살짝 앞으로 오게 합니다.
+            overlayObj.transform.localPosition = new Vector3(0f, 0f, -0.05f); 
+            overlayObj.transform.localScale = Vector3.one;
+
+            _fixedOverlayRenderer = overlayObj.AddComponent<SpriteRenderer>();
+            _fixedOverlayRenderer.sprite = fixedOverlaySprite;
+            _fixedOverlayRenderer.color = fixedOverlayColor;
+            _fixedOverlayRenderer.sortingOrder = fixedOverlaySortingOrder;
+        }
+
+        ToggleFixedVisuals(false); // 처음 생성 시에는 꺼둠
+    }
+
+    // ⬇️ 켜고 끄는 토글 메서드
+    private void ToggleFixedVisuals(bool isActive)
+    {
+        if (_fixedOverlayRenderer != null)
+        {
+            _fixedOverlayRenderer.gameObject.SetActive(isActive);
+        }
     }
 }
