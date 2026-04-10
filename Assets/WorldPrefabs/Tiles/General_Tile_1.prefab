@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6270105272533751257}
   - component: {fileID: 7994597274793602657}
   - component: {fileID: 8518318969344062906}
+  - component: {fileID: 1111942732403629109}
   m_Layer: 0
   m_Name: General_Tile_1
   m_TagString: Untagged
@@ -170,6 +171,27 @@ MonoBehaviour:
   padlockSprite: {fileID: -3343585313190569305, guid: b6c5225399a463a478037a1b48ef9354, type: 3}
   chainScale: 0.4
   padlockScale: 0.5
+  fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
+  fixedOverlayColor: {r: 1, g: 1, b: 1, a: 1}
+  fixedOverlaySortingOrder: 5
+--- !u!114 &1111942732403629109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4513621499352595547}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89a3bc31ecfd6de4cae88ac021a42713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovableTileEdgeLine
+  lineMaterial: {fileID: 2100000, guid: f3e3a05df3992dd438456ca333d41d5b, type: 2}
+  halfSize: 1.5
+  lineWidth: 0.06
+  zOffset: 0
+  hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  hoverLineWidthMultiplier: 1.5
 --- !u!1001 &7270261017361226229
 PrefabInstance:
   m_ObjectHideFlags: 0

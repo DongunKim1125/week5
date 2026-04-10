@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4475901320984159389}
   - component: {fileID: 7866213789497641703}
   - component: {fileID: 7512660551015401454}
+  - component: {fileID: 4086129700110118602}
   m_Layer: 0
   m_Name: General_Tile_19
   m_TagString: Untagged
@@ -117,16 +118,18 @@ MonoBehaviour:
   unlockedColor: {r: 0.15076537, g: 0.16270071, b: 0.26415092, a: 1}
   invertGravityColor: {r: 0.7386708, g: 0.5562478, b: 0.9433962, a: 1}
   hoverSortingOrderOffset: 50
+  visualRoot: {fileID: 0}
   fixedBrightness: 0.9
   borderRenderer: {fileID: 4475901320984159389}
-  nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
-  nailOffset: 0.1
   gravityEffectPrefab: {fileID: 0}
   gravityEffectOrderOffset: 1
   chainSprite: {fileID: 0}
   padlockSprite: {fileID: -3343585313190569305, guid: b6c5225399a463a478037a1b48ef9354, type: 3}
   chainScale: 0.8
   padlockScale: 0.4
+  fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
+  fixedOverlayColor: {r: 1, g: 1, b: 1, a: 1}
+  fixedOverlaySortingOrder: 5
 --- !u!61 &7512660551015401454
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -173,6 +176,24 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &4086129700110118602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4187859458412472455}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89a3bc31ecfd6de4cae88ac021a42713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovableTileEdgeLine
+  lineMaterial: {fileID: 2100000, guid: f3e3a05df3992dd438456ca333d41d5b, type: 2}
+  halfSize: 1.5
+  lineWidth: 0.06
+  zOffset: 0
+  hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  hoverLineWidthMultiplier: 1.5
 --- !u!1001 &837920185418579340
 PrefabInstance:
   m_ObjectHideFlags: 0
