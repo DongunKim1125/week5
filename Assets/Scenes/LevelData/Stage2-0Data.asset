@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d63cc75be70a6744ba7b171face539bd, type: 3}
   m_Name: Stage2-0Data
   m_EditorClassIdentifier: Assembly-CSharp::StageData
-  stageDisplayName: 2-0
+  stageDisplayName: 9
   sceneName: Stage2-0
   isDefaultUnlocked: 0
   stageDescription: 
