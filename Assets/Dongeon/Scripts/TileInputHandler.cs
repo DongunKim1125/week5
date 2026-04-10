@@ -131,8 +131,7 @@ public class TileInputHandler : MonoBehaviour
             if (tileUnderMouse != null)
             {
                 _hoveredTile = tileUnderMouse;
-                _hoveredTileOriginalScale = _hoveredTile.transform.localScale;
-                _hoveredTile.transform.localScale = _hoveredTileOriginalScale * hoverScaleMultiplier;
+                _hoveredTile.SetVisualScale(hoverScaleMultiplier);
                 _hoveredTile.SetHoverState(true); // 외곽선 호버 색상 적용
             }
         }
@@ -142,7 +141,7 @@ public class TileInputHandler : MonoBehaviour
     {
         if (_hoveredTile != null)
         {
-            _hoveredTile.transform.localScale = _hoveredTileOriginalScale;
+            _hoveredTile.SetVisualScale(1f);
             _hoveredTile.SetHoverState(false); // 외곽선 원래대로 복구
             _hoveredTile = null;
         }
@@ -219,8 +218,8 @@ public class TileInputHandler : MonoBehaviour
             _originalWorldPos = _selectedTile.transform.position;
             _originalGridPos = _selectedTile.GridPosition;
             
-            _originalTileScale = _selectedTile.transform.localScale;
-            _selectedTile.transform.localScale = _originalTileScale * dragScaleMultiplier;
+            _originalTileScale = Vector3.one;
+            _selectedTile.SetVisualScale(dragScaleMultiplier);
 
             _targetRotation = _selectedTile.transform.rotation;
             Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -282,7 +281,7 @@ public class TileInputHandler : MonoBehaviour
         // 3. 드래그 외곽선 색상 복구
         _selectedTile.SetDragState(false);
 
-        _selectedTile.transform.localScale = _originalTileScale;
+        _selectedTile.SetVisualScale(1f);
 
         Vector2Int targetGridPos = GridManager.Instance.WorldToGrid(_selectedTile.transform.position);
 
