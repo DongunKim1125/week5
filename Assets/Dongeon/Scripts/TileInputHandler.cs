@@ -283,13 +283,16 @@ public class TileInputHandler : MonoBehaviour
 
         _selectedTile.SetVisualScale(1f);
 
+        // ★ 버그 수정: 성공/실패 여부에 상관없이 마우스를 놓는 순간 
+        // 흔들림(Shake)이 들어간 회전값을 원래 목표하는 직각(0, 90, 180, 270)으로 즉시 고정합니다.
+        _selectedTile.transform.rotation = _targetRotation;
+
         Vector2Int targetGridPos = GridManager.Instance.WorldToGrid(_selectedTile.transform.position);
 
         if (GridManager.Instance.IsEmpty(targetGridPos) || targetGridPos == _originalGridPos)
         {
             // 빈 칸이거나 제자리인 경우: 일반 이동
             GridManager.Instance.UpdateTilePosition(_originalGridPos, targetGridPos, _selectedTile);
-            _selectedTile.transform.rotation = _targetRotation;
         }
         else if (GridManager.Instance.IsInBounds(targetGridPos))
         {
@@ -299,7 +302,6 @@ public class TileInputHandler : MonoBehaviour
             {
                 // 상대방도 이동 가능하면 서로 교체
                 GridManager.Instance.SwapTiles(_originalGridPos, targetGridPos);
-                _selectedTile.transform.rotation = _targetRotation;
                 Debug.Log($"타일 위치 교체: {_selectedTile.name} <-> {targetTile.name}");
             }
             else
