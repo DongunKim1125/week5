@@ -39,6 +39,7 @@ public class JumpObject : MonoBehaviour
 
     private void ExecuteHeightBasedBounce(Collision2D collision)
     {
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.jump);
         DE_PlayerController controller = collision.gameObject.GetComponent<DE_PlayerController>();
         Rigidbody2D rb = collision.gameObject.GetComponent<Rigidbody2D>();
 
