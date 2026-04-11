@@ -200,14 +200,14 @@ MonoBehaviour:
   lineMaterial: {fileID: 2100000, guid: ad09a1c5a71077c4eb35de0e6656af4d, type: 2}
   normalColor: {r: 1, g: 1, b: 1, a: 1}
   halfSize: 1.5
-  lineWidth: 0.08
+  lineWidth: 0.06
   zOffset: 0
   hoverColor: {r: 1, g: 1, b: 1, a: 1}
   hoverLineWidthMultiplier: 1.5
   usePulseEffect: 1
   minAlpha: 0
-  maxAlpha: 1
-  pulseSpeed: 1.5
+  maxAlpha: 0.8
+  pulseSpeed: 3
 --- !u!1001 &2889850531006333962
 PrefabInstance:
   m_ObjectHideFlags: 0
