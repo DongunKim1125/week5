@@ -60,6 +60,9 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelDesign/Stage4-4.unity
     guid: 815365303b377fb42aa7b25106173fea
   - enabled: 1
+    path: Assets/Scenes/LevelDesign/Stage4-5.unity
+    guid: 7ab3f465c77fde548b59011c04030d9e
+  - enabled: 1
     path: Assets/Scenes/LevelDesign/Stage4-6.unity
     guid: 769f7db50f818134e990299ed5e86600
   - enabled: 1
