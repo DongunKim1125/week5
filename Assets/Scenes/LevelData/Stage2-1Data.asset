@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Stage2-1Data
   m_EditorClassIdentifier: Assembly-CSharp::StageData
   stageDisplayName: 10
-  sceneName: Stage2-1
+  sceneName: Stage10
   isDefaultUnlocked: 0
   stageDescription: 
