@@ -24,6 +24,7 @@ public static class SceneLoader
 
     public static void GoToStageSelect()
     {
+        CheckpointManager.ClearCheckpoint();
         SceneManager.LoadScene("StageSelectScene");
     }
 }

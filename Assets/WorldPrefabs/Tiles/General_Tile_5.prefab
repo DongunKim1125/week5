@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8207547546963756720}
   - component: {fileID: 8888278964696624800}
   - component: {fileID: 1907215932081757681}
+  - component: {fileID: 1342468277244907734}
   m_Layer: 0
   m_Name: General_Tile_5
   m_TagString: Untagged
@@ -85,7 +86,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.47058824, g: 0.52156866, b: 0.69803923, a: 1}
+  m_Color: {r: 0.1970452, g: 0.20123866, b: 0.33962262, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -157,20 +158,47 @@ MonoBehaviour:
   isLocked: 0
   isOccupiedByPlayer: 0
   invertGravity: 0
+  normalColor: {r: 0.1970452, g: 0.20123866, b: 0.33962262, a: 1}
+  normalInvertColor: {r: 0.4509804, g: 0.34901962, b: 0.6901961, a: 1}
+  fixedColor: {r: 0.13768244, g: 0.14084716, b: 0.24528301, a: 1}
+  fixedInvertColor: {r: 0.32156864, g: 0.25490198, b: 0.52156866, a: 1}
   lockedColor: {r: 1, g: 0.8, b: 0.8, a: 1}
-  unlockedColor: {r: 0.47058824, g: 0.52156866, b: 0.69803923, a: 1}
-  invertGravityColor: {r: 0.7386708, g: 0.5562478, b: 0.9433962, a: 1}
   hoverSortingOrderOffset: 50
-  fixedBrightness: 0.9
+  visualRoot: {fileID: 0}
+  fixedBrightness: 0.6
   borderRenderer: {fileID: 8207547546963756720}
-  nailSprite: {fileID: 21300000, guid: e01840d19d275df42978c66eaf776b01, type: 3}
-  nailOffset: 0.1
   gravityEffectPrefab: {fileID: 0}
   gravityEffectOrderOffset: 1
   chainSprite: {fileID: 0}
   padlockSprite: {fileID: -3343585313190569305, guid: b6c5225399a463a478037a1b48ef9354, type: 3}
   chainScale: 0.8
   padlockScale: 0.4
+  fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
+  fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
+  fixedOverlaySortingOrder: 5
+--- !u!114 &1342468277244907734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3766947997505576331}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89a3bc31ecfd6de4cae88ac021a42713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MovableTileEdgeLine
+  lineMaterial: {fileID: 2100000, guid: ad09a1c5a71077c4eb35de0e6656af4d, type: 2}
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  halfSize: 1.5
+  lineWidth: 0.08
+  zOffset: 0
+  hoverColor: {r: 1, g: 1, b: 1, a: 1}
+  hoverLineWidthMultiplier: 1.5
+  usePulseEffect: 1
+  minAlpha: 0
+  maxAlpha: 1
+  pulseSpeed: 1.5
 --- !u!1001 &1544437218060180843
 PrefabInstance:
   m_ObjectHideFlags: 0

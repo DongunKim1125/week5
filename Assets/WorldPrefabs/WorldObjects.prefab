@@ -32,6 +32,7 @@ Transform:
   - {fileID: 4332353595579516568}
   - {fileID: 9073645575694921660}
   - {fileID: 4710312637648358028}
+  - {fileID: 4750315131453752146}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2734428656758068730
@@ -117,7 +118,7 @@ SpriteRenderer:
   m_SortingOrder: 10
   m_MaskInteraction: 0
   m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
-  m_Color: {r: 1, g: 0.62352943, b: 0.10980392, a: 1}
+  m_Color: {r: 1, g: 0.61502856, b: 0.033018887, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -186,7 +187,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.1970452, g: 0.22494082, b: 0.33962262, a: 0}
+  m_BackGroundColor: {r: 0.0627451, g: 0.07058824, b: 0.13725491, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -258,7 +259,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -279,6 +280,55 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!1 &5871927945619400842
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4750315131453752146}
+  - component: {fileID: 2741012360299885899}
+  m_Layer: 0
+  m_Name: Global Volume
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4750315131453752146
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5871927945619400842}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -1.1335757, y: 0.07009984, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5600497458870583303}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2741012360299885899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5871927945619400842}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172515602e62fb746b5d573b38a5fe58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
+  m_IsGlobal: 1
+  priority: 0
+  blendDistance: 0
+  weight: 1
+  sharedProfile: {fileID: 11400000, guid: 4586e225a16aaab4c8efe439eab2f0b1, type: 2}
 --- !u!1 &8612569524975500859
 GameObject:
   m_ObjectHideFlags: 0
@@ -328,6 +378,9 @@ MonoBehaviour:
   width: 5
   height: 4
   cellSize: 3
+  showBackdrop: 1
+  squareSprite: {fileID: 21300000, guid: a8e5c719df318104e97b1b8f8732ad65, type: 3}
+  backdropColor: {r: 0, g: 0, b: 0, a: 0.88235295}
   showGrid: 1
   showGridInGame: 1
   gridColor: {r: 0.52078146, g: 0.57825804, b: 0.7830189, a: 0.33333334}
@@ -370,7 +423,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8612569524975500859}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6aeba4891f5e65d45823cc1160044143, type: 3}
   m_Name: 
@@ -407,7 +460,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -4.14
+      value: -1.79
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.z
@@ -440,6 +493,10 @@ PrefabInstance:
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5294898312758212689, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
+      propertyPath: coyoteTime
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7400771041239086679, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: deathEffectPrefab

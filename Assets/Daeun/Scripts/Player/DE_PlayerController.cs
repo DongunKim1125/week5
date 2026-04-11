@@ -17,6 +17,10 @@ public class DE_PlayerController : MonoBehaviour
     [SerializeField] private float castDistance = 0.1f;
     [SerializeField] private Vector2 boxSize = new Vector2(0.5f, 0.1f);
 
+    [Tooltip("절벽에서 떨어진 후 점프가 가능한 유예 시간")]
+    [SerializeField] private float coyoteTime = 0.15f; 
+    private float _coyoteTimeCounter; 
+
     private Rigidbody2D _rb;
     private float _horizontalInput;
     private Vector3 _initialScale;
@@ -60,6 +64,17 @@ public class DE_PlayerController : MonoBehaviour
         UpdateGravityBasedOnTile();
         CheckGrounded();
 
+        if (_isGrounded)
+        {
+            // 땅에 닿아있으면 타이머를 꽉 채워줍니다.
+            _coyoteTimeCounter = coyoteTime;
+        }
+        else
+        {
+            // 공중에 있으면 타이머를 깎습니다.
+            _coyoteTimeCounter -= Time.deltaTime;
+        }
+
         if (InputLockTimer > 0f)
         {
             _horizontalInput = 0f;
@@ -69,7 +84,7 @@ public class DE_PlayerController : MonoBehaviour
 
         _horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        if (Input.GetButtonDown("Jump") && _isGrounded)
+        if (Input.GetButtonDown("Jump") && _coyoteTimeCounter > 0f)
             Jump();
     }
 
@@ -122,10 +137,12 @@ public class DE_PlayerController : MonoBehaviour
         bool wasGrounded = _isGrounded;
         _isGrounded = hits.Length > 0;
 
+        // JumpObject가 groundLayer에 포함되어 있지 않을 수도 있으므로, 레이어 상관없이 모두 감지하여 체크합니다.
+        RaycastHit2D[] allHits = Physics2D.BoxCastAll(transform.position, boxSize, 0f, Vector2.up * direction, castDistance);
         bool touchedJumpObject = false;
-        for (int i = 0; i < hits.Length; i++)
+        for (int i = 0; i < allHits.Length; i++)
         {
-            if (hits[i].collider != null && hits[i].collider.GetComponentInParent<JumpObject>() != null)
+            if (allHits[i].collider != null && allHits[i].collider.GetComponentInParent<JumpObject>() != null)
             {
                 touchedJumpObject = true;
                 break;
@@ -141,6 +158,8 @@ public class DE_PlayerController : MonoBehaviour
 
     private void Jump()
     {
+        _coyoteTimeCounter = 0f;
+        
         float jumpDirection = _rb.gravityScale > 0 ? 1f : -1f;
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0f);
         _rb.AddForce(Vector2.up * jumpDirection * jumpForce, ForceMode2D.Impulse);
