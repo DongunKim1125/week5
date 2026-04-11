@@ -278,29 +278,6 @@ public class JumpObject : MonoBehaviour
                 }
             }
         }
-        
-        // 노말 계산이 빗나가는 코너 충돌 등을 대비한 엄격한 위치 기반 폴백
-        if (!isCorrectSide && collision.collider != null && platformTransform != null)
-        {
-            Collider2D platCol = platformTransform.GetComponent<Collider2D>();
-            if (platCol != null)
-            {
-                Vector2 playerCenter = collision.collider.bounds.center;
-                Vector2 platCenter = platCol.bounds.center;
-                Vector2 extentsP = collision.collider.bounds.extents;
-                Vector2 extentsT = platCol.bounds.extents;
-
-                float dist = Vector2.Dot(playerCenter - platCenter, activeDir);
-                float minRequiredDist = Vector2.Dot(extentsT, new Vector2(Mathf.Abs(activeDir.x), Mathf.Abs(activeDir.y))) 
-                                      + Vector2.Dot(extentsP, new Vector2(Mathf.Abs(activeDir.x), Mathf.Abs(activeDir.y))) 
-                                      - 0.45f;
-                
-                if (dist >= minRequiredDist)
-                {
-                    isCorrectSide = true;
-                }
-            }
-        }
 
         Rigidbody2D playerRb = collision.gameObject.GetComponent<Rigidbody2D>();
         bool isMovingTowards = true;
@@ -393,13 +370,9 @@ public class JumpObject : MonoBehaviour
         playerRb.linearVelocity = Vector2.zero;
         playerRb.gravityScale   = 0f;
 
+        Vector3 prevPlatformPos = platformTransform != null ? platformTransform.position : transform.position;
+
         // ── 1단계: 압축 ──
-        // 플레이어는 중력=0, 속도=0으로 제자리에 떠 있습니다.
-        // PinPlayerToPlatformTop을 사용하지 않는 이유:
-        //   Platform의 BoxCollider2D는 Kinematic RB 자식이라 localPosition 변경 시
-        //   물리 충돌 위치는 움직이지 않습니다. 시각 위치로
-        //   플레이어를 옵기면 콜라이더에서 이탈하여 OnCollisionExit2D가
-        //   조기 발동되어 다음번 Enter를 기다려야 하는 버그의 원인이 됩니다.
         float elapsed = 0f;
         while (elapsed < compressDuration)
         {
@@ -408,7 +381,15 @@ public class JumpObject : MonoBehaviour
             float eased = EaseOutQuad(t); // 빠르게 눌리고 멈춴
             ApplyCompression(eased * compressionAmt);
 
-            // 플레이어 속도를 0으로 유지하여 제자리 부유 유지
+            if (platformTransform != null)
+            {
+                Vector3 currentPlatformPos = platformTransform.position;
+                Vector3 delta = currentPlatformPos - prevPlatformPos;
+                playerRb.position = playerRb.position + (Vector2)delta;
+                prevPlatformPos = currentPlatformPos;
+            }
+
+            // 플레이어 속도를 0으로 유지하여 제자리 부유 방지
             playerRb.linearVelocity = Vector2.zero;
 
             yield return null;
@@ -430,6 +411,14 @@ public class JumpObject : MonoBehaviour
             float eased     = EaseInQuad(t); // 천천히 시작 → 빠르게 복원
             float remaining = compressionAmt * (1f - eased);
             ApplyCompression(remaining);
+
+            if (!launched && platformTransform != null)
+            {
+                Vector3 currentPlatformPos = platformTransform.position;
+                Vector3 delta = currentPlatformPos - prevPlatformPos;
+                playerRb.position = playerRb.position + (Vector2)delta;
+                prevPlatformPos = currentPlatformPos;
+            }
 
             // 복원 30% 지점에서 플레이어 발사
             if (!launched && t >= 0.3f)

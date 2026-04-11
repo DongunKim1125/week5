@@ -54,10 +54,14 @@ TemporaryDependencyNodeTargetIdentifier=netstandard2.1
 [sourceFiles]
 Assets/Daeun/Scripts/
  DE_SoundManager.cs
- Object/JumpObject.cs
+ Object/
+  CheckPoint.cs
+  CheckpointManager.cs
+  JumpObject.cs
  Player/
   DE_PlayerController.cs
   DE_PlayerHealth.cs
+ Tile/MovableTileEdgeLine.cs
 Assets/
  Daeun_ShaderSet/GridEffectApplier.cs
  Dongeon/Scripts/
@@ -77,6 +81,7 @@ Assets/
   StageSelectUI.cs
   StageUI.cs
   Tile.cs
+  TileColorSettings.cs
   TileDragger.cs
   TileInputHandler.cs
   TitleUI.cs
