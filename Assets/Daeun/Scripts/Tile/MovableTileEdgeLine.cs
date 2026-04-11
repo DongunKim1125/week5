@@ -3,69 +3,32 @@ using System.Collections.Generic;
 
 /// <summary>
 /// 이동 가능한 타일의 외곽선을 그리는 컴포넌트.
-///
-/// [렌더러 구조]
-/// _loopLR    : loop = true, 4점 → 모서리 이음새 없는 완벽한 사각형.
-///              호버 시 또는 4면이 전부 외곽일 때 사용.
-/// _segLR[2]  : 부분 외곽 시 연속 구간(L·U자형)을 그리는 경로 렌더러 (최대 2개).
-///
-/// [색상 정책]
-/// - 일반 상태 : 버텍스 색 = Color.white (= 재질 색 그대로 표시, 별도 tint 없음)
-/// - 호버 상태 : 버텍스 색 = hoverColor (인스펙터에서 설정)
-///
-/// [호버 감지]
-/// Tile.cs 수정 없이 GridManager.WorldToGrid 로 직접 판별.
 /// </summary>
 [RequireComponent(typeof(Tile))]
 public class MovableTileEdgeLine : MonoBehaviour
 {
     [Header("Line Settings")]
-    [Tooltip("선에 적용할 재질")]
     public Material lineMaterial;
-    
-    // ⬇️ 새로 추가하는 변수: 평상시 선 색상
-    [Tooltip("일반 상태의 선 색상 (주황색으로 설정하세요)")]
     public Color normalColor = new Color(1f, 0.5f, 0f, 1f);
-
-    [Tooltip("타일 크기의 절반값 (GridManager cellSize = 1 기준 → 0.5 권장, 시각 조정 가능)")]
     public float halfSize = 1.5f;
-
-    [Tooltip("선의 두께")]
     public float lineWidth = 0.08f;
-
-    [Tooltip("타일 위로 선이 표시되도록 하는 Z축 오프셋 (음수일수록 카메라와 가까움)")]
     public float zOffset = 0f;
 
     [Header("Hover Effect")]
-    [Tooltip("호버 시 선 색상 (일반 상태는 재질 기본색 사용)")]
     public Color hoverColor = Color.white;
-
-    [Tooltip("호버 시 선 두께 배율 (1.0 = 동일)")]
     public float hoverLineWidthMultiplier = 1.5f;
 
-    // =========================================================
-    // ⬇️ 수정된 펄스(Pulse) 효과 설정
-    // =========================================================
     [Header("Pulse Effect (Alpha)")]
-    [Tooltip("투명도 깜빡임(펄스) 효과 사용 여부 (플레이어 입력 시 자동으로 꺼짐)")]
     public bool usePulseEffect = true;
-    
-    [Tooltip("최소 투명도 (0.0 ~ 1.0)")]
     [Range(0f, 1f)] public float minAlpha = 0.0f;
-    
-    [Tooltip("최대 투명도 (0.0 ~ 1.0)")]
     [Range(0f, 1f)] public float maxAlpha = 1.0f;
-    
-    [Tooltip("투명도가 변하는 속도 (입력이 없을 때 밝아지는 속도)")]
     public float pulseSpeed = 2f;
-    // =========================================================
 
     // ─────────────────────────────────────────────────────────
     // 내부 상수
     // ─────────────────────────────────────────────────────────
-    // 코너 인덱스: 0=TopLeft, 1=TopRight, 2=BottomRight, 3=BottomLeft
-    private static readonly int[] EdgeStartCorner = { 0, 1, 2, 3 }; // 엣지→시작 코너
-    private static readonly int[] EdgeEndCorner   = { 1, 2, 3, 0 }; // 엣지→끝 코너
+    private static readonly int[] EdgeStartCorner = { 0, 1, 2, 3 };
+    private static readonly int[] EdgeEndCorner   = { 1, 2, 3, 0 };
 
     private static readonly Vector2Int[] Directions =
     {
@@ -85,18 +48,20 @@ public class MovableTileEdgeLine : MonoBehaviour
     private Tile   _tile;
     private Camera _mainCamera;
     private bool   _isHovered;
-    private float _currentAlphaRatio = 0f; // 펄스 애니메이션을 위한 내부 상태값
-    private float _pulseTimer = 0f;
     private DE_PlayerController _playerController;
 
-    // ─────────────────────────────────────────────────────────
-    // 초기화
-    // ─────────────────────────────────────────────────────────
+    // =========================================================
+    // ★ 핵심 수정: 모든 타일이 완벽히 동일한 주기를 가지도록 정적(Static) 변수로 변경
+    // =========================================================
+    private static float s_currentAlphaRatio = 0f; 
+    private static float s_pulseTimer = 0f;        
+    private static int s_lastUpdateFrame = -1;
+    // =========================================================
+
     private void Start()
     {
         _tile       = GetComponent<Tile>();
         _mainCamera = Camera.main;
-        // 씬 시작 시 플레이어 컨트롤러를 찾아둠
         _playerController = FindFirstObjectByType<DE_PlayerController>();
 
         _corners = new Vector3[]
@@ -112,77 +77,78 @@ public class MovableTileEdgeLine : MonoBehaviour
         _segLR[1] = CreateSegmentRenderer("Seg_1");
     }
 
-    // ─────────────────────────────────────────────────────────
-    // 매 프레임: 시각 효과의 부드러움을 위해 Update로 변경
-    // ─────────────────────────────────────────────────────────
     private void Update()
     {
         if (_tile == null || GridManager.Instance == null || _mainCamera == null) return;
 
-        // 1. 모두 숨김 (매 프레임 클린 슬레이트)
         HideAll();
 
         bool isTileActive = _tile.Type != TileType.Fixed && !_tile.IsDragging;
         if (!isTileActive) return;
 
-        // 부모(Tile) 회전에 영향을 받지 않고 외곽선은 항상 월드 기준 정방향(상하좌우)을 유지하도록 설정
         if (_loopLR != null) _loopLR.transform.rotation = Quaternion.identity;
         foreach (var lr in _segLR) if (lr != null) lr.transform.rotation = Quaternion.identity;
 
-        // 2. 호버 감지
         Vector3    mouseWorld = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         Vector2Int mouseGrid  = GridManager.Instance.WorldToGrid(mouseWorld);
         _isHovered = (mouseGrid == _tile.GridPosition);
 
-        // 3. 호버 상태 → 루프 렌더러로 4면 전체 표시 (hoverColor 적용, 마우스를 올렸을 땐 선명하게)
+        // =========================================================
+        // 1. 전역 펄스 타이머 업데이트 (호버 감지 이전에 무조건 실행)
+        // =========================================================
+        if (s_lastUpdateFrame != Time.frameCount)
+        {
+            s_lastUpdateFrame = Time.frameCount;
+            if (usePulseEffect && _playerController != null)
+            {
+                if (!_playerController.IsInputting)
+                {
+                    // 조작을 멈추면 먼저 비율이 1(100%)로 차오름
+                    s_currentAlphaRatio = Mathf.Clamp01(s_currentAlphaRatio + Time.deltaTime * pulseSpeed);
+                    
+                    // ★ 수정된 부분: 서서히 켜지는 효과가 100% 완료된 시점부터 펄스 타이머를 시작함
+                    if (s_currentAlphaRatio >= 1f)
+                    {
+                        s_pulseTimer += Time.deltaTime; 
+                    }
+                }
+                else
+                {
+                    // 조작 중이면 빠르게 비율이 깎이고, 펄스 타이머를 0으로 초기화
+                    s_currentAlphaRatio = Mathf.Clamp01(s_currentAlphaRatio - Time.deltaTime * (pulseSpeed * 2f)); 
+                    s_pulseTimer = 0f; 
+                }
+            }
+        }
+
+        // 2. 호버 상태 → 루프 렌더러로 4면 전체 표시 후 조기 종료
         if (_isHovered)
         {
             ApplyToLR(_loopLR, hoverColor, lineWidth * hoverLineWidthMultiplier);
             _loopLR.enabled = true;
-            return;
+            return; 
         }
 
-        // =========================================================
-        // 4. 일반 상태 알파값 계산 (입력 정지 시 펄스 타이머 시작)
-        // =========================================================
+        // 3. 일반 상태 알파값 계산 (전역 변수 사용)
         float currentAlpha = minAlpha; 
         
         if (usePulseEffect && _playerController != null)
         {
-            if (!_playerController.IsInputting)
-            {
-                // 조작을 멈추면 비율이 1(100%)로 차오르고, 펄스 타이머가 흘러가기 시작함
-                _currentAlphaRatio = Mathf.Clamp01(_currentAlphaRatio + Time.deltaTime * pulseSpeed);
-                _pulseTimer += Time.deltaTime; 
-            }
-            else
-            {
-                // 조작 중이면 빠르게 비율이 0(0%)으로 깎이고, 펄스 타이머를 0으로 초기화
-                _currentAlphaRatio = Mathf.Clamp01(_currentAlphaRatio - Time.deltaTime * (pulseSpeed * 2f)); 
-                _pulseTimer = 0f; 
-            }
-
-            // Mathf.Cos를 사용하면 타이머가 0일 때 1(최대치)에서 시작하므로, 
-            // 켜지자마자 가장 밝은 상태(maxAlpha)에서 시작해 부드럽게 어두워지는 펄스가 만들어집니다.
-            float pulseT = (Mathf.Cos(_pulseTimer * pulseSpeed) + 1f) / 2f;
+            float pulseT = (Mathf.Cos(s_pulseTimer * pulseSpeed) + 1f) / 2f;
             float targetPulseAlpha = Mathf.Lerp(minAlpha, maxAlpha, pulseT);
 
-            // 최종 알파값 = (0부터 시작한 펄스 값) * (현재 나타남/사라짐 비율)
-            currentAlpha = targetPulseAlpha * _currentAlphaRatio;
+            currentAlpha = targetPulseAlpha * s_currentAlphaRatio;
         }
         else if (!usePulseEffect)
         {
             currentAlpha = normalColor.a;
         }
         
-        // 투명도가 적용된 기본 색상
         Color normalColorWithPulse = new Color(normalColor.r, normalColor.g, normalColor.b, currentAlpha);
         
-        // 만약 투명도가 거의 0에 가깝다면 (안보인다면) 렌더링 최적화를 위해 여기서 종료
         if (currentAlpha <= 0.01f) return;
-        // =========================================================
 
-
+        // 4. 선 그리기
         bool[] visible     = GetVisibleEdges();
         int    visibleCount = CountTrue(visible);
 
@@ -190,20 +156,15 @@ public class MovableTileEdgeLine : MonoBehaviour
 
         if (visibleCount == 4)
         {
-            // 4면 모두 외곽 → 루프 렌더러 사용 (모서리 완벽 이음)
             ApplyToLR(_loopLR, normalColorWithPulse, lineWidth);
             _loopLR.enabled = true;
         }
         else
         {
-            // 일부 면만 외곽 → 연속 구간별 꺾인 경로 렌더러 사용
             DrawSegments(visible, normalColorWithPulse);
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // 외곽 엣지 계산
-    // ─────────────────────────────────────────────────────────
     private bool[] GetVisibleEdges()
     {
         bool[] visible = new bool[4];
@@ -216,9 +177,6 @@ public class MovableTileEdgeLine : MonoBehaviour
         return visible;
     }
 
-    // ─────────────────────────────────────────────────────────
-    // 연속 구간 탐색 (순환 배열 처리)
-    // ─────────────────────────────────────────────────────────
     private List<List<int>> FindContiguousRuns(bool[] visible)
     {
         var runs    = new List<List<int>>();
@@ -252,9 +210,6 @@ public class MovableTileEdgeLine : MonoBehaviour
         return runs;
     }
 
-    // ─────────────────────────────────────────────────────────
-    // 세그먼트 렌더러 설정 (투명도 색상 전달받도록 수정됨)
-    // ─────────────────────────────────────────────────────────
     private void DrawSegments(bool[] visible, Color applyColor)
     {
         List<List<int>> runs = FindContiguousRuns(visible);
@@ -276,9 +231,6 @@ public class MovableTileEdgeLine : MonoBehaviour
         }
     }
 
-    // ─────────────────────────────────────────────────────────
-    // LineRenderer 색상/두께 적용
-    // ─────────────────────────────────────────────────────────
     private static void ApplyToLR(LineRenderer lr, Color color, float width)
     {
         lr.startColor = color;
@@ -287,18 +239,12 @@ public class MovableTileEdgeLine : MonoBehaviour
         lr.endWidth   = width;
     }
 
-    // ─────────────────────────────────────────────────────────
-    // 전체 숨김 (매 프레임 시작 시 호출)
-    // ─────────────────────────────────────────────────────────
     private void HideAll()
     {
         if (_loopLR != null) _loopLR.enabled = false;
         foreach (var lr in _segLR) if (lr != null) lr.enabled = false;
     }
 
-    // ─────────────────────────────────────────────────────────
-    // 렌더러 생성 헬퍼
-    // ─────────────────────────────────────────────────────────
     private LineRenderer CreateLoopRenderer()
     {
         var obj = new GameObject("Edge_Loop");

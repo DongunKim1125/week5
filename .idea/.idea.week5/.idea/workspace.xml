@@ -32,7 +32,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "Habin__",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -53,7 +53,7 @@
       <method v="2" />
     </configuration>
     <configuration name="독립실행형 플레이어" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/../Desktop/build2\Tile'o Shift.exe" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../Desktop/0411 오후 빌드 수정본\Tile'o Shift.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="C:\Users\jungle\Desktop\test1423" />
       <option name="PASS_PARENT_ENVS" value="1" />
@@ -98,6 +98,7 @@
       <updated>1775625785904</updated>
       <workItem from="1775625786347" duration="20127000" />
       <workItem from="1775700227741" duration="8853000" />
+      <workItem from="1775891314053" duration="1456000" />
     </task>
     <servers />
   </component>
