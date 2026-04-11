@@ -33,6 +33,11 @@ public class DE_PlayerController : MonoBehaviour
     private float _externalVelocityX = 0f;
     private DE_PlayerVisuals _visuals; // 추가: 시각 효과 스크립트 연결용 변수
 
+    public bool IsGrounded => _isGrounded;
+    public float TimeSinceLanded { get; private set; } = 999f;
+    public float LastPeakFallSpeed { get; private set; } = 0f;
+    private float _currentPeakFallSpeed = 0f;
+
     public bool IsInputting =>
         _horizontalInput != 0 ||
         Input.GetKey(KeyCode.LeftArrow) ||
@@ -149,10 +154,38 @@ public class DE_PlayerController : MonoBehaviour
             }
         }
 
+        // JumpObject 위에 있으면 땅에 있는 것으로 간주하여 일반 점프가 가능하게 합니다.
+        if (touchedJumpObject)
+        {
+            _isGrounded = true;
+        }
+
         if (!wasGrounded && _isGrounded && !touchedJumpObject)
         {
             CanReceiveBounceBonus = true;
             _visuals?.TriggerLand();
+        }
+
+        // --- 점프 오브젝트용 낙하 속도 및 착지 시간 기록 ---
+        if (!wasGrounded && _isGrounded)
+        {
+            TimeSinceLanded = 0f;
+            LastPeakFallSpeed = _currentPeakFallSpeed;
+            _currentPeakFallSpeed = 0f;
+        }
+        else if (_isGrounded)
+        {
+            TimeSinceLanded += Time.deltaTime;
+            _currentPeakFallSpeed = 0f;
+        }
+        else
+        {
+            TimeSinceLanded = 999f;
+            float currentSpeedAlongGravity = Mathf.Abs(_rb.linearVelocity.y);
+            if (currentSpeedAlongGravity > _currentPeakFallSpeed) 
+            {
+                _currentPeakFallSpeed = currentSpeedAlongGravity;
+            }
         }
     }
 

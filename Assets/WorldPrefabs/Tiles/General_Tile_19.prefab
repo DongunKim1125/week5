@@ -132,6 +132,11 @@ MonoBehaviour:
   fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
   fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
   fixedOverlaySortingOrder: 5
+  platformRenderers:
+  - {fileID: 179394482263519844}
+  - {fileID: 3737505662739840077}
+  - {fileID: 5155428184671158273}
+  colorSettings: {fileID: 11400000, guid: 9c520c6913047824c9e5c84e15a5a730, type: 2}
 --- !u!61 &7512660551015401454
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -211,15 +216,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.18039216
+      value: 0.5179334
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.09019608
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.05882353
+      value: 0.9235187
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x
@@ -278,6 +283,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+--- !u!212 &179394482263519844 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+  m_PrefabInstance: {fileID: 837920185418579340}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4789130804667970866 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
@@ -293,15 +303,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.18039216
+      value: 0.5179334
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.09019608
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.05882353
+      value: 0.9235187
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x
@@ -360,6 +370,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+--- !u!212 &3737505662739840077 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+  m_PrefabInstance: {fileID: 4180462186954879909}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8346708163402693403 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
@@ -375,15 +390,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.18039216
+      value: 0.5179334
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.09019608
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.05882353
+      value: 0.9235187
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x
@@ -445,5 +460,10 @@ PrefabInstance:
 --- !u!4 &540711083107321687 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+  m_PrefabInstance: {fileID: 5644830240991023081}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &5155428184671158273 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
   m_PrefabInstance: {fileID: 5644830240991023081}
   m_PrefabAsset: {fileID: 0}

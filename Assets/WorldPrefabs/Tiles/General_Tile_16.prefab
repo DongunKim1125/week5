@@ -132,6 +132,11 @@ MonoBehaviour:
   fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
   fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
   fixedOverlaySortingOrder: 5
+  platformRenderers:
+  - {fileID: 7546061971747704368}
+  - {fileID: 7729732699818950487}
+  - {fileID: 6355660644608329806}
+  colorSettings: {fileID: 11400000, guid: 9c520c6913047824c9e5c84e15a5a730, type: 2}
 --- !u!61 &964421256534220166
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -211,15 +216,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.18039216
+      value: 0.5179334
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.09019608
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.05882353
+      value: 0.9235187
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x
@@ -283,6 +288,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
   m_PrefabInstance: {fileID: 5903763923956713382}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &6355660644608329806 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+  m_PrefabInstance: {fileID: 5903763923956713382}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7018097839475556824
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -293,15 +303,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.18039216
+      value: 0.5179334
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.09019608
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.05882353
+      value: 0.9235187
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x
@@ -365,6 +375,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
   m_PrefabInstance: {fileID: 7018097839475556824}
   m_PrefabAsset: {fileID: 0}
+--- !u!212 &7546061971747704368 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+  m_PrefabInstance: {fileID: 7018097839475556824}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7104484775478849727
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -375,15 +390,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.18039216
+      value: 0.5179334
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.09019608
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.05882353
+      value: 0.9235187
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x
@@ -445,5 +460,10 @@ PrefabInstance:
 --- !u!4 &3120635743614793729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+  m_PrefabInstance: {fileID: 7104484775478849727}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &7729732699818950487 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
   m_PrefabInstance: {fileID: 7104484775478849727}
   m_PrefabAsset: {fileID: 0}
