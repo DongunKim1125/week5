@@ -31,6 +31,9 @@ public class TileDragger : MonoBehaviour
         // 마우스 클릭 위치와 오브젝트 중심의 차이 계산
         Vector3 mousePos = GetMouseWorldPosition();
         _offset = transform.position - mousePos;
+
+        // 드래그 상태 활성화 (외곽선 및 플랫폼 색상 변경)
+        _tile.SetDragState(true);
     }
 
     public void OnMouseDrag()
@@ -45,6 +48,9 @@ public class TileDragger : MonoBehaviour
     {
         if (!_isDragging) return;
         _isDragging = false;
+
+        // 드래그 상태 해제
+        _tile.SetDragState(false);
 
         // 현재 마우스 위치를 기반으로 가장 가까운 그리드 좌표 계산
         Vector2Int targetGridPos = GridManager.Instance.WorldToGrid(transform.position);
