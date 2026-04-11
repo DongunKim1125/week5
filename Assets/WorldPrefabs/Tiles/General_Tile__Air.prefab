@@ -175,6 +175,8 @@ MonoBehaviour:
   fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
   fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
   fixedOverlaySortingOrder: 5
+  platformRenderers: []
+  colorSettings: {fileID: 0}
 --- !u!114 &1575053312240564997
 MonoBehaviour:
   m_ObjectHideFlags: 0
