@@ -206,8 +206,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 1
+      scalar: 3.5
+      minScalar: 1.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -5159,8 +5159,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 1
+      scalar: 3.5
+      minScalar: 1.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -10148,11 +10148,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.13
+      value: -6.68
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.63
+      value: -4.63
       objectReference: {fileID: 0}
     - target: {fileID: 4999058936368869884, guid: f3e7b29094b6ef048b243d07e10b8574, type: 3}
       propertyPath: m_LocalPosition.z
