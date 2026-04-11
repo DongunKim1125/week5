@@ -130,6 +130,9 @@ MonoBehaviour:
   fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
   fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
   fixedOverlaySortingOrder: 5
+  platformRenderers:
+  - {fileID: 8268410498467528159}
+  colorSettings: {fileID: 11400000, guid: 9c520c6913047824c9e5c84e15a5a730, type: 2}
 --- !u!61 &4391259216583414341
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -209,15 +212,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.18039216
+      value: 0.5179334
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.09019608
+      value: 0.9716981
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.05882353
+      value: 0.9235187
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x
@@ -279,5 +282,10 @@ PrefabInstance:
 --- !u!4 &3653673605761497737 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
+  m_PrefabInstance: {fileID: 8890948055788941879}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &8268410498467528159 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
   m_PrefabInstance: {fileID: 8890948055788941879}
   m_PrefabAsset: {fileID: 0}

@@ -71,6 +71,13 @@ public class Tile : MonoBehaviour
     [Tooltip("빗금 스프라이트의 Sorting Order (타일 배경보다 높게 설정)")]
     [SerializeField] private int fixedOverlaySortingOrder = 5;
 
+    [Header("Platform Visuals")]
+    [Tooltip("타일 내부에 있는 플랫폼 렌더러들")]
+    [SerializeField] private List<SpriteRenderer> platformRenderers = new List<SpriteRenderer>();
+    [Tooltip("플랫폼의 통합 색상 설정 에셋 (한곳에서 바꾸면 모든 타일이 변함)")]
+    [SerializeField] private TileColorSettings colorSettings;
+
+    private GameObject[] _generatedNails = new GameObject[4];
     private SpriteRenderer _chainRenderer;
     private SpriteRenderer _padlockRenderer;
     private SpriteRenderer _visualRenderer;
@@ -428,8 +435,6 @@ public class Tile : MonoBehaviour
 
     /// <summary>
     /// 드래그 외곽선 표시/해제.
-    /// 드래그 중 sortingOrder는 TileInputHandler가 모든 렌더러에 일괄 적용하므로
-    /// 이 메서드에서는 색상만 제어.
     /// </summary>
     public void SetDragState(bool isDragging)
     {
@@ -478,6 +483,19 @@ public class Tile : MonoBehaviour
     { 
         if (tileType == TileType.Normal) isLocked = false;
         ApplyColorPriority();
+        UpdatePlatformColors();
+    }
+
+    private void UpdatePlatformColors()
+    {
+        Color defaultColor = (colorSettings != null) ? colorSettings.platformDefaultColor : Color.white;
+        foreach (var sr in platformRenderers)
+        {
+            if (sr != null)
+            {
+                sr.color = defaultColor;
+            }
+        }
     }
     
     private void GenerateFixedVisuals()
