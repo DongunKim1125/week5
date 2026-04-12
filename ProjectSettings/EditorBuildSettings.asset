@@ -12,55 +12,58 @@ EditorBuildSettings:
     path: Assets/Scenes/StageSelectScene.unity
     guid: 4aca0ea7839722c4ebbebb23a79e9a8f
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage0-1.unity
+    path: Assets/Scenes/LevelDesign/Stage1.unity
     guid: 77c6f8d0f206c5f4bb8df215be8c64c6
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage0-2.unity
+    path: Assets/Scenes/LevelDesign/Stage2.unity
     guid: 42b08c5515269bf4a930fde90c567e30
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage0-3.unity
+    path: Assets/Scenes/LevelDesign/Stage3.unity
     guid: 3d4c0e9fa85f11749b82fb868f025f25
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage0-4.unity
+    path: Assets/Scenes/LevelDesign/Stage4.unity
     guid: b99c88587012dce4bb02514b2e95bdd9
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage1-1.unity
+    path: Assets/Scenes/LevelDesign/Stage5.unity
     guid: 9dc976dab2d626e4781ef835e59b2d82
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage1-2.unity
+    path: Assets/Scenes/LevelDesign/Stage6.unity
     guid: 27628ac400b286e42ac5bbe6081234a7
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage1-3.unity
-    guid: 815365303b377fb42aa7b25106173fea
-  - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage1-4.unity
-    guid: 7ab3f465c77fde548b59011c04030d9e
-  - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage2-0.unity
+    path: Assets/Scenes/LevelDesign/Stage7.unity
     guid: 3df07f09cc8ccca489220066a93cd214
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage2-1.unity
+    path: Assets/Scenes/LevelDesign/Stage8.unity
     guid: 1e205ed21826b364688440384bd0805e
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage2-2.unity
+    path: Assets/Scenes/LevelDesign/Stage9.unity
+    guid: 86aef69cdeac33041b7d4be81f4fabcf
+  - enabled: 1
+    path: Assets/Scenes/LevelDesign/Stage10.unity
     guid: ce1679efca24de64c8bbb768f25934f9
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage2-3.unity
-    guid: f2e74b8843699f74a8421b12a6905839
-  - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage2-4.unity
-    guid: 769f7db50f818134e990299ed5e86600
-  - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage3-1.unity
+    path: Assets/Scenes/LevelDesign/Stage11.unity
     guid: 16dab8ba1fd4b9444b7d685c08f5f171
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage3-2.unity
-    guid: 7cef4ead33a1e8b4f9d9e6c788dc07c9
-  - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage3-3.unity
+    path: Assets/Scenes/LevelDesign/Stage12.unity
     guid: c66699335945db64b977aaa2b8fc6d60
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/Stage3-4.unity
+    path: Assets/Scenes/LevelDesign/Stage13.unity
+    guid: 7cef4ead33a1e8b4f9d9e6c788dc07c9
+  - enabled: 1
+    path: Assets/Scenes/LevelDesign/Stage14.unity
+    guid: 815365303b377fb42aa7b25106173fea
+  - enabled: 1
+    path: Assets/Scenes/LevelDesign/Stage15.unity
+    guid: 7ab3f465c77fde548b59011c04030d9e
+  - enabled: 1
+    path: Assets/Scenes/LevelDesign/Stage16.unity
+    guid: f2e74b8843699f74a8421b12a6905839
+  - enabled: 1
+    path: Assets/Scenes/LevelDesign/Stage17.unity
+    guid: 769f7db50f818134e990299ed5e86600
+  - enabled: 1
+    path: Assets/Scenes/LevelDesign/hard100.unity
     guid: ab9a89dfec66da546a24c51d25e05a7f
   - enabled: 1
     path: Assets/Scenes/AllClearScene.unity

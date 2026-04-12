@@ -308,6 +308,8 @@ public class Tile : MonoBehaviour
         {
             borderRenderer.color = targetColor;
         }
+        
+        UpdatePlatformColors();
 
         // 4. 잠금 비주얼 색상 적용 (Locked 컬러가 쇠사슬/자물쇠에도 반영)
         if (_chainRenderer != null)
@@ -488,12 +490,27 @@ public class Tile : MonoBehaviour
 
     private void UpdatePlatformColors()
     {
-        Color defaultColor = (colorSettings != null) ? colorSettings.platformDefaultColor : Color.white;
+        // colorSettings가 없을 경우를 대비한 기본값
+        Color targetColor = Color.white;
+
+        if (colorSettings != null)
+        {
+            // 타일 타입이 고정(Fixed)이면 고정용 색상을, 아니면 기본 색상을 사용
+            if (tileType == TileType.Fixed)
+            {
+                targetColor = colorSettings.platformFixedColor;
+            }
+            else
+            {
+                targetColor = colorSettings.platformDefaultColor;
+            }
+        }
+
         foreach (var sr in platformRenderers)
         {
             if (sr != null)
             {
-                sr.color = defaultColor;
+                sr.color = targetColor;
             }
         }
     }

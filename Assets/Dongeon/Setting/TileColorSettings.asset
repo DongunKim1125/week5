@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: TileColorSettings
   m_EditorClassIdentifier: Assembly-CSharp::TileColorSettings
   platformDefaultColor: {r: 1, g: 1, b: 1, a: 1}
+  platformFixedColor: {r: 0.6981132, g: 0.6948202, b: 0.6948202, a: 1}
