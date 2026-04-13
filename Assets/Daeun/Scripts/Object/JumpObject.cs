@@ -89,6 +89,7 @@ public class JumpObject : MonoBehaviour
     private float _trackedImpactSpeed = 0f;
     private bool _playerWasAirborne = false;  // 점프 후 실제로 낙하했는지 여부
     private float _peakFallSpeed = 0f;        // 낙하 중 최대 속도 (착지 시 사용)
+    private float _sustainedBounceHeight = 0f;
 
     // ════════════════════════
     //  초기화
@@ -325,6 +326,8 @@ public class JumpObject : MonoBehaviour
 
         float targetHeight = (fallHeight * heightMultiplier) + bonusApplied;
         targetHeight       = Mathf.Max(targetHeight, bonusHeight * 0.5f); // 최소 높이 보장
+        targetHeight       = Mathf.Max(targetHeight, _sustainedBounceHeight);
+        _sustainedBounceHeight = targetHeight;
         float launchSpeed  = Mathf.Sqrt(2f * gravity * targetHeight);
 
         // ── 압축 비율 & 체류 시간 계산 ──
