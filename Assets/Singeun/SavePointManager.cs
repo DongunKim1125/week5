@@ -38,6 +38,7 @@ public class SavePointManager : MonoBehaviour
     // 저장된 데이터
     private Vector3 _savedPlayerPosition;
     private Dictionary<Tile, Vector2Int> _savedTilePositions = new Dictionary<Tile, Vector2Int>();
+    private Dictionary<Tile, Quaternion> _savedTileRotations = new Dictionary<Tile, Quaternion>();
     private Dictionary<Tile, bool> _savedTileLockStates = new Dictionary<Tile, bool>();
     private List<Key> _savedActiveKeys = new List<Key>();
 
@@ -198,8 +199,9 @@ public class SavePointManager : MonoBehaviour
         // 1. 현재 플레이어 위치 저장
         _savedPlayerPosition = _playerController.transform.position;
 
-        // 2. 현재 타일 배치 상태 및 잠금 상태 저장
+        // 2. 현재 타일 배치 상태 및 잠금 상태, 회전 상태 저장
         _savedTilePositions.Clear();
+        _savedTileRotations.Clear();
         _savedTileLockStates.Clear();
         GridManager gridManager = GridManager.Instance;
         if (gridManager != null)
@@ -219,6 +221,7 @@ public class SavePointManager : MonoBehaviour
                     if (tile != null)
                     {
                         _savedTilePositions[tile] = pos;
+                        _savedTileRotations[tile] = tile.transform.rotation;
                     }
                 }
             }
@@ -292,6 +295,7 @@ public class SavePointManager : MonoBehaviour
         }
 
         _savedTilePositions.Clear();
+        _savedTileRotations.Clear();
         _savedTileLockStates.Clear();
         _savedActiveKeys.Clear();
         _hasSavePoint = false;
@@ -320,10 +324,19 @@ public class SavePointManager : MonoBehaviour
             }
         }
 
-        // 2. 타일 배치 상태 복구 (GridManager에 추가된 RestoreTileState 메서드 사용)
+        // 2. 타일 배치 상태 및 회전 상태 복구
         if (GridManager.Instance != null)
         {
             GridManager.Instance.RestoreTileState(_savedTilePositions);
+            
+            // 회전 상태 복구
+            foreach (var kvp in _savedTileRotations)
+            {
+                if (kvp.Key != null)
+                {
+                    kvp.Key.transform.rotation = kvp.Value;
+                }
+            }
         }
 
         // 3. 타일 잠금 상태 복구

@@ -15,10 +15,10 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelDesign/BuildScene/Stage0-1.unity
     guid: 77c6f8d0f206c5f4bb8df215be8c64c6
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/BuildScene/Stage0-2.unity
+    path: Assets/Scenes/LevelDesign/BuildScene/Stage0-3.unity
     guid: 42b08c5515269bf4a930fde90c567e30
   - enabled: 1
-    path: Assets/Scenes/LevelDesign/BuildScene/Stage0-3.unity
+    path: Assets/Scenes/LevelDesign/BuildScene/Stage0-2.unity
     guid: 3d4c0e9fa85f11749b82fb868f025f25
   - enabled: 1
     path: Assets/Scenes/LevelDesign/BuildScene/Stage1-1.unity
