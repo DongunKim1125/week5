@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 public enum TileType { Normal, Fixed, KeyLocked }
 
@@ -12,32 +13,38 @@ public class Tile : MonoBehaviour
     [SerializeField] private bool isOccupiedByPlayer;
     [SerializeField] private bool invertGravity;
 
-    [Header("Visuals (For Player)")]
-    [SerializeField] private Color lockedColor = new Color(1f, 0.8f, 0.8f);       
-    [SerializeField] private Color unlockedColor = Color.white;                   
-    [SerializeField] private Color invertGravityColor = new Color(0.8f, 0.8f, 1f);
+    [Header("Visuals - Normal Tile")]
+    [Tooltip("일반 상태의 타일 색상")]
+    [SerializeField] private Color normalColor = Color.white;                   
+    [Tooltip("반중력 상태의 일반 타일 색상")]
+    [SerializeField] private Color normalInvertColor = new Color(0.8f, 0.8f, 1f);
+
+    [Header("Visuals - Fixed Tile")]
+    [Tooltip("고정 상태의 타일 색상")]
+    [SerializeField] private Color fixedColor = new Color(0.85f, 0.85f, 0.85f);
+    [Tooltip("반중력 상태의 고정 타일 색상")]
+    [SerializeField] private Color fixedInvertColor = new Color(0.68f, 0.68f, 0.85f);
+
+    [Header("Visuals - Locked Tile")]
+    [Tooltip("잠겨있을 때의 색상 (우선순위 제일 높음)")]
+    [SerializeField] private Color lockedColor = new Color(1f, 0.8f, 0.8f);
 
     [Header("Interaction Visuals")]
     [Tooltip("마우스를 올렸을 때 외곽선 색상")]
-    private Color hoverOutlineColor = new Color(0.549f, 0.549f, 0.549f); 
+    private Color hoverOutlineColor = new Color(255f/255f, 157f/255f, 8f/255f);
     [Tooltip("드래그 중일 때 외곽선 색상")]
     private Color dragOutlineColor = Color.white; 
     [Tooltip("외곽선 두께 (1.0 = 타일과 동일, 1.04 = 4% 더 크게 → 가장자리만 튀어나와 테두리처럼 보임)")]
     private float outlineScale = 1.02f;
     [Tooltip("호버/드래그 외곽선이 인접 타일에 가려지지 않도록 올릴 Sorting Order 값")]
     [SerializeField] private int hoverSortingOrderOffset = 50;
+    [SerializeField] private Transform visualRoot;
     
     // 추가됨: 고정 타일일 때 최종 색상의 밝기를 얼마나 줄일 것인가 (1 = 그대로, 0.85 = 15% 어둡게)
     [Tooltip("고정 타일일 때 적용할 밝기 배율")]
     [SerializeField] private float fixedBrightness = 0.85f;
     
     [SerializeField] private SpriteRenderer borderRenderer;
-
-    [Header("Fixed Tile Visuals (Auto Generated)")]
-    [Tooltip("인스펙터에서 못 이미지를 넣어주세요.")]
-    [SerializeField] private Sprite nailSprite;
-    [Tooltip("모서리에서 안쪽으로 얼마나 들어올지 결정합니다.")]
-    [SerializeField] private float nailOffset = 0.4f; 
     
     [Header("Gravity Visuals")]
     [SerializeField] private GameObject gravityEffectPrefab; 
@@ -55,26 +62,176 @@ public class Tile : MonoBehaviour
     [SerializeField] private float chainScale = 0.8f;
     [Tooltip("자물쇠 스케일")]
     [SerializeField] private float padlockScale = 0.4f;
+    
+    [Header("Fixed Tile Visuals")]
+    [Tooltip("고정 타일 위에 덮어씌울 빗금(Hatch) 스프라이트")]
+    [SerializeField] private Sprite fixedOverlaySprite;
+    [Tooltip("빗금 스프라이트의 색상 및 투명도")]
+    [SerializeField] private Color fixedOverlayColor = new Color(1f, 1f, 1f, 0.3f); // 기본 투명도 30%
+    [Tooltip("빗금 스프라이트의 Sorting Order (타일 배경보다 높게 설정)")]
+    [SerializeField] private int fixedOverlaySortingOrder = 5;
+    
+    [Header("Fixed Tile Nails")]
+    [Tooltip("고정 타일 네 모서리에 박힐 못 스프라이트")]
+    [SerializeField] private Sprite nailSprite;
+    [Tooltip("못 이미지의 스케일")]
+    [SerializeField] private float nailScale = 0.5f;
+    [Tooltip("타일 중심에서 각 모서리 방향으로 얼마나 떨어져 있는지 (X, Y)")]
+    [SerializeField] private Vector2 nailOffset = new Vector2(0.4f, 0.4f);
+    [Tooltip("못 스프라이트의 Sorting Order (오버레이보다 높게 권장)")]
+    [SerializeField] private int nailSortingOrder = 6;
+
+    [Header("Platform Visuals")]
+    [Tooltip("타일 내부에 있는 플랫폼 렌더러들")]
+    [SerializeField] private List<SpriteRenderer> platformRenderers = new List<SpriteRenderer>();
+    [Tooltip("플랫폼의 통합 색상 설정 에셋 (한곳에서 바꾸면 모든 타일이 변함)")]
+    [SerializeField] private TileColorSettings colorSettings;
 
     private GameObject[] _generatedNails = new GameObject[4];
     private SpriteRenderer _chainRenderer;
     private SpriteRenderer _padlockRenderer;
+    private SpriteRenderer _visualRenderer;
     private SpriteRenderer _outlineRenderer; // 외곽선 전용 렌더러 (자동 생성)
     private int _baseBorderSortingOrder;    // borderRenderer의 원래 sortingOrder (복구용)
     private Dictionary<Renderer, int> _hoverOriginalSortingOrders = new Dictionary<Renderer, int>(); // 호버 시 복구용
+    private SpriteRenderer _fixedOverlayRenderer;
+
+    private Dictionary<SpriteRenderer, SpriteRenderer> _overlayRenderers = new Dictionary<SpriteRenderer, SpriteRenderer>();
+    private List<SpriteRenderer> _overlaySourcesBuffer = new List<SpriteRenderer>();
+
+    private bool _isOriginalHidden = false;
 
     public int LockID => lockID;
     public TileType Type => tileType;
+    public bool IsLocked { get => isLocked; set { isLocked = value; UpdateState(); } }
     public Vector2Int GridPosition { get; set; }
     public bool IsOccupiedByPlayer { get => isOccupiedByPlayer; set => isOccupiedByPlayer = value; }
     public bool InvertGravity => invertGravity;
+    public bool IsDragging { get; private set; }
 
     public bool CanMove => (tileType == TileType.Normal || (tileType == TileType.KeyLocked && !isLocked)) && !isOccupiedByPlayer;
 
     private void Awake()
     {
+        EnsureVisualRoot();
         GenerateFixedVisuals();
         GenerateLockedVisuals();
+    }
+
+    private void EnsureVisualRoot()
+    {
+        if (visualRoot == null)
+        {
+            Transform existing = transform.Find("Visual");
+            if (existing != null)
+            {
+                visualRoot = existing;
+            }
+            else
+            {
+                GameObject visualObj = new GameObject("Visual");
+                visualRoot = visualObj.transform;
+                visualRoot.SetParent(transform, false);
+            }
+        }
+
+        SyncVisualOverlay();
+        visualRoot.gameObject.SetActive(false);
+    }
+
+    private void SyncVisualOverlay()
+    {
+        if (visualRoot == null)
+            return;
+
+        _overlaySourcesBuffer.Clear();
+
+        SpriteRenderer[] sourceRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        foreach (SpriteRenderer sourceRenderer in sourceRenderers)
+        {
+            if (sourceRenderer == null || sourceRenderer.transform.IsChildOf(visualRoot))
+                continue;
+
+            _overlaySourcesBuffer.Add(sourceRenderer);
+
+            if (!_overlayRenderers.TryGetValue(sourceRenderer, out SpriteRenderer overlayRenderer) || overlayRenderer == null)
+            {
+                overlayRenderer = CreateOverlayRenderer(sourceRenderer);
+                _overlayRenderers[sourceRenderer] = overlayRenderer;
+            }
+
+            SyncOverlayRenderer(sourceRenderer, overlayRenderer);
+        }
+
+        List<SpriteRenderer> staleSources = _overlayRenderers.Keys.Where(source => !_overlaySourcesBuffer.Contains(source)).ToList();
+        foreach (SpriteRenderer staleSource in staleSources)
+        {
+            if (_overlayRenderers[staleSource] != null)
+                DestroyImmediate(_overlayRenderers[staleSource].gameObject);
+
+            _overlayRenderers.Remove(staleSource);
+        }
+    }
+
+    private SpriteRenderer CreateOverlayRenderer(SpriteRenderer sourceRenderer)
+    {
+        if (sourceRenderer == borderRenderer)
+        {
+            Transform visualSprite = visualRoot.Find("VisualSprite");
+            if (visualSprite == null)
+            {
+                GameObject visualSpriteObj = new GameObject("VisualSprite");
+                visualSprite = visualSpriteObj.transform;
+                visualSprite.SetParent(visualRoot, false);
+            }
+
+            _visualRenderer = visualSprite.GetComponent<SpriteRenderer>();
+            if (_visualRenderer == null)
+                _visualRenderer = visualSprite.gameObject.AddComponent<SpriteRenderer>();
+
+            return _visualRenderer;
+        }
+
+        GameObject overlayObj = new GameObject($"{sourceRenderer.gameObject.name}_Overlay");
+        overlayObj.transform.SetParent(visualRoot, false);
+        return overlayObj.AddComponent<SpriteRenderer>();
+    }
+
+    private void SyncOverlayRenderer(SpriteRenderer sourceRenderer, SpriteRenderer overlayRenderer)
+    {
+        if (sourceRenderer == null || overlayRenderer == null)
+            return;
+
+        Transform overlayTransform = overlayRenderer.transform;
+        overlayTransform.localPosition = transform.InverseTransformPoint(sourceRenderer.transform.position);
+        overlayTransform.localRotation = Quaternion.Inverse(transform.rotation) * sourceRenderer.transform.rotation;
+        overlayTransform.localScale = GetRelativeScale(sourceRenderer.transform.lossyScale, transform.lossyScale);
+
+        overlayRenderer.sprite = sourceRenderer.sprite;
+        overlayRenderer.color = sourceRenderer.color;
+        overlayRenderer.sortingLayerID = sourceRenderer.sortingLayerID;
+        overlayRenderer.sortingOrder = sourceRenderer.sortingOrder;
+        overlayRenderer.flipX = sourceRenderer.flipX;
+        overlayRenderer.flipY = sourceRenderer.flipY;
+        overlayRenderer.drawMode = sourceRenderer.drawMode;
+        overlayRenderer.size = sourceRenderer.size;
+        overlayRenderer.maskInteraction = sourceRenderer.maskInteraction;
+        overlayRenderer.enabled = _isOriginalHidden ? true : sourceRenderer.enabled; 
+
+        overlayRenderer.gameObject.SetActive(sourceRenderer.gameObject.activeSelf);
+    }
+
+    private Vector3 GetRelativeScale(Vector3 sourceLossyScale, Vector3 rootLossyScale)
+    {
+        return new Vector3(
+            SafeDivide(sourceLossyScale.x, rootLossyScale.x),
+            SafeDivide(sourceLossyScale.y, rootLossyScale.y),
+            SafeDivide(sourceLossyScale.z, rootLossyScale.z));
+    }
+
+    private float SafeDivide(float value, float divisor)
+    {
+        return Mathf.Approximately(divisor, 0f) ? 1f : value / divisor;
     }
 
     private void Start()
@@ -117,39 +274,6 @@ public class Tile : MonoBehaviour
         }
     }
 
-    private void GenerateFixedVisuals()
-    {
-        float halfSize = 0.5f; 
-
-        // 점선 로직 제거됨, 못 4개만 생성
-        if (nailSprite != null)
-        {
-            Vector3[] corners = new Vector3[4]
-            {
-                new Vector3(-halfSize + nailOffset, halfSize - nailOffset, -0.1f), 
-                new Vector3(halfSize - nailOffset, halfSize - nailOffset, -0.1f),  
-                new Vector3(-halfSize + nailOffset, -halfSize + nailOffset, -0.1f),
-                new Vector3(halfSize - nailOffset, -halfSize + nailOffset, -0.1f)  
-            };
-
-            for (int i = 0; i < 4; i++)
-            {
-                GameObject nailObj = new GameObject($"Nail_{i}_Auto");
-                nailObj.transform.SetParent(transform);
-                nailObj.transform.localPosition = corners[i];
-                nailObj.transform.localScale = Vector3.one * 0.5f; 
-                
-                SpriteRenderer sr = nailObj.AddComponent<SpriteRenderer>();
-                sr.sprite = nailSprite;
-                sr.sortingOrder = 6;
-                
-                _generatedNails[i] = nailObj;
-            }
-        }
-        
-        ToggleFixedVisuals(false);
-    }
-
     public void Unlock()
     {
         isLocked = false;
@@ -172,27 +296,22 @@ public class Tile : MonoBehaviour
 
     private void ApplyColorPriority()
     {
-        // 1. 기본이 되는 상태(베이스 컬러)를 먼저 결정합니다.
-        Color targetColor = unlockedColor;
+        Color targetColor = normalColor;
 
+        // 1. 타일 타입과 반중력 여부에 따라 기본 색상 결정
+        if (tileType == TileType.Fixed)
+        {
+            targetColor = invertGravity ? fixedInvertColor : fixedColor;
+        }
+        else // Normal 또는 KeyLocked(잠금 해제됨) 상태
+        {
+            targetColor = invertGravity ? normalInvertColor : normalColor;
+        }
+
+        // 2. 잠금(Locked) 상태라면 무조건 잠금 색상으로 덮어쓰기 (최우선 순위)
         if (isLocked)
         {
             targetColor = lockedColor;
-        }
-        else if (invertGravity)
-        {
-            targetColor = invertGravityColor;
-        }
-
-        // 2. 만약 고정 타일(Fixed)이라면, 위에서 결정된 베이스 컬러에 밝기 배율을 곱합니다.
-        if (tileType == TileType.Fixed)
-        {
-            targetColor = new Color(
-                targetColor.r * fixedBrightness, 
-                targetColor.g * fixedBrightness, 
-                targetColor.b * fixedBrightness, 
-                targetColor.a
-            );
         }
 
         // 3. 렌더러에 최종 색상 적용
@@ -200,6 +319,8 @@ public class Tile : MonoBehaviour
         {
             borderRenderer.color = targetColor;
         }
+        
+        UpdatePlatformColors();
 
         // 4. 잠금 비주얼 색상 적용 (Locked 컬러가 쇠사슬/자물쇠에도 반영)
         if (_chainRenderer != null)
@@ -207,11 +328,10 @@ public class Tile : MonoBehaviour
         if (_padlockRenderer != null)
             _padlockRenderer.color = targetColor;
 
-        // 고정 타일 여부에 따라 못 켜기/끄기
-        ToggleFixedVisuals(tileType == TileType.Fixed);
-
         // 잠금 상태에 따라 쇠사슬/자물쇠 켜기/끄기
         ToggleLockedVisuals(isLocked);
+        ToggleFixedVisuals(tileType == TileType.Fixed);
+        SyncVisualOverlay();
     }
 
     private void GenerateLockedVisuals()
@@ -243,17 +363,6 @@ public class Tile : MonoBehaviour
         ToggleLockedVisuals(false);
     }
 
-    private void ToggleFixedVisuals(bool isActive)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            if (_generatedNails[i] != null)
-            {
-                _generatedNails[i].SetActive(isActive);
-            }
-        }
-    }
-
     private void ToggleLockedVisuals(bool isActive)
     {
         if (_chainRenderer != null)
@@ -275,18 +384,22 @@ public class Tile : MonoBehaviour
     /// </summary>
     private void GenerateOutline()
     {
-        if (borderRenderer == null || borderRenderer.sprite == null) return;
+        if (borderRenderer == null || borderRenderer.sprite == null || visualRoot == null) return;
+
+        SyncVisualOverlay();
+        if (_visualRenderer == null) return;
 
         // borderRenderer 원래 sortingOrder 저장 (SetHoverState에서 복구에 사용)
         _baseBorderSortingOrder = borderRenderer.sortingOrder;
 
         GameObject outlineObj = new GameObject("TileOutline_Auto");
-        outlineObj.transform.SetParent(transform);
+        outlineObj.transform.SetParent(visualRoot);
         outlineObj.transform.localPosition = Vector3.zero;
         outlineObj.transform.localScale = Vector3.one * outlineScale;
 
         _outlineRenderer = outlineObj.AddComponent<SpriteRenderer>();
-        _outlineRenderer.sprite = borderRenderer.sprite;
+        _outlineRenderer.sprite = _visualRenderer.sprite;
+        _outlineRenderer.sortingLayerID = _visualRenderer.sortingLayerID;
         _outlineRenderer.sortingOrder = _baseBorderSortingOrder - 1; // 기본: 배경 뒤에 배치
         _outlineRenderer.color = Color.clear; // 기본 투명
     }
@@ -305,7 +418,7 @@ public class Tile : MonoBehaviour
             // 1. 자식 포함 모든 렌더러(outline 제외)를 hoverSortingOrderOffset만큼 올림
             //    → 자식 플랫폼들도 outline 위에 유지되어 가려지지 않음
             _hoverOriginalSortingOrders.Clear();
-            Renderer[] allRenderers = GetComponentsInChildren<Renderer>(true);
+            Renderer[] allRenderers = visualRoot.GetComponentsInChildren<Renderer>(true);
             foreach (var r in allRenderers)
             {
                 if (r == _outlineRenderer) continue; // outline은 별도 처리
@@ -335,13 +448,45 @@ public class Tile : MonoBehaviour
 
     /// <summary>
     /// 드래그 외곽선 표시/해제.
-    /// 드래그 중 sortingOrder는 TileInputHandler가 모든 렌더러에 일괄 적용하므로
-    /// 이 메서드에서는 색상만 제어.
     /// </summary>
     public void SetDragState(bool isDragging)
     {
+        IsDragging = isDragging;
         if (_outlineRenderer == null) return;
         _outlineRenderer.color = isDragging ? dragOutlineColor : Color.clear;
+
+        BoxCollider2D col = GetComponent<BoxCollider2D>();
+        if (col != null)
+        {
+            col.enabled = !isDragging;
+        }
+    }
+
+    public void SetVisualScale(float scaleMultiplier)
+    {
+        if (visualRoot == null) return;
+        
+        bool isDragging = scaleMultiplier > 1f;
+
+        SyncVisualOverlay();
+        
+        visualRoot.gameObject.SetActive(isDragging);
+        visualRoot.localScale = Vector3.one * scaleMultiplier;
+
+        // 드래그 중이면 원본 타일의 렌더러들을 숨겨서 겹쳐 보이지 않게 함
+        ToggleOriginalRenderers(!isDragging);
+    }
+
+    private void ToggleOriginalRenderers(bool isVisible)
+    {
+        _isOriginalHidden = !isVisible;
+        foreach (var sr in _overlaySourcesBuffer)
+        {
+            if (sr != null)
+            {
+                sr.enabled = isVisible;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other) { if (other.CompareTag("Player")) isOccupiedByPlayer = true; }
@@ -351,5 +496,123 @@ public class Tile : MonoBehaviour
     { 
         if (tileType == TileType.Normal) isLocked = false;
         ApplyColorPriority();
+        UpdatePlatformColors();
+        UpdateNailTransform();
+    }
+    
+    private void UpdateNailTransform()
+    {
+        if (_generatedNails == null) return;
+
+        Vector2[] corners = new Vector2[4]
+        {
+            new Vector2(-nailOffset.x, nailOffset.y),
+            new Vector2(nailOffset.x, nailOffset.y),
+            new Vector2(-nailOffset.x, -nailOffset.y),
+            new Vector2(nailOffset.x, -nailOffset.y)
+        };
+
+        for (int i = 0; i < 4; i++)
+        {
+            if (_generatedNails[i] != null)
+            {
+                _generatedNails[i].transform.localPosition = new Vector3(corners[i].x, corners[i].y, -0.06f);
+                _generatedNails[i].transform.localScale = Vector3.one * nailScale;
+            }
+        }
+    }
+
+    private void UpdatePlatformColors()
+    {
+        // colorSettings가 없을 경우를 대비한 기본값
+        Color targetColor = Color.white;
+
+        if (colorSettings != null)
+        {
+            // 타일 타입이 고정(Fixed)이면 고정용 색상을, 아니면 기본 색상을 사용
+            if (tileType == TileType.Fixed)
+            {
+                targetColor = colorSettings.platformFixedColor;
+            }
+            else
+            {
+                targetColor = colorSettings.platformDefaultColor;
+            }
+        }
+
+        foreach (var sr in platformRenderers)
+        {
+            if (sr != null)
+            {
+                sr.color = targetColor;
+            }
+        }
+    }
+    
+    private void GenerateFixedVisuals()
+    {
+        if (fixedOverlaySprite != null)
+        {
+            GameObject overlayObj = new GameObject("FixedOverlay_Auto");
+            overlayObj.transform.SetParent(transform); 
+            overlayObj.transform.localPosition = new Vector3(0f, 0f, -0.05f); 
+            overlayObj.transform.localScale = Vector3.one;
+
+            _fixedOverlayRenderer = overlayObj.AddComponent<SpriteRenderer>();
+            _fixedOverlayRenderer.sprite = fixedOverlaySprite;
+            _fixedOverlayRenderer.color = fixedOverlayColor;
+            _fixedOverlayRenderer.sortingOrder = fixedOverlaySortingOrder;
+        }
+
+        // --- 못(Nail) 생성 로직 추가 ---
+        if (nailSprite != null)
+        {
+            Vector2[] corners = new Vector2[4]
+            {
+                new Vector2(-nailOffset.x, nailOffset.y),  // 좌상단
+                new Vector2(nailOffset.x, nailOffset.y),   // 우상단
+                new Vector2(-nailOffset.x, -nailOffset.y), // 좌하단
+                new Vector2(nailOffset.x, -nailOffset.y)   // 우하단
+            };
+
+            for (int i = 0; i < 4; i++)
+            {
+                GameObject nailObj = new GameObject($"Nail_Auto_{i}");
+                nailObj.transform.SetParent(transform);
+                // 오버레이(-0.05f)보다 살짝 더 앞(-0.06f)에 배치하여 묻히지 않게 함
+                nailObj.transform.localPosition = new Vector3(corners[i].x, corners[i].y, -0.06f); 
+                nailObj.transform.localScale = Vector3.one * nailScale;
+
+                SpriteRenderer nailRenderer = nailObj.AddComponent<SpriteRenderer>();
+                nailRenderer.sprite = nailSprite;
+                nailRenderer.sortingOrder = nailSortingOrder;
+
+                _generatedNails[i] = nailObj;
+            }
+        }
+        // ------------------------------
+
+        ToggleFixedVisuals(false); // 처음 생성 시에는 꺼둠
+    }
+
+    private void ToggleFixedVisuals(bool isActive)
+    {
+        if (_fixedOverlayRenderer != null)
+        {
+            _fixedOverlayRenderer.gameObject.SetActive(isActive);
+        }
+
+        // --- 못 오브젝트 토글 로직 추가 ---
+        if (_generatedNails != null)
+        {
+            for (int i = 0; i < _generatedNails.Length; i++)
+            {
+                if (_generatedNails[i] != null)
+                {
+                    _generatedNails[i].SetActive(isActive);
+                }
+            }
+        }
+        // --------------------------------
     }
 }

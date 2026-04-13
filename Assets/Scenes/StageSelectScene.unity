@@ -625,6 +625,8 @@ MonoBehaviour:
   rotationSpeed: 10
   hoverScaleMultiplier: 1.05
   dragScaleMultiplier: 1.1
+  dragShakeAmount: 2
+  dragShakeSpeed: 20
   dragSortingOrderOffset: 100
   hintFont: {fileID: 11400000, guid: 71472e595d35e284c8a75c1480cf4892, type: 2}
   occupiedTileHint: "\uD50C\uB808\uC774\uC5B4\uAC00 \uC788\uB294 \uD0C0\uC77C\uC785\uB2C8\uB2E4"
@@ -651,6 +653,9 @@ MonoBehaviour:
   width: 5
   height: 4
   cellSize: 3
+  showBackdrop: 1
+  squareSprite: {fileID: 0}
+  backdropColor: {r: 1, g: 1, b: 1, a: 0.05}
   showGrid: 0
   showGridInGame: 1
   gridColor: {r: 1, g: 1, b: 1, a: 1}
@@ -793,6 +798,7 @@ MonoBehaviour:
   stageList: {fileID: 11400000, guid: b44840e8fcbb37c4da67ca4773813876, type: 2}
   buttonPrefab: {fileID: 1180815218851052362, guid: 3f4d0f9a9ab03974090d21992a712273, type: 3}
   container: {fileID: 580211785}
+  columnCount: 7
 --- !u!4 &1675134478
 Transform:
   m_ObjectHideFlags: 0

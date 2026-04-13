@@ -94,8 +94,15 @@ public class TileInputHandler : MonoBehaviour
 
     private void HandleRotation()
     {
-        if (Input.GetKeyDown(KeyCode.Q)) _targetRotation *= Quaternion.Euler(0, 0, 90f);
-        else if (Input.GetKeyDown(KeyCode.E)) _targetRotation *= Quaternion.Euler(0, 0, -90f);
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.rotation);
+            _targetRotation *= Quaternion.Euler(0, 0, 90f);
+        }
+        else if (Input.GetKeyDown(KeyCode.E)) {
+            DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.rotation);
+            _targetRotation *= Quaternion.Euler(0, 0, -90f);
+        }
     }
 
     private void HandleInput()
@@ -124,8 +131,7 @@ public class TileInputHandler : MonoBehaviour
             if (tileUnderMouse != null)
             {
                 _hoveredTile = tileUnderMouse;
-                _hoveredTileOriginalScale = _hoveredTile.transform.localScale;
-                _hoveredTile.transform.localScale = _hoveredTileOriginalScale * hoverScaleMultiplier;
+                _hoveredTile.SetVisualScale(hoverScaleMultiplier);
                 _hoveredTile.SetHoverState(true); // 외곽선 호버 색상 적용
             }
         }
@@ -135,7 +141,7 @@ public class TileInputHandler : MonoBehaviour
     {
         if (_hoveredTile != null)
         {
-            _hoveredTile.transform.localScale = _hoveredTileOriginalScale;
+            _hoveredTile.SetVisualScale(1f);
             _hoveredTile.SetHoverState(false); // 외곽선 원래대로 복구
             _hoveredTile = null;
         }
@@ -212,8 +218,8 @@ public class TileInputHandler : MonoBehaviour
             _originalWorldPos = _selectedTile.transform.position;
             _originalGridPos = _selectedTile.GridPosition;
             
-            _originalTileScale = _selectedTile.transform.localScale;
-            _selectedTile.transform.localScale = _originalTileScale * dragScaleMultiplier;
+            _originalTileScale = Vector3.one;
+            _selectedTile.SetVisualScale(dragScaleMultiplier);
 
             _targetRotation = _selectedTile.transform.rotation;
             Vector2 mousePos = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -275,7 +281,11 @@ public class TileInputHandler : MonoBehaviour
         // 3. 드래그 외곽선 색상 복구
         _selectedTile.SetDragState(false);
 
-        _selectedTile.transform.localScale = _originalTileScale;
+        _selectedTile.SetVisualScale(1f);
+
+        // ★ 버그 수정: 성공/실패 여부에 상관없이 마우스를 놓는 순간 
+        // 흔들림(Shake)이 들어간 회전값을 원래 목표하는 직각(0, 90, 180, 270)으로 즉시 고정합니다.
+        _selectedTile.transform.rotation = _targetRotation;
 
         Vector2Int targetGridPos = GridManager.Instance.WorldToGrid(_selectedTile.transform.position);
 
@@ -283,7 +293,6 @@ public class TileInputHandler : MonoBehaviour
         {
             // 빈 칸이거나 제자리인 경우: 일반 이동
             GridManager.Instance.UpdateTilePosition(_originalGridPos, targetGridPos, _selectedTile);
-            _selectedTile.transform.rotation = _targetRotation;
         }
         else if (GridManager.Instance.IsInBounds(targetGridPos))
         {
@@ -293,7 +302,6 @@ public class TileInputHandler : MonoBehaviour
             {
                 // 상대방도 이동 가능하면 서로 교체
                 GridManager.Instance.SwapTiles(_originalGridPos, targetGridPos);
-                _selectedTile.transform.rotation = _targetRotation;
                 Debug.Log($"타일 위치 교체: {_selectedTile.name} <-> {targetTile.name}");
             }
             else
