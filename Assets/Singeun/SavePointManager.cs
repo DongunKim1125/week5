@@ -263,6 +263,8 @@ public class SavePointManager : MonoBehaviour
 
         _hasSavePoint = true;
         Debug.Log("세이브 포인트가 생성되었습니다.");
+        
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.flagsound);
     }
 
     private void EnsureSaveParticleExists()
@@ -359,6 +361,8 @@ public class SavePointManager : MonoBehaviour
         }
 
         Debug.Log("세이브 포인트로 돌아왔습니다.");
+        DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.Recall);
+        
         return true;
     }
 }

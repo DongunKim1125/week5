@@ -772,12 +772,55 @@ PrefabInstance:
 '
       objectReference: {fileID: 0}
     - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: sfxIndexGuide
+      value: 'Array Size: 13 / Enum Count: 13
+
+        0 : uiclick
+
+        1 :
+        stageclick
+
+        2 : clunk1
+
+        3 : cluck2
+
+        4 : clear
+
+        5
+        : AllClear
+
+        6 : bell
+
+        7 : die
+
+        8 : unlock
+
+        9
+        : rotation
+
+        10 : jump
+
+        11 : flagsound
+
+        12 : Recall
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
       propertyPath: bgmSound.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: sfxSounds.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
       propertyPath: bgmVolumes.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: sfxVolumes.Array.size
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
       propertyPath: 'bgmSound.Array.data[0]'
@@ -786,6 +829,22 @@ PrefabInstance:
     - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
       propertyPath: 'bgmVolumes.Array.data[0]'
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: 'sfxSounds.Array.data[11]'
+      value: 
+      objectReference: {fileID: 8300000, guid: d47896c33e4580740ac054071d3575e0, type: 3}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: 'sfxSounds.Array.data[12]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 7c761583dc197cd4dac6d07b7f6e39e7, type: 3}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: 'sfxVolumes.Array.data[11]'
+      value: 0.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: 'sfxVolumes.Array.data[12]'
+      value: 0.805
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
