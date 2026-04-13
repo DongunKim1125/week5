@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/LevelDesign/BuildScene/Stage4.unity
     guid: b99c88587012dce4bb02514b2e95bdd9
   - enabled: 1
+    path: Assets/Scenes/LevelDesign/BuildScene/Stage4-1.unity
+    guid: 716319e90efc59f478ff7dcbb4ea97d5
+  - enabled: 1
     path: Assets/Scenes/LevelDesign/BuildScene/Stage5.unity
     guid: 9dc976dab2d626e4781ef835e59b2d82
   - enabled: 1
@@ -41,8 +44,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/LevelDesign/BuildScene/Stage10.unity
     guid: ce1679efca24de64c8bbb768f25934f9
-  - enabled: 1
-    path: Assets/Scenes/LevelDesign/BuildScene/Stage11.unity
+  - enabled: 0
+    path: "Assets/Scenes/LevelDesign/260412 \uBE4C\uB4DC/Stage11.unity"
     guid: 16dab8ba1fd4b9444b7d685c08f5f171
   - enabled: 1
     path: Assets/Scenes/LevelDesign/BuildScene/Stage12.unity
