@@ -14,6 +14,10 @@ public class StageSelectUI : MonoBehaviour
     [SerializeField] private GameObject buttonPrefab; // 생성할 버튼 프리팹
     [SerializeField] private Transform container;      // 버튼들이 담길 부모 오브젝트 (예: Grid Layout)
 
+    [Header("Grid Settings")]
+    [Tooltip("가로로 배치될 버튼의 개수")]
+    [SerializeField] private int columnCount = 5;      // 인스펙터에서 가로 줄(열) 수 설정
+
     private void Start()
     {
         // 씬 시작 시 버튼 자동 생성
@@ -27,6 +31,19 @@ public class StageSelectUI : MonoBehaviour
             Debug.LogError("StageSelectUI: 필수 설정 값이 누락되었습니다.");
             return;
         }
+
+        // --- 추가된 부분: GridLayoutGroup 동적 설정 ---
+        GridLayoutGroup gridLayout = container.GetComponent<GridLayoutGroup>();
+        if (gridLayout != null)
+        {
+            gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            gridLayout.constraintCount = columnCount;
+        }
+        else
+        {
+            Debug.LogWarning("StageSelectUI: 컨테이너에 GridLayoutGroup 컴포넌트가 없습니다.");
+        }
+        // -----------------------------------------
 
         // 기존 버튼 초기화
         foreach (Transform child in container) Destroy(child.gameObject);
