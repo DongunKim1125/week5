@@ -46,4 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SavePointManager
   savePointPrefab: {fileID: 5035860805735908470, guid: 6f3c3187eca3767468f54b060d52db2a, type: 3}
   holdTimeToSave: 1
+  savePointCooldown: 0.5
+  saveParticlePrefab: {fileID: 5063597578477970557, guid: 3d6a3eba70c66ac4bbcb364f83a3db2d, type: 3}
   holdTimeToLoad: 0.25

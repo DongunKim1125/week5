@@ -13,6 +13,9 @@ public class SavePointManager : MonoBehaviour
     [Header("Save Hold Settings")]
     [Tooltip("세이브 포인트를 설치하기 위해 Z키를 꾹 눌러야 하는 시간")]
     [SerializeField] private float holdTimeToSave = 1.5f;
+    [SerializeField] private float savePointCooldown = 0.5f;
+    [Tooltip("Z키를 꾹 누르는 동안 생성될 파티클 프리팹 (기가 모이는 연출)")]
+    [SerializeField] private GameObject saveParticlePrefab;
 
     [Header("Load Settings")]
     [Tooltip("세이브 포인트를 로드하기 위해 R키를 꾹 눌러야 하는 시간 (이 시간 동안 화면이 페이드 아웃됩니다)")]
@@ -26,6 +29,8 @@ public class SavePointManager : MonoBehaviour
 
     // Save Hold State
     private float _currentSaveHoldTime = 0f;
+    private float _savePointCooldownTimer = 0f;
+    private GameObject _currentSaveParticle;
 
     private GameObject _currentSavePointVisual;
     private bool _hasSavePoint = false;
@@ -49,6 +54,15 @@ public class SavePointManager : MonoBehaviour
 
     private void EnsureFadeImageExists()
     {
+        if (_savePointCooldownTimer > 0f)
+        {
+            _savePointCooldownTimer -= Time.deltaTime;
+            if (_savePointCooldownTimer < 0f)
+            {
+                _savePointCooldownTimer = 0f;
+            }
+        }
+
         if (_fadeImage != null) return;
 
         GameObject canvasGo = new GameObject("SavePointFadeCanvas");
@@ -140,11 +154,18 @@ public class SavePointManager : MonoBehaviour
         {
             _currentSaveHoldTime = 0f;
         }
+
+        DestroySaveParticle();
     }
 
     private void TryCreateSavePoint()
     {
         if (_playerController == null || _playerRb == null) return;
+        if (_savePointCooldownTimer > 0f)
+        {
+            ResetSaveHold();
+            return;
+        }
 
         // 플레이어가 움직이는 중인지 확인 (입력 중이거나 물리적 속도가 존재할 때)
         if (_playerController.IsInputting || _playerRb.linearVelocity.magnitude > 0.1f)
@@ -153,12 +174,14 @@ public class SavePointManager : MonoBehaviour
             return;
         }
 
+        EnsureSaveParticleExists();
         _currentSaveHoldTime += Time.deltaTime;
 
         if (_currentSaveHoldTime >= holdTimeToSave)
         {
             ResetSaveHold();
             CreateSavePoint();
+            _savePointCooldownTimer = savePointCooldown;
         }
     }
 
@@ -217,6 +240,26 @@ public class SavePointManager : MonoBehaviour
 
         _hasSavePoint = true;
         Debug.Log("세이브 포인트가 생성되었습니다.");
+    }
+
+    private void EnsureSaveParticleExists()
+    {
+        if (saveParticlePrefab == null || _playerController == null || _currentSaveParticle != null)
+        {
+            return;
+        }
+
+        _currentSaveParticle = Instantiate(saveParticlePrefab, _playerController.transform);
+        _currentSaveParticle.transform.localPosition = Vector3.zero;
+        _currentSaveParticle.transform.localRotation = Quaternion.identity;
+    }
+
+    private void DestroySaveParticle()
+    {
+        if (_currentSaveParticle == null) return;
+
+        Destroy(_currentSaveParticle);
+        _currentSaveParticle = null;
     }
 
     private void RemoveSavePoint()
