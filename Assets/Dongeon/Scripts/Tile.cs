@@ -296,39 +296,38 @@ public class Tile : MonoBehaviour
 
     private void ApplyColorPriority()
     {
-        Color targetColor = normalColor;
+        Color baseTileColor = normalColor;
 
-        // 1. 타일 타입과 반중력 여부에 따라 기본 색상 결정
+        // 1. 타일 타입과 반중력 여부에 따라 기본 배경 색상 결정
         if (tileType == TileType.Fixed)
         {
-            targetColor = invertGravity ? fixedInvertColor : fixedColor;
+            baseTileColor = invertGravity ? fixedInvertColor : fixedColor;
         }
-        else // Normal 또는 KeyLocked(잠금 해제됨) 상태
+        else // Normal 또는 KeyLocked 상태
         {
-            targetColor = invertGravity ? normalInvertColor : normalColor;
+            baseTileColor = invertGravity ? normalInvertColor : normalColor;
         }
 
-        // 2. 잠금(Locked) 상태라면 무조건 잠금 색상으로 덮어쓰기 (최우선 순위)
-        if (isLocked)
-        {
-            targetColor = lockedColor;
-        }
-
-        // 3. 렌더러에 최종 색상 적용
+        // 2. 타일 배경 렌더러에 기본 색상 적용 (잠금 상태여도 배경색 유지)
         if (borderRenderer != null)
         {
-            borderRenderer.color = targetColor;
+            borderRenderer.color = baseTileColor;
         }
         
         UpdatePlatformColors();
 
-        // 4. 잠금 비주얼 색상 적용 (Locked 컬러가 쇠사슬/자물쇠에도 반영)
-        if (_chainRenderer != null)
-            _chainRenderer.color = targetColor;
+        // 3. 자물쇠(및 체인) 비주얼 색상 적용 (잠겨있을 때만 lockedColor 적용)
         if (_padlockRenderer != null)
-            _padlockRenderer.color = targetColor;
+        {
+            _padlockRenderer.color = isLocked ? lockedColor : baseTileColor;
+        }
 
-        // 잠금 상태에 따라 쇠사슬/자물쇠 켜기/끄기
+        if (_chainRenderer != null) 
+        {
+            _chainRenderer.color = isLocked ? lockedColor : baseTileColor;
+        }
+
+        // 상태에 따라 비주얼 켜기/끄기 갱신
         ToggleLockedVisuals(isLocked);
         ToggleFixedVisuals(tileType == TileType.Fixed);
         SyncVisualOverlay();
