@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -0.255, y: 0.387}
   m_SizeDelta: {x: 0.9677, y: 0.3711}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &791390212
@@ -864,6 +864,30 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.13768244
       objectReference: {fileID: 0}
+    - target: {fileID: 3608256270142539845, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.b
+      value: 0.6948202
+      objectReference: {fileID: 0}
+    - target: {fileID: 3608256270142539845, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6948202
+      objectReference: {fileID: 0}
+    - target: {fileID: 3608256270142539845, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6981132
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001237222981729060, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.b
+      value: 0.6948202
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001237222981729060, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6948202
+      objectReference: {fileID: 0}
+    - target: {fileID: 6001237222981729060, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6981132
+      objectReference: {fileID: 0}
     - target: {fileID: 8306312709942045337, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 6.26
@@ -907,6 +931,22 @@ PrefabInstance:
     - target: {fileID: 8734497342013774600, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
       propertyPath: tileType
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8734497342013774600, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: colorSettings
+      value: 
+      objectReference: {fileID: 11400000, guid: 9c520c6913047824c9e5c84e15a5a730, type: 2}
+    - target: {fileID: 8965455173104034128, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.b
+      value: 0.6948202
+      objectReference: {fileID: 0}
+    - target: {fileID: 8965455173104034128, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.g
+      value: 0.6948202
+      objectReference: {fileID: 0}
+    - target: {fileID: 8965455173104034128, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
+      propertyPath: m_Color.r
+      value: 0.6981132
       objectReference: {fileID: 0}
     - target: {fileID: 9136483505044427082, guid: b5689ee914b675149bf75f98c8d167f2, type: 3}
       propertyPath: m_Name

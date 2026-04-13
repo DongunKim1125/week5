@@ -122,10 +122,10 @@ MonoBehaviour:
   visualRoot: {fileID: 0}
   fixedBrightness: 0.6
   borderRenderer: {fileID: 5962783667169759733}
-  gravityEffectPrefab: {fileID: 0}
+  gravityEffectPrefab: {fileID: -2253911629886400664, guid: 08765b5c1dc47a94b9390b6a139d0901, type: 3}
   gravityEffectOrderOffset: 1
   chainSprite: {fileID: 0}
-  padlockSprite: {fileID: -3343585313190569305, guid: b6c5225399a463a478037a1b48ef9354, type: 3}
+  padlockSprite: {fileID: 21300000, guid: 6ea81afc274d5814caa4ff32e8ded9a5, type: 3}
   chainScale: 0.8
   padlockScale: 0.4
   fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
