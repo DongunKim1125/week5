@@ -317,6 +317,8 @@ public class JumpObject : MonoBehaviour
         // 효과음
         DE_SoundManager.soundManager.PlaySFX(DE_SoundManager.sfx.jump);
 
+        bool isBounceChain = !controller.CanReceiveBounceBonus;
+
         float bonusApplied = 0f;
         if (controller.CanReceiveBounceBonus)
         {
@@ -326,7 +328,10 @@ public class JumpObject : MonoBehaviour
 
         float targetHeight = (fallHeight * heightMultiplier) + bonusApplied;
         targetHeight       = Mathf.Max(targetHeight, bonusHeight * 0.5f); // 최소 높이 보장
-        targetHeight       = Mathf.Max(targetHeight, _sustainedBounceHeight);
+        if (isBounceChain)
+        {
+            targetHeight = Mathf.Max(targetHeight, _sustainedBounceHeight);
+        }
         _sustainedBounceHeight = targetHeight;
         float launchSpeed  = Mathf.Sqrt(2f * gravity * targetHeight);
 
