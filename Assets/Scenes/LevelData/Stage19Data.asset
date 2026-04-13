@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d63cc75be70a6744ba7b171face539bd, type: 3}
-  m_Name: Stage5-6Data
+  m_Name: Stage19Data
   m_EditorClassIdentifier: Assembly-CSharp::StageData
-  stageDisplayName: 5-6
-  sceneName: Stage5-6
+  stageDisplayName: 19
+  sceneName: Stage19
   isDefaultUnlocked: 0
   stageDescription: 
