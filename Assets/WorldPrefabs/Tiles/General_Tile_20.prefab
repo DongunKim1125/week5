@@ -130,6 +130,10 @@ MonoBehaviour:
   fixedOverlaySprite: {fileID: 21300000, guid: 8aba9438244417e41b640d678b93e378, type: 3}
   fixedOverlayColor: {r: 1, g: 1, b: 1, a: 0}
   fixedOverlaySortingOrder: 5
+  nailSprite: {fileID: 21300000, guid: cc56ab35b859bf743b5162ddb579299e, type: 3}
+  nailScale: 0.1
+  nailOffset: {x: 0.4, y: 0.4}
+  nailSortingOrder: 6
   platformRenderers:
   - {fileID: 287626097806659240}
   colorSettings: {fileID: 11400000, guid: 9c520c6913047824c9e5c84e15a5a730, type: 2}
@@ -212,15 +216,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.b
-      value: 0.5179334
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.g
-      value: 0.9716981
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 710924070291214312, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_Color.r
-      value: 0.9235187
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5320592772395010238, guid: 7f1ff5f7e82c8cf47b17ceaeea87fd89, type: 3}
       propertyPath: m_LocalScale.x

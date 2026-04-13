@@ -71,6 +71,22 @@ public class DE_PlayerHealth : MonoBehaviour
     private IEnumerator RestartAfterDelay()
     {
         yield return new WaitForSeconds(restartDelay);
-        SceneLoader.ReloadCurrentScene();
+        
+        SavePointManager spm = FindFirstObjectByType<SavePointManager>();
+        if (spm != null && spm.LoadSavePoint())
+        {
+            _isDead = false;
+            
+            // 플레이어 렌더러 및 물리 복구
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer r in renderers) r.enabled = true;
+            
+            if (TryGetComponent<Collider2D>(out var col)) col.enabled = true;
+            if (TryGetComponent<Rigidbody2D>(out var rb)) rb.simulated = true;
+        }
+        else
+        {
+            SceneLoader.ReloadCurrentScene();
+        }
     }
 }

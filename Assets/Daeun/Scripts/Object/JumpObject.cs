@@ -89,6 +89,7 @@ public class JumpObject : MonoBehaviour
     private float _trackedImpactSpeed = 0f;
     private bool _playerWasAirborne = false;  // 점프 후 실제로 낙하했는지 여부
     private float _peakFallSpeed = 0f;        // 낙하 중 최대 속도 (착지 시 사용)
+    private float _sustainedBounceHeight = 0f;
 
     // ════════════════════════
     //  초기화
@@ -299,6 +300,7 @@ public class JumpObject : MonoBehaviour
     {
         DE_PlayerController controller = collision.gameObject.GetComponent<DE_PlayerController>();
         Rigidbody2D playerRb           = collision.gameObject.GetComponent<Rigidbody2D>();
+        Collider2D playerCol           = collision.collider;
 
         if (controller == null || playerRb == null)
             return;
@@ -324,6 +326,8 @@ public class JumpObject : MonoBehaviour
 
         float targetHeight = (fallHeight * heightMultiplier) + bonusApplied;
         targetHeight       = Mathf.Max(targetHeight, bonusHeight * 0.5f); // 최소 높이 보장
+        targetHeight       = Mathf.Max(targetHeight, _sustainedBounceHeight);
+        _sustainedBounceHeight = targetHeight;
         float launchSpeed  = Mathf.Sqrt(2f * gravity * targetHeight);
 
         // ── 압축 비율 & 체류 시간 계산 ──
@@ -338,11 +342,11 @@ public class JumpObject : MonoBehaviour
             StopCoroutine(_springCoroutine);
 
         _springCoroutine = StartCoroutine(
-            SpringRoutine(controller, playerRb, launchSpeed, compressionAmt, compressDuration, GetActiveWorldDirection())
+            SpringRoutine(controller, playerRb, playerCol, launchSpeed, compressionAmt, compressDuration, GetActiveWorldDirection())
         );
 
-        Debug.Log($"[JumpObject] fallH={fallHeight:F1} | targetH={targetHeight:F1} | " +
-                  $"launch={launchSpeed:F1} | compression={compressionAmt:F2} | compressSec={compressDuration:F3}s");
+        Debug.Log($"[JumpObject] fallH={fallHeight:F1} | targetH={targetHeight:F1} | " + 
+        $"launch={launchSpeed:F1} | compression={compressionAmt:F2} | compressSec={compressDuration:F3}s");
     }
 
     // ════════════════════════
@@ -358,11 +362,20 @@ public class JumpObject : MonoBehaviour
     private IEnumerator SpringRoutine(
         DE_PlayerController controller,
         Rigidbody2D playerRb,
+        Collider2D playerCol,
         float launchSpeed,
         float compressionAmt,
         float compressDuration,
         Vector2 activeDir)
     {
+        Collider2D platformCol = platformTransform != null ? platformTransform.GetComponent<Collider2D>() : null;
+
+        // 애니메이션 도중 충돌 처리가 플레이어의 속도를 갉아먹거나 버그를 일으키는 것을 방지
+        if (platformCol != null && playerCol != null)
+        {
+            Physics2D.IgnoreCollision(playerCol, platformCol, true);
+        }
+
         // 입력 잠금 (압축 + 해제 시간 동안)
         controller.InputLockTimer = compressDuration + releaseDuration + inputLockTime;
 
@@ -451,7 +464,11 @@ public class JumpObject : MonoBehaviour
             yield return null;
         }
 
-        // 원위치 복원
+        // 원위치 복원 및 충돌 복구
+        if (platformCol != null && playerCol != null)
+        {
+            Physics2D.IgnoreCollision(playerCol, platformCol, false);
+        }
         ResetToOriginal();
         _springCoroutine = null;
     }
