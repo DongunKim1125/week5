@@ -38,6 +38,8 @@ public class SavePointManager : MonoBehaviour
     // 저장된 데이터
     private Vector3 _savedPlayerPosition;
     private Dictionary<Tile, Vector2Int> _savedTilePositions = new Dictionary<Tile, Vector2Int>();
+    private Dictionary<Tile, bool> _savedTileLockStates = new Dictionary<Tile, bool>();
+    private List<Key> _savedActiveKeys = new List<Key>();
 
     private DE_PlayerController _playerController;
     private Rigidbody2D _playerRb;
@@ -196,11 +198,18 @@ public class SavePointManager : MonoBehaviour
         // 1. 현재 플레이어 위치 저장
         _savedPlayerPosition = _playerController.transform.position;
 
-        // 2. 현재 타일 배치 상태 저장
+        // 2. 현재 타일 배치 상태 및 잠금 상태 저장
         _savedTilePositions.Clear();
+        _savedTileLockStates.Clear();
         GridManager gridManager = GridManager.Instance;
         if (gridManager != null)
         {
+            Tile[] allTiles = FindObjectsByType<Tile>(FindObjectsSortMode.None);
+            foreach (Tile tile in allTiles)
+            {
+                _savedTileLockStates[tile] = tile.IsLocked;
+            }
+
             for (int x = 0; x < gridManager.Width; x++)
             {
                 for (int y = 0; y < gridManager.Height; y++)
@@ -214,9 +223,20 @@ public class SavePointManager : MonoBehaviour
                 }
             }
         }
+
+        // 3. 열쇠 상태 저장
+        _savedActiveKeys.Clear();
+        Key[] allKeys = FindObjectsByType<Key>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Key key in allKeys)
+        {
+            if (key.gameObject.activeSelf)
+            {
+                _savedActiveKeys.Add(key);
+            }
+        }
         Debug.Log("중간 단계");
 
-        // 3. 시각적 세이브 포인트 생성
+        // 4. 시각적 세이브 포인트 생성
         if (savePointPrefab != null)
         {
             _currentSavePointVisual = Instantiate(savePointPrefab, _savedPlayerPosition, Quaternion.identity);
@@ -272,6 +292,8 @@ public class SavePointManager : MonoBehaviour
         }
 
         _savedTilePositions.Clear();
+        _savedTileLockStates.Clear();
+        _savedActiveKeys.Clear();
         _hasSavePoint = false;
         
         Debug.Log("세이브 포인트가 제거되었습니다.");
@@ -302,6 +324,25 @@ public class SavePointManager : MonoBehaviour
         if (GridManager.Instance != null)
         {
             GridManager.Instance.RestoreTileState(_savedTilePositions);
+        }
+
+        // 3. 타일 잠금 상태 복구
+        foreach (var kvp in _savedTileLockStates)
+        {
+            if (kvp.Key != null)
+            {
+                kvp.Key.IsLocked = kvp.Value;
+            }
+        }
+
+        // 4. 열쇠 상태 복구
+        Key[] allKeys = FindObjectsByType<Key>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (Key key in allKeys)
+        {
+            if (key != null)
+            {
+                key.gameObject.SetActive(_savedActiveKeys.Contains(key));
+            }
         }
 
         Debug.Log("세이브 포인트로 돌아왔습니다.");

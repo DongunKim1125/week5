@@ -222,7 +222,7 @@ public class DE_PlayerController : MonoBehaviour
         if (other.TryGetComponent<Key>(out Key key))
         {
             KeyManager.Instance.OnKeyCollected(key.KeyID);
-            Destroy(other.gameObject);
+            other.gameObject.SetActive(false);
             Debug.Log($"{key.KeyID} key collected!");
         }
     }

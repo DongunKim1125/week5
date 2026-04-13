@@ -103,6 +103,7 @@ public class Tile : MonoBehaviour
 
     public int LockID => lockID;
     public TileType Type => tileType;
+    public bool IsLocked { get => isLocked; set { isLocked = value; UpdateState(); } }
     public Vector2Int GridPosition { get; set; }
     public bool IsOccupiedByPlayer { get => isOccupiedByPlayer; set => isOccupiedByPlayer = value; }
     public bool InvertGravity => invertGravity;
