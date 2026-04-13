@@ -763,6 +763,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: bgmIndexGuide
+      value: 'Array Size: 1 / Enum Count: 1
+
+        0 : MainTheme
+
+'
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: bgmSound.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: bgmVolumes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: 'bgmSound.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 5c279fcb1c731a04da86e2ab0d60bda1, type: 3}
+    - target: {fileID: 4053630207048945744, guid: a6c11584beefade4bb78bf1211ad3fde, type: 3}
+      propertyPath: 'bgmVolumes.Array.data[0]'
+      value: 0.3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

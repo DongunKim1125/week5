@@ -53,7 +53,7 @@
       <method v="2" />
     </configuration>
     <configuration name="독립실행형 플레이어" type="RunUnityExe" factoryName="Unity Executable">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/../Desktop/Tile'O Shift_0413\Tile'o Shift.exe" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../Desktop/테스트빌드\Tile'o Shift.exe" />
       <option name="PROGRAM_PARAMETERS" value="" />
       <option name="WORKING_DIRECTORY" value="C:\Users\jungle\Desktop\test1423" />
       <option name="PASS_PARENT_ENVS" value="1" />
