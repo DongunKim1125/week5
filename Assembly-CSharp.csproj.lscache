@@ -86,6 +86,7 @@ Assets/
   TileInputHandler.cs
   TitleUI.cs
  Habin/Habin_Scripts/HB_PlayerVisuals.cs
+ Singeun/SavePointManager.cs
  TextMesh Pro/Examples & Extras/Scripts/
   Benchmark01.cs
   Benchmark01_UGUI.cs

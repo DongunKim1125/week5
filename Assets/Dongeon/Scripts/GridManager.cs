@@ -26,7 +26,9 @@ public class GridManager : MonoBehaviour
 
     [Header("Grid Settings")]
     [SerializeField] private int width = 5;
+    public int Width => width;
     [SerializeField] private int height = 4;
+    public int Height => height;
     [SerializeField] private float cellSize = 1.0f; // 타일 한 칸의 크기
     
     [Header("Backdrop Settings")]
@@ -213,6 +215,21 @@ public class GridManager : MonoBehaviour
         
         tileGrid[newPos] = tile;
         tile.SetGridPosition(newPos);
+    }
+
+    /// <summary>
+    /// 세이브 포인트를 위해 전체 타일을 지우고 새로운 상태로 복구합니다.
+    /// </summary>
+    public void RestoreTileState(Dictionary<Tile, Vector2Int> savedState)
+    {
+        tileGrid.Clear();
+        foreach (var kvp in savedState)
+        {
+            Tile tile = kvp.Key;
+            Vector2Int pos = kvp.Value;
+            tileGrid[pos] = tile;
+            tile.SetGridPosition(pos);
+        }
     }
 
     /// <summary>
