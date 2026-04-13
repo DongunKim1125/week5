@@ -162,7 +162,6 @@ public class DE_PlayerController : MonoBehaviour
 
         if (!wasGrounded && _isGrounded && !touchedJumpObject)
         {
-            CanReceiveBounceBonus = true;
             _visuals?.TriggerLand();
         }
 
@@ -187,11 +186,19 @@ public class DE_PlayerController : MonoBehaviour
                 _currentPeakFallSpeed = currentSpeedAlongGravity;
             }
         }
+
+        // 일반 타일과 점프 발판 사이를 빠르게 오갈 때(미끄러짐) 
+        // 보너스 높이가 무한 증식하는 버그를 막기 위해 초기화를 0.1초 지연시킵니다.
+        if (_isGrounded && !touchedJumpObject && TimeSinceLanded >= 0.1f)
+        {
+            CanReceiveBounceBonus = true;
+        }
     }
 
     private void Jump()
     {
         _coyoteTimeCounter = 0f;
+        CanReceiveBounceBonus = true;
         
         float jumpDirection = _rb.gravityScale > 0 ? 1f : -1f;
         _rb.linearVelocity = new Vector2(_rb.linearVelocity.x, 0f);
